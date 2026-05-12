@@ -1,0 +1,1677 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - EQUILA STYLE{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="container py-5">
+        <!-- Professional Profile Header -->
+        <div class="profile-header-modern">
+            <div class="header-background"></div>
+            <div class="header-content">
+                <div class="profile-avatar-section">
+                    <div class="avatar-container">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.get_full_name|default:user.email }}" class="avatar-image">
+                        {% else %}
+                            <div class="avatar-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                        <div class="avatar-edit">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-info-section">
+                    <div class="profile-welcome">
+                        <h1 class="profile-title">Welcome Back</h1>
+                        <h2 class="profile-name">{{ user.get_full_name|default:user.email }}</h2>
+                        <p class="profile-email">{{ user.email }}</p>
+                        <p class="profile-member">Member since {{ user.date_joined|date:"F Y" }}</p>
+                    </div>
+                    <div class="profile-stats-modern">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-number">{{ cart.get_total_items }}</span>
+                                <span class="stat-label">Cart Items</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-number">{{ wishlist_items.count }}</span>
+                                <span class="stat-label">Wishlist</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-number">{{ orders.count }}</span>
+                                <span class="stat-label">Orders</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern Profile Content -->
+        <div class="profile-content-modern">
+            <div class="content-grid">
+                <!-- Left Column - User Details -->
+                <div class="left-column">
+                    <!-- Personal Information Card -->
+                    <div class="profile-card-modern">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <h3 class="card-title">Personal Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data" class="profile-form">
+                                {% csrf_token %}
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="{{ user_form.email.id_for_label }}" class="form-label-modern">
+                                            <i class="fas fa-envelope"></i> Email Address
+                                        </label>
+                                        {{ user_form.email }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ user_form.phone.id_for_label }}" class="form-label-modern">
+                                            <i class="fas fa-phone"></i> Phone Number
+                                        </label>
+                                        {{ user_form.phone }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ profile_form.first_name.id_for_label }}" class="form-label-modern">
+                                            <i class="fas fa-user"></i> First Name
+                                        </label>
+                                        {{ profile_form.first_name }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ profile_form.last_name.id_for_label }}" class="form-label-modern">
+                                            <i class="fas fa-user"></i> Last Name
+                                        </label>
+                                        {{ profile_form.last_name }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ profile_form.birth_date.id_for_label }}" class="form-label-modern">
+                                            <i class="fas fa-calendar"></i> Birth Date
+                                        </label>
+                                        {{ profile_form.birth_date }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="{{ profile_form.avatar.id_for_label }}" class="form-label-modern">
+                                            <i class="fas fa-camera"></i> Profile Image
+                                        </label>
+                                        {{ profile_form.avatar }}
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="{{ profile_form.bio.id_for_label }}" class="form-label-modern">
+                                            <i class="fas fa-pen"></i> Bio
+                                        </label>
+                                        {{ profile_form.bio }}
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" name="user_form" class="btn-modern btn-primary-modern">
+                                        <i class="fas fa-save"></i>
+                                        <span>Update Profile</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Address Management Card -->
+                    <div class="profile-card-modern">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h3 class="card-title">Delivery Addresses</h3>
+                        </div>
+                        <div class="card-body">
+                            <!-- Existing Addresses -->
+                            {% if addresses %}
+                                <div class="addresses-list">
+                                    {% for address in addresses %}
+                                    <div class="address-card-modern {% if address.is_default %}default-address{% endif %}">
+                                        <div class="address-header-modern">
+                                            <div class="address-type">
+                                                <i class="fas fa-home"></i>
+                                                <span>{{ address.get_address_type_display }}</span>
+                                            </div>
+                                            {% if address.is_default %}
+                                                <span class="default-badge-modern">
+                                                    <i class="fas fa-star"></i> Default
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="address-details-modern">
+                                            <div class="address-line">
+                                                <i class="fas fa-location-dot"></i>
+                                                <span>{{ address.street_address }}</span>
+                                            </div>
+                                            <div class="address-line">
+                                                <i class="fas fa-city"></i>
+                                                <span>{{ address.city }}, {{ address.state }} {{ address.postal_code }}</span>
+                                            </div>
+                                            <div class="address-line">
+                                                <i class="fas fa-globe"></i>
+                                                <span>{{ address.country }}</span>
+                                            </div>
+                                            {% if address.phone_number %}
+                                            <div class="address-line">
+                                                <i class="fas fa-phone"></i>
+                                                <span>{{ address.phone_number }}</span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="empty-state-modern">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <p>No delivery addresses saved</p>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Add New Address -->
+                            <div class="add-address-modern">
+                                <h4 class="add-address-title">
+                                    <i class="fas fa-plus-circle"></i> Add New Address
+                                </h4>
+                                <form method="post" class="address-form">
+                                    {% csrf_token %}
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="{{ address_form.address_type.id_for_label }}" class="form-label-modern">
+                                                <i class="fas fa-tag"></i> Address Type
+                                            </label>
+                                            {{ address_form.address_type }}
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label for="{{ address_form.street_address.id_for_label }}" class="form-label-modern">
+                                                <i class="fas fa-road"></i> Street Address
+                                            </label>
+                                            {{ address_form.street_address }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ address_form.city.id_for_label }}" class="form-label-modern">
+                                                <i class="fas fa-city"></i> City
+                                            </label>
+                                            {{ address_form.city }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ address_form.state.id_for_label }}" class="form-label-modern">
+                                                <i class="fas fa-map"></i> State
+                                            </label>
+                                            {{ address_form.state }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ address_form.postal_code.id_for_label }}" class="form-label-modern">
+                                                <i class="fas fa-envelope"></i> Postal Code
+                                            </label>
+                                            {{ address_form.postal_code }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ address_form.country.id_for_label }}" class="form-label-modern">
+                                                <i class="fas fa-globe"></i> Country
+                                            </label>
+                                            {{ address_form.country }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ address_form.phone_number.id_for_label }}" class="form-label-modern">
+                                                <i class="fas fa-phone"></i> Phone Number
+                                            </label>
+                                            {{ address_form.phone_number }}
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <div class="checkbox-group">
+                                                {{ address_form.is_default }}
+                                                <label for="{{ address_form.is_default.id_for_label }}" class="checkbox-label">
+                                                    <i class="fas fa-star"></i> Set as default delivery address
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" name="address_form" class="btn-modern btn-primary-modern">
+                                            <i class="fas fa-plus"></i>
+                                            <span>Add Address</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - User Activity -->
+                <div class="right-column">
+                    <!-- Quick Navigation Cards -->
+                    <div class="profile-card-modern">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-compass"></i>
+                            </div>
+                            <h3 class="card-title">Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="navigation-grid">
+                                <a href="{% url 'cart:cart_detail' %}" class="nav-card">
+                                    <div class="nav-icon">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                    <div class="nav-content">
+                                        <h4>Shopping Cart</h4>
+                                        <p>{{ cart.get_total_items }} items</p>
+                                        {% if cart.get_total_items > 0 %}
+                                            <span class="nav-price">${{ cart.get_total_price }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="nav-arrow">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </a>
+                                
+                                <a href="{% url 'accounts:wishlist' %}" class="nav-card">
+                                    <div class="nav-icon">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <div class="nav-content">
+                                        <h4>My Wishlist</h4>
+                                        <p>{{ wishlist_items.count }} saved items</p>
+                                        {% if wishlist_items.count > 0 %}
+                                            <span class="nav-price">{{ wishlist_items.count }} products</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="nav-arrow">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </a>
+                                
+                                <a href="{% url 'products:product_list' %}" class="nav-card">
+                                    <div class="nav-icon">
+                                        <i class="fas fa-shopping-bag"></i>
+                                    </div>
+                                    <div class="nav-content">
+                                        <h4>Browse Products</h4>
+                                        <p>Discover new arrivals</p>
+                                    </div>
+                                    <div class="nav-arrow">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </a>
+                                
+                                <a href="{% url 'orders:order_list' %}" class="nav-card">
+                                    <div class="nav-icon">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div class="nav-content">
+                                        <h4>Order History</h4>
+                                        <p>{{ orders.count }} total orders</p>
+                                    </div>
+                                    <div class="nav-arrow">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders Card -->
+                    <div class="profile-card-modern">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <h3 class="card-title">Recent Orders</h3>
+                            <span class="card-badge">{{ orders.count }} total</span>
+                        </div>
+                        <div class="card-body">
+                            {% if recent_orders %}
+                                <div class="orders-list-modern">
+                                    {% for order in recent_orders %}
+                                    <div class="order-card-modern">
+                                        <div class="order-header-modern">
+                                            <div class="order-info-modern">
+                                                <h4 class="order-number">Order #{{ order.order_number }}</h4>
+                                                <p class="order-date">{{ order.created_at|date:"F d, Y" }}</p>
+                                            </div>
+                                            <div class="order-status-modern">
+                                                <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="order-items-modern">
+                                            {% for item in order.items.all %}
+                                            <div class="order-item-modern">
+                                                <div class="order-item-image-modern">
+                                                    {% if item.product.images.first %}
+                                                        <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
+                                                    {% else %}
+                                                        <img src="{% static 'images/placeholder-product.jpg' %}" alt="{{ item.product.name }}">
+                                                    {% endif %}
+                                                </div>
+                                                <div class="order-item-details-modern">
+                                                    <h5 class="order-item-name">{{ item.product.name }}</h5>
+                                                    <p class="order-item-quantity">Qty: {{ item.quantity }} × ${{ item.price }}</p>
+                                                </div>
+                                                <div class="order-item-total-modern">
+                                                    ${{ item.get_total_price }}
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="order-footer-modern">
+                                            <div class="order-total-modern">
+                                                <strong>Total: ${{ order.total_price }}</strong>
+                                            </div>
+                                            <a href="{% url 'orders:order_detail' order.id %}" class="btn-modern btn-outline-modern btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                                <span>View Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% if orders.count > 5 %}
+                                <div class="card-footer">
+                                    <a href="{% url 'orders:order_list' %}" class="btn-modern btn-outline-modern">
+                                        <i class="fas fa-list"></i>
+                                        <span>View All Orders</span>
+                                    </a>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="empty-state-modern">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <p>You haven't placed any orders yet</p>
+                                    <a href="{% url 'products:product_list' %}" class="btn-modern btn-outline-modern">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        <span>Start Shopping</span>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Modern Profile Page Styles */
+.profile-page {
+    min-height: 100vh;
+    padding-top: 80px;
+    background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-green) 50%, var(--charcoal) 100%);
+}
+
+/* Modern Header Styles */
+.profile-header-modern {
+    position: relative;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 16px;
+}
+
+.header-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+}
+
+.profile-avatar-section {
+    flex-shrink: 0;
+}
+
+.avatar-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--gold);
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mid) 0%, var(--mid2) 100%);
+    border: 4px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 48px;
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+}
+
+.avatar-edit {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.avatar-edit:hover {
+    transform: scale(1.1);
+    background: var(--gold-shine);
+}
+
+.profile-info-section {
+    flex: 1;
+}
+
+.profile-welcome {
+    margin-bottom: 30px;
+}
+
+.profile-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.profile-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+}
+
+.profile-email {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.profile-member {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+.profile-stats-modern {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 150px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+    border-color: var(--gold);
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 16px;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    display: block;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    line-height: 1;
+}
+
+.stat-label {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Modern Content Layout */
+.profile-content-modern {
+    margin-bottom: 40px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Modern Card Styles */
+.profile-card-modern {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.profile-card-modern:hover {
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.card-header {
+    background: rgba(255, 215, 0, 0.05);
+    padding: 20px 25px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 16px;
+}
+
+.card-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin: 0;
+    letter-spacing: 0.05em;
+}
+
+.card-badge {
+    margin-left: auto;
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.card-body {
+    padding: 25px;
+}
+
+.card-footer {
+    background: rgba(255, 215, 0, 0.02);
+    padding: 15px 25px;
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+    text-align: center;
+}
+
+/* Modern Form Styles */
+.profile-form, .address-form {
+    margin: 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label-modern {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-label-modern i {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--gold);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.checkbox-label i {
+    color: var(--gold);
+    font-size: 14px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.btn-primary-modern {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.btn-primary-modern:hover {
+    background: var(--gold-shine);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+}
+
+.btn-outline-modern {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.btn-outline-modern:hover {
+    background: var(--gold);
+    color: var(--black);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+}
+
+/* Modern Items Grid */
+.items-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.item-card-modern {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.item-card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.item-image-modern {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+}
+
+.item-image-modern img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.item-card-modern:hover .item-image-modern img {
+    transform: scale(1.05);
+}
+
+.item-quantity-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--gold);
+    color: var(--black);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.item-wishlist-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.item-details-modern {
+    padding: 15px;
+}
+
+.item-name {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.item-category {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.item-variant {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.item-price {
+    font-family: 'Bebas Neue', cursive;
+    color: var(--gold);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+}
+
+/* Modern Empty State */
+.empty-state-modern {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+}
+
+.empty-icon {
+    margin-bottom: 20px;
+}
+
+.empty-icon i {
+    font-size: 48px;
+    color: var(--text-dim);
+    opacity: 0.6;
+}
+
+.empty-state-modern p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* Modern Address Styles */
+.addresses-list {
+    margin-bottom: 30px;
+}
+
+.address-card-modern {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.address-card-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.address-card-modern.default-address {
+    border-color: var(--gold);
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.address-header-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.address-type {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Bebas Neue', cursive;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+}
+
+.address-type i {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.default-badge-modern {
+    background: var(--gold);
+    color: var(--black);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.default-badge-modern i {
+    font-size: 10px;
+}
+
+.address-details-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.address-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+.address-line i {
+    width: 16px;
+    color: var(--gold);
+    opacity: 0.6;
+}
+
+.add-address-modern {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.add-address-title {
+    font-family: 'Bebas Neue', cursive;
+    color: var(--gold);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-address-title i {
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+/* Modern Orders Styles */
+.orders-list-modern {
+    margin-bottom: 20px;
+}
+
+.order-card-modern {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.order-card-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.order-header-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.order-info-modern {
+    flex: 1;
+}
+
+.order-number {
+    font-family: 'Bebas Neue', cursive;
+    color: var(--gold);
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+    letter-spacing: 0.05em;
+}
+
+.order-date {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+.order-status-modern {
+    margin-left: auto;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+}
+
+.status-pending {
+    background: var(--mid);
+    color: var(--text-dim);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.status-confirmed {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.status-processing {
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.status-shipped {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+}
+
+.status-delivered {
+    background: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+.status-cancelled {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.order-items-modern {
+    margin-bottom: 20px;
+}
+
+.order-item-modern {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.05);
+}
+
+.order-item-modern:last-child {
+    border-bottom: none;
+}
+
+.order-item-image-modern {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.order-item-image-modern img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.order-item-details-modern {
+    flex: 1;
+}
+
+.order-item-name {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.order-item-quantity {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.order-item-total-modern {
+    font-family: 'Bebas Neue', cursive;
+    color: var(--gold);
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.order-footer-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.order-total-modern {
+    font-family: 'Bebas Neue', cursive;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+}
+
+/* Navigation Cards Styles */
+.navigation-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.nav-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-card:hover::before {
+    left: 100%;
+}
+
+.nav-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.nav-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.nav-content {
+    flex: 1;
+}
+
+.nav-content h4 {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.nav-content p {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.nav-price {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: 'Bebas Neue', cursive;
+    color: var(--gold);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+}
+
+.nav-arrow {
+    color: var(--text-dim);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.nav-card:hover .nav-arrow {
+    color: var(--gold);
+    transform: translateX(3px);
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 1200px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-stats-modern {
+        flex-wrap: wrap;
+    }
+    
+    .stat-card {
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 992px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .avatar-container {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .profile-name {
+        font-size: 2.5rem;
+    }
+    
+    .profile-stats-modern {
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-page {
+        padding-top: 60px;
+    }
+    
+    .header-content {
+        padding: 30px 20px;
+    }
+    
+    .avatar-container {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .avatar-image,
+    .avatar-placeholder {
+        border-width: 3px;
+    }
+    
+    .profile-name {
+        font-size: 2rem;
+    }
+    
+    .profile-stats-modern {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .stat-card {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .card-header {
+        padding: 15px 20px;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .nav-card {
+        padding: 15px;
+    }
+    
+    .nav-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+    
+    .nav-content h4 {
+        font-size: 1rem;
+    }
+    
+    .nav-content p {
+        font-size: 0.8rem;
+    }
+    
+    .nav-price {
+        font-size: 0.8rem;
+    }
+    
+    .order-header-modern {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .order-footer-modern {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .order-status-modern {
+        margin-left: 0;
+    }
+    
+    .address-header-modern {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .address-details-modern {
+        text-align: center;
+    }
+    
+    .address-line {
+        justify-content: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-modern {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-page {
+        padding-top: 50px;
+    }
+    
+    .header-content {
+        padding: 20px 15px;
+    }
+    
+    .avatar-container {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .avatar-image,
+    .avatar-placeholder {
+        border-width: 2px;
+        font-size: 36px;
+    }
+    
+    .avatar-edit {
+        width: 30px;
+        height: 30px;
+        bottom: 0;
+        right: 0;
+    }
+    
+    .profile-name {
+        font-size: 1.8rem;
+    }
+    
+    .profile-email {
+        font-size: 1rem;
+    }
+    
+    .profile-member {
+        font-size: 0.8rem;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .card-header {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .card-title {
+        font-size: 1.3rem;
+    }
+    
+    .card-badge {
+        margin-left: 0;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .card-footer {
+        padding: 12px 15px;
+    }
+    
+    .nav-card {
+        padding: 12px;
+        gap: 12px;
+    }
+    
+    .nav-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+    
+    .nav-content h4 {
+        font-size: 0.9rem;
+    }
+    
+    .nav-content p {
+        font-size: 0.7rem;
+    }
+    
+    .nav-price {
+        font-size: 0.7rem;
+    }
+    
+    .form-label-modern {
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+    }
+    
+    .form-control {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .order-card-modern {
+        padding: 15px;
+    }
+    
+    .order-number {
+        font-size: 1.1rem;
+    }
+    
+    .order-date {
+        font-size: 0.8rem;
+    }
+    
+    .order-item-modern {
+        gap: 10px;
+        padding: 8px 0;
+    }
+    
+    .order-item-image-modern {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .order-item-name {
+        font-size: 0.8rem;
+    }
+    
+    .order-item-quantity {
+        font-size: 0.7rem;
+    }
+    
+    .order-item-total-modern {
+        font-size: 0.9rem;
+    }
+    
+    .order-total-modern {
+        font-size: 1rem;
+    }
+    
+    .address-card-modern {
+        padding: 15px;
+    }
+    
+    .address-type {
+        font-size: 1rem;
+    }
+    
+    .address-line {
+        font-size: 0.8rem;
+    }
+    
+    .default-badge-modern {
+        font-size: 0.6rem;
+        padding: 3px 8px;
+    }
+    
+    .add-address-title {
+        font-size: 1.3rem;
+    }
+    
+    .empty-state-modern {
+        padding: 40px 15px;
+    }
+    
+    .empty-icon i {
+        font-size: 36px;
+    }
+    
+    .empty-state-modern p {
+        font-size: 0.9rem;
+    }
+    
+    .btn-modern {
+        padding: 10px 20px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 0.7rem;
+    }
+}
+</style>
+{% endblock %}

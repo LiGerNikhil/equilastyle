@@ -1,0 +1,2901 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EQUILA - Premium Fashion & Footwear{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ═══════════════ HERO 3D SCROLL ═══════════════ */
+    #hero-canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 1;
+        background: linear-gradient(135deg, #1A0000 0%, #6B0000 25%, #AA0000 50%, #CC0000 75%, #4B0000 100%);
+        box-shadow: inset 0 0 100px rgba(255, 215, 0, 0.1);
+    }
+    
+    /* Mobile-specific gradient with dark red and royal dark green */
+    @media (max-width: 768px) {
+        #hero-canvas-container {
+            background: linear-gradient(135deg, #1A0000 0%, #2B4D3D 25%, #1F3A2E 50%, #6B0000 75%, #4B0000 100%);
+            box-shadow: inset 0 0 80px rgba(255, 215, 0, 0.15);
+        }
+    }
+
+    #hero-canvas {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: relative;
+        z-index: 2;
+    }
+
+    .story-trigger {
+        height: 100vh;
+        width: 100%;
+        position: relative;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        padding-left: 10%;
+        z-index: 10;
+    }
+
+    .story-content {
+        max-width: 600px;
+        padding: 40px;
+        background: linear-gradient(
+            135deg,
+            rgba(26, 46, 29, 0.35) 0%,
+            rgba(0, 0, 0, 0.45) 50%,
+            rgba(10, 20, 10, 0.4) 100%
+        );
+        backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+        -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+        border: 2px solid rgba(255, 215, 0, 0.6);
+        border-radius: 0;
+        opacity: 0;
+        transform: translateX(-50px);
+        pointer-events: auto;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: 520px;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.5),
+            0 0 20px rgba(255, 215, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+    }
+
+    .story-content:hover {
+        transform: translateX(0) perspective(1000px) rotateY(-5deg) rotateX(3deg) scale(1.02);
+        box-shadow: 
+            12px 12px 40px rgba(0, 0, 0, 0.6),
+            0 0 30px rgba(255, 215, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Background distortion layer for story cards */
+    .story-content::before {
+        content: '';
+        position: absolute;
+        inset: -50%;
+        background: 
+            radial-gradient(circle at 30% 30%, rgba(43, 77, 61, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 70% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        background-size: cover, cover, 128px 128px;
+        opacity: 0.4;
+        mix-blend-mode: overlay;
+        animation: distortionShift 8s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Animated gradient overlay for distortion effect */
+    .story-content::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 215, 0, 0.03) 0%,
+            transparent 30%,
+            transparent 70%,
+            rgba(43, 77, 61, 0.05) 100%
+        );
+        border-radius: 16px;
+        pointer-events: none;
+        z-index: 1;
+        animation: shimmerDistort 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes distortionShift {
+        0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        25% { transform: translate(-2%, 1%) rotate(0.5deg) scale(1.02); }
+        50% { transform: translate(1%, -1%) rotate(-0.3deg) scale(0.98); }
+        75% { transform: translate(-1%, 2%) rotate(0.2deg) scale(1.01); }
+    }
+
+    @keyframes shimmerDistort {
+        0% { opacity: 0.3; }
+        50% { opacity: 0.6; }
+        100% { opacity: 0.3; }
+    }
+
+    /* ═══════════════ 3D PINNED SCROLL STORY CARDS ═══════════════ */
+    #story-scroll-container {
+        position: relative;
+        z-index: 15;
+    }
+
+    #story-pinned {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1200px;
+        transform-style: preserve-3d;
+        overflow: hidden;
+    }
+
+    .story-card {
+        position: absolute;
+        width: 90%;
+        max-width: 520px;
+        height: 70vh;
+        max-height: 640px;
+        background: linear-gradient(
+            135deg,
+            rgba(26, 46, 29, 0.35) 0%,
+            rgba(0, 0, 0, 0.45) 50%,
+            rgba(10, 20, 10, 0.4) 100%
+        );
+        backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+        -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+        border: 2px solid rgba(255, 215, 0, 0.6);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.5),
+            0 0 20px rgba(255, 215, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transform-style: preserve-3d;
+        will-change: transform, opacity;
+        z-index: 20;
+    }
+
+    .story-card .story-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    .story-card .story-text {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 30px;
+        z-index: 2;
+        background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 45%, transparent 100%);
+    }
+
+    .story-card .story-text h2 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(36px, 6vw, 64px);
+        color: var(--white);
+        margin-bottom: 10px;
+        line-height: 0.95;
+        letter-spacing: 2px;
+    }
+
+    .story-card .story-text h2 span {
+        color: var(--gold-shine);
+    }
+
+    .story-card .story-text p {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-size: 1.15rem;
+        color: rgba(245, 245, 245, 0.75);
+        line-height: 1.4;
+        margin-bottom: 16px;
+    }
+
+    .story-card .story-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        opacity: 1;
+        max-height: none;
+        overflow: visible;
+    }
+
+    /* Three.js Particles Canvas */
+    #particles-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    /* Scroll progress indicator */
+    .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-shine));
+        z-index: 1000;
+        transform-origin: left;
+        transform: scaleX(0);
+    }
+
+    .story-content > h2,
+    .story-content > p,
+    .story-content > .story-actions {
+        position: relative;
+        z-index: 2;
+    }
+
+    .story-content h2 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(50px, 8vw, 100px);
+        color: var(--white);
+        margin-bottom: 20px;
+        line-height: 0.9;
+        letter-spacing: 2px;
+    }
+
+    .story-content h2 span {
+        color: var(--gold-shine);
+    }
+
+    .story-content p {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-size: 1.5rem;
+        color: rgba(245, 245, 245, 0.7);
+        line-height: 1.4;
+        margin-bottom: 20px;
+    }
+
+    .story-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    .story-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .story-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.05) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.4);
+        color: var(--gold);
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 14px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 2;
+    }
+
+    .story-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+        transition: left 0.5s ease;
+        z-index: -1;
+    }
+
+    .story-btn:hover {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(255, 215, 0, 0.1) 100%);
+        border-color: var(--gold);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+    }
+
+    .story-btn:hover::before {
+        left: 100%;
+    }
+
+    .story-btn i {
+        font-size: 12px;
+        transition: transform 0.3s ease;
+    }
+
+    .story-btn:hover i {
+        transform: translateX(4px);
+    }
+
+    /* ═══════════════ SHOE VAULT ═══════════════ */
+    #vault { padding: 130px 0 100px; position: relative; z-index: 20; background: var(--black); }
+    .section-head { padding: 0 60px; margin-bottom: 70px; }
+    .s-eyebrow { font-size: 10px; letter-spacing: .5em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; display: flex; align-items: center; gap: 14px; }
+    .s-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
+    .s-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 9vw, 130px); line-height: .88; letter-spacing: .03em; color: var(--white); }
+    .s-title em { font-style: italic; font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: .68em; }
+
+    .vault-outer { overflow: hidden; padding: 0 60px 20px; cursor: grab; }
+    .vault-track { display: flex; gap: 20px; width: max-content; padding-bottom: 8px; }
+
+    .v-card { width: 300px; flex-shrink: 0; position: relative; background: var(--dark-green); overflow: hidden; border: 1px solid rgba(255, 215, 0, 0.1); transition: border-color .4s; }
+    .v-card:hover { border-color: rgba(255, 215, 0, 0.4); }
+    .v-card-photo { width: 100%; height: 320px; overflow: hidden; position: relative; }
+    .v-card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s; }
+    .v-card:hover .v-card-photo img { transform: scale(1.08); }
+    .v-badge { position: absolute; top: 16px; left: 16px; font-size: 8px; letter-spacing: .3em; text-transform: uppercase; padding: 5px 12px; background: var(--gold); color: var(--black); }
+    .v-card-body { padding: 24px 24px 28px; }
+    .v-brand { font-size: 9px; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .v-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--white); margin-bottom: 4px; }
+    .v-price { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--gold); }
+    .v-btn { font-size: 9px; letter-spacing: .22em; text-transform: uppercase; padding: 9px 20px; border: 1px solid rgba(255, 215, 0, 0.3); color: var(--gold); background: none; }
+
+    /* ═══════════════ MARQUEE ═══════════════ */
+    .marquee-wrap { padding: 20px 0; overflow: hidden; background: var(--dark-green); border-top: 1px solid rgba(255, 215, 0, 0.08); border-bottom: 1px solid rgba(255, 215, 0, 0.08); white-space: nowrap; }
+    .mq-track { display: inline-flex; animation: mq 25s linear infinite; }
+    @keyframes mq { to { transform: translateX(-50%); } }
+    .mq-item { display: inline-flex; align-items: center; gap: 28px; padding: 0 28px; font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: .3em; color: rgba(245, 245, 245, 0.3); }
+    .mq-item.gold { color: var(--gold); }
+    .mq-sep { width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 215, 0, 0.4); flex-shrink: 0; }
+
+    /* ═══════════════ LOOKBOOK ═══════════════ */
+    #lookbook { padding: 130px 60px; background: var(--black); position: relative; z-index: 20; }
+    .lb-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 80px; }
+    .lb-item { 
+        position: relative; 
+        overflow: hidden; 
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(10, 46, 29, 0.3) 0%, rgba(26, 26, 26, 0.5) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .lb-item:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(255, 215, 0, 0.15);
+        border-color: var(--gold);
+    }
+    .lb-item img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: brightness(0.95) contrast(1.1);
+    }
+    .lb-item:hover img {
+        transform: scale(1.08);
+        filter: brightness(1) contrast(1.2);
+    }
+    .lb-overlay { 
+        position: absolute; 
+        inset: 0; 
+        background: linear-gradient(135deg, 
+            rgba(0,0,0,0.1) 0%, 
+            rgba(0,0,0,0.3) 30%, 
+            rgba(0,0,0,0.7) 70%, 
+            rgba(0,0,0,0.9) 100%
+        ); 
+        transition: all 0.4s ease;
+    }
+    .lb-item:hover .lb-overlay {
+        background: linear-gradient(135deg, 
+            rgba(0,0,0,0.2) 0%, 
+            rgba(0,0,0,0.4) 30%, 
+            rgba(0,0,0,0.8) 70%, 
+            rgba(0,0,0,0.95) 100%
+        );
+    }
+    .lb-info { 
+        position: absolute; 
+        bottom: 24px; 
+        left: 24px; 
+        right: 24px;
+        z-index: 3;
+        transform: translateY(20px);
+        opacity: 0.9;
+        transition: all 0.4s ease;
+    }
+    .lb-item:hover .lb-info {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    .lb-name { 
+        font-family: 'Bebas Neue', sans-serif; 
+        font-size: 2.2rem; 
+        color: var(--white); 
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        letter-spacing: 0.02em;
+        line-height: 1.1;
+        margin-bottom: 8px;
+    }
+    .lb-a { 
+        grid-column: 1/5; 
+        grid-row: 1/3; 
+        min-height: 560px; 
+    }
+    .lb-b { 
+        grid-column: 5/9; 
+        min-height: 260px; 
+    }
+    .lb-c { 
+        grid-column: 9/13; 
+        min-height: 260px; 
+    }
+    .lb-d { 
+        grid-column: 5/13; 
+        min-height: 284px; 
+    }
+
+    /* ═══════════════ ANTI-GRAVITY ═══════════════ */
+    .ag-container { position: relative; min-height: 100vh; background: var(--black); padding: 100px 0; overflow: hidden; z-index: 20; }
+    .ag-card { position: absolute; width: 300px; background: var(--dark-green); border: 1px solid rgba(255, 215, 0, 0.2); padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    .ag-card img { width: 100%; height: 200px; object-fit: cover; margin-bottom: 20px; }
+    .ag-card h4 { font-family: 'Bebas Neue', sans-serif; color: var(--gold-shine); letter-spacing: 1px; }
+
+    .scroll-down-hint {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 215, 0, 0.9);
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        z-index: 25;
+        pointer-events: none;
+        animation: pulse 2s ease-in-out infinite;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+    }
+
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 768px) {
+        /* Hero Section */
+        .story-content {
+            max-width: 90%;
+            padding: 30px 20px;
+            margin: 0 auto;
+            min-height: 420px;
+        }
+
+        .story-content h2 {
+            font-size: clamp(32px, 10vw, 60px);
+            line-height: 1;
+        }
+
+        .story-content p {
+            font-size: 1.2rem;
+            line-height: 1.3;
+        }
+
+        .story-actions {
+            gap: 10px;
+        }
+
+        .story-btn {
+            padding: 8px 18px;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Shoe Vault */
+        #vault { padding: 80px 20px 60px; }
+        .section-head { padding: 0 20px; margin-bottom: 40px; }
+        .s-title { font-size: clamp(40px, 8vw, 80px); }
+        .vault-outer { padding: 0 20px 20px; }
+        .v-card { width: 280px; }
+        .v-card-photo { height: 280px; }
+        .v-card-body { padding: 20px; }
+        .v-name { font-size: 18px; }
+        .v-price { font-size: 22px; }
+
+        /* Marquee */
+        .mq-item { font-size: 12px; padding: 0 20px; gap: 20px; }
+
+        /* Lookbook */
+        #lookbook { padding: 80px 20px; }
+        .lb-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 40px; }
+        .lb-a { grid-column: 1/3; grid-row: 1/3; min-height: 300px; }
+        .lb-b { grid-column: 1/3; min-height: 200px; }
+        .lb-c { grid-column: 1/3; min-height: 200px; }
+        .lb-d { grid-column: 1/3; min-height: 220px; }
+        .lb-info { bottom: 16px; left: 16px; }
+        .lb-name { font-size: 18px; }
+
+        /* Anti-Gravity */
+        .ag-container { padding: 80px 20px; }
+        .ag-card { 
+            position: relative; 
+            width: 100%; 
+            max-width: 320px; 
+            margin: 20px auto;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+        }
+
+        /* Stats */
+        #stats { grid-template-columns: repeat(2, 1fr); }
+        .stat-block { padding: 40px 20px; }
+        .stat-n { font-size: clamp(40px, 6vw, 60px); }
+
+        /* CTA */
+        .cta-section { padding: 80px 20px; }
+        .cta-section h2 { font-size: clamp(32px, 6vw, 48px); }
+        .cta-section p { font-size: 1.4rem; }
+        .cta-section .btn-gold { padding: 16px 40px; font-size: 12px; }
+
+        /* Scroll hint */
+        .scroll-down-hint { 
+            font-size: 0.6rem; 
+            letter-spacing: 2px; 
+            bottom: 20px;
+        }
+    }
+
+    /* Mobile: Pinned Story Cards */
+    @media (max-width: 768px) {
+        .story-card {
+            width: 92%;
+            height: 65vh;
+            max-height: 500px;
+            border-radius: 16px;
+        }
+
+        .story-card .story-text {
+            padding: 20px;
+        }
+
+        .story-card .story-text h2 {
+            font-size: clamp(28px, 8vw, 44px);
+            margin-bottom: 8px;
+        }
+
+        .story-card .story-text p {
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .story-card .story-actions {
+            gap: 8px;
+        }
+
+        .story-btn {
+            padding: 8px 16px;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        /* Extra small mobile */
+        .story-content { padding: 20px 15px; }
+        .story-content h2 { font-size: clamp(28px, 8vw, 48px); }
+        .story-content p { font-size: 1.1rem; }
+
+        #vault { padding: 60px 15px 40px; }
+        .v-card { width: 100%; }
+        .v-card-photo { height: 240px; }
+
+        #lookbook { padding: 60px 15px; }
+        .lb-grid { grid-template-columns: 1fr; }
+        .lb-a, .lb-b, .lb-c, .lb-d { 
+            grid-column: 1; 
+            min-height: 200px; 
+        }
+
+        .ag-container { padding: 60px 15px; }
+
+        #stats { grid-template-columns: 1fr; }
+        .stat-block { padding: 30px 15px; border-right: none !important; border-bottom: 1px solid rgba(255, 215, 0, 0.1); }
+
+        .cta-section { padding: 60px 15px; }
+        .cta-section .btn-gold { width: 100%; text-align: center; }
+    }
+</style>
+
+<!-- Canvas Container Styles -->
+<style>
+    #hero-canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 80px); /* Reduced height to leave space for footer */
+        z-index: 1;
+        background: var(--black);
+    }
+    
+    #hero-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    
+    .scroll-down-hint {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        color: var(--gold);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 12px;
+        letter-spacing: 2px;
+        padding: 12px 24px;
+        border-radius: 30px;
+        background: linear-gradient(135deg, var(--black) 0%, var(--dark-green) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        opacity: 0.9;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+    }
+    
+    #story-container {
+        position: relative;
+        z-index: 2;
+        background: transparent;
+        margin-bottom: 80px; /* Add space for footer */
+    }
+    
+    .story-content {
+        background: linear-gradient(
+            135deg,
+            rgba(26, 46, 29, 0.35) 0%,
+            rgba(0, 0, 0, 0.45) 50%,
+            rgba(10, 20, 10, 0.4) 100%
+        );
+        backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+        -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+        border: 2px solid rgba(255, 215, 0, 0.6);
+        padding: 40px;
+        border-radius: 0;
+        color: var(--white);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.5),
+            0 0 20px rgba(255, 215, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+    }
+
+    .story-content:hover {
+        transform: perspective(1000px) rotateY(-5deg) rotateX(3deg) scale(1.02);
+        box-shadow: 
+            12px 12px 40px rgba(0, 0, 0, 0.6),
+            0 0 30px rgba(255, 215, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .story-content::before {
+        content: '';
+        position: absolute;
+        inset: -50%;
+        background: 
+            radial-gradient(circle at 30% 30%, rgba(43, 77, 61, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 70% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        background-size: cover, cover, 128px 128px;
+        opacity: 0.4;
+        mix-blend-mode: overlay;
+        animation: distortionShift 8s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .story-content::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: 
+            linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.05) 100%),
+            linear-gradient(135deg, rgba(255, 215, 0, 0.03) 0%, transparent 30%, transparent 70%, rgba(43, 77, 61, 0.05) 100%);
+        pointer-events: none;
+        z-index: 1;
+        transition: background 0.4s ease;
+        animation: shimmerDistort 6s ease-in-out infinite alternate;
+    }
+
+    .story-content:hover::after {
+        background: 
+            linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.4) 100%),
+            linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, transparent 30%, transparent 70%, rgba(43, 77, 61, 0.08) 100%);
+    }
+
+    .story-content:hover .story-actions {
+        opacity: 1;
+        max-height: 80px;
+        margin-top: 16px;
+    }
+
+    .story-content > h2,
+    .story-content > p,
+    .story-content > .story-actions {
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Ensure footer is visible above canvas */
+    footer {
+        position: relative;
+        z-index: 100 !important;
+        background: var(--black) !important;
+    }
+    
+    .material-footer {
+        position: relative;
+        z-index: 100 !important;
+    }
+    
+    /* Shoes Showcase Styles */
+    .shoes-showcase {
+        padding: 100px 0;
+        background: var(--black);
+    }
+    
+    .shoes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-auto-rows: minmax(320px, auto);
+        gap: 20px;
+        margin-top: 50px;
+    }
+    
+    .shoe-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        aspect-ratio: 1;
+    }
+    
+    .shoe-item:nth-child(1),
+    .shoe-item:nth-child(4) {
+        grid-column: span 2;
+        grid-row: span 2;
+        aspect-ratio: auto;
+    }
+    
+    .shoe-frame {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border: 3px solid var(--gold);
+        border-radius: 15px;
+        overflow: hidden;
+        background: var(--dark-green);
+        transition: all 0.3s ease;
+    }
+    
+    .shoe-frame:hover {
+        transform: scale(1.02);
+        border-color: var(--gold-shine);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+    
+    .shoe-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 40%;
+        transition: transform 0.3s ease;
+    }
+    
+    .shoe-frame:hover .shoe-img {
+        transform: scale(1.1);
+    }
+    
+    .shoe-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
+        padding: 30px 20px 20px;
+        transform: translateY(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .shoe-overlay h4 {
+        color: var(--gold);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .shoe-overlay p {
+        color: var(--white);
+        font-size: 14px;
+        margin: 0;
+    }
+    
+    /* Tablet Responsive */
+    @media (max-width: 1024px) {
+        .shoes-grid {
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: minmax(260px, auto);
+            gap: 15px;
+        }
+        
+        .shoe-item:nth-child(1),
+        .shoe-item:nth-child(4) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .shoe-overlay h4 {
+            font-size: 22px;
+        }
+        
+        .shoe-overlay p {
+            font-size: 13px;
+        }
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .shoes-showcase {
+            padding: 60px 15px;
+        }
+        
+        .shoes-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: minmax(200px, auto);
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .shoe-item:nth-child(1),
+        .shoe-item:nth-child(4) {
+            grid-column: span 2;
+            grid-row: span 1;
+            aspect-ratio: 16 / 10;
+        }
+        
+        .shoe-item {
+            aspect-ratio: 1;
+        }
+        
+        .shoe-overlay {
+            padding: 20px 12px 12px;
+        }
+        
+        .shoe-overlay h4 {
+            font-size: 16px;
+        }
+        
+        .shoe-overlay p {
+            font-size: 11px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .shoes-showcase {
+            padding: 40px 10px;
+        }
+        
+        .shoes-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: minmax(170px, auto);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .shoe-item:nth-child(1),
+        .shoe-item:nth-child(4) {
+            grid-column: span 2;
+            grid-row: span 1;
+            aspect-ratio: 16 / 10;
+        }
+        
+        .shoe-item {
+            aspect-ratio: 1;
+        }
+        
+        .shoe-frame {
+            border-width: 2px;
+            border-radius: 12px;
+        }
+        
+        .shoe-overlay {
+            padding: 15px 10px 10px;
+        }
+        
+        .shoe-overlay h4 {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .shoe-overlay p {
+            font-size: 10px;
+        }
+    }
+    
+    @media (max-width: 360px) {
+        .shoes-grid {
+            grid-template-columns: 1fr;
+            grid-auto-rows: minmax(220px, auto);
+            gap: 10px;
+        }
+        
+        .shoe-item,
+        .shoe-item:nth-child(1),
+        .shoe-item:nth-child(4) {
+            grid-column: span 1;
+            grid-row: span 1;
+            aspect-ratio: 16 / 10;
+        }
+    }
+    
+    /* Clothing Wear Styles */
+    .clothing-wear {
+        padding: 100px 0;
+        background: var(--black);
+    }
+    
+    .clothing-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 320px;
+        gap: 25px;
+        margin-top: 50px;
+    }
+    
+    .clothing-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+    }
+    
+    .clothing-large {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+    
+    .clothing-small {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    
+    .clothing-frame {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border: 3px solid var(--gold);
+        border-radius: 15px;
+        overflow: hidden;
+        background: var(--dark-green);
+        transition: all 0.3s ease;
+    }
+    
+    .clothing-frame:hover {
+        transform: scale(1.02);
+        border-color: var(--gold-shine);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+    
+    .clothing-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .clothing-frame:hover .clothing-img {
+        transform: scale(1.1);
+    }
+    
+    .clothing-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .clothing-frame:hover .clothing-overlay {
+        transform: translateY(0);
+    }
+    
+    .clothing-overlay h4 {
+        color: var(--gold);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .clothing-overlay p {
+        color: var(--white);
+        font-size: 14px;
+        margin: 0;
+    }
+    
+    /* Mobile Responsive for Clothing */
+    @media (max-width: 768px) {
+        .clothing-wear {
+            padding: 60px 0;
+        }
+        
+        .clothing-grid {
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 200px;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .clothing-large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .clothing-small {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .clothing-overlay h4 {
+            font-size: 18px;
+        }
+        
+        .clothing-overlay p {
+            font-size: 12px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .clothing-wear {
+            padding: 40px 0;
+        }
+        
+        .clothing-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 180px;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        /* Create odd layout pattern for mobile */
+        .clothing-item:nth-child(1) {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        
+        .clothing-item:nth-child(2) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .clothing-item:nth-child(3) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .clothing-item:nth-child(4) {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        
+        .clothing-item:nth-child(5) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .clothing-large,
+        .clothing-small {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .clothing-frame {
+            border-width: 2px;
+        }
+        
+        .clothing-overlay {
+            padding: 15px;
+        }
+        
+        .clothing-overlay h4 {
+            font-size: 16px;
+        }
+        
+        .clothing-overlay p {
+            font-size: 11px;
+        }
+    }
+    
+    @media (max-width: 360px) {
+        .clothing-grid {
+            grid-template-columns: 1fr;
+            grid-auto-rows: 220px;
+            gap: 10px;
+        }
+        
+        .clothing-item:nth-child(odd) {
+            grid-row: span 1;
+        }
+        
+        .clothing-item:nth-child(even) {
+            grid-row: span 1;
+        }
+        
+        .clothing-overlay h4 {
+            font-size: 14px;
+        }
+        
+        .clothing-overlay p {
+            font-size: 10px;
+        }
+    }
+    
+    /* Kids Wear Styles */
+    .kids-wear {
+        padding: 100px 0;
+        background: var(--black);
+    }
+    
+    .kids-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 300px;
+        gap: 25px;
+        margin-top: 50px;
+    }
+    
+    .kids-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+    }
+    
+    .kids-large {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+    
+    .kids-small {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    
+    .kids-frame {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border: 3px solid var(--gold);
+        border-radius: 15px;
+        overflow: hidden;
+        background: var(--dark-green);
+        transition: all 0.3s ease;
+    }
+    
+    .kids-frame:hover {
+        transform: scale(1.02);
+        border-color: var(--gold-shine);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+    
+    .kids-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .kids-frame:hover .kids-img {
+        transform: scale(1.1);
+    }
+    
+    .kids-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .kids-frame:hover .kids-overlay {
+        transform: translateY(0);
+    }
+    
+    .kids-overlay h4 {
+        color: var(--gold);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .kids-overlay p {
+        color: var(--white);
+        font-size: 14px;
+        margin: 0;
+    }
+    
+    /* Mobile Responsive for Kids */
+    @media (max-width: 768px) {
+        .kids-wear {
+            padding: 60px 0;
+        }
+        
+        .kids-grid {
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 200px;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .kids-large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .kids-small {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .kids-overlay h4 {
+            font-size: 18px;
+        }
+        
+        .kids-overlay p {
+            font-size: 12px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .kids-wear {
+            padding: 40px 0;
+        }
+        
+        .kids-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 180px;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        /* Create odd layout pattern for mobile */
+        .kids-item:nth-child(1) {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        
+        .kids-item:nth-child(2) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .kids-item:nth-child(3) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .kids-item:nth-child(4) {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        
+        .kids-item:nth-child(5) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .kids-item:nth-child(6) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .kids-large,
+        .kids-small {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .kids-frame {
+            border-width: 2px;
+        }
+        
+        .kids-overlay {
+            padding: 15px;
+        }
+        
+        .kids-overlay h4 {
+            font-size: 16px;
+        }
+        
+        .kids-overlay p {
+            font-size: 11px;
+        }
+    }
+    
+    @media (max-width: 360px) {
+        .kids-grid {
+            grid-template-columns: 1fr;
+            grid-auto-rows: 200px;
+            gap: 10px;
+        }
+        
+        .kids-item:nth-child(odd) {
+            grid-row: span 1;
+        }
+        
+        .kids-item:nth-child(even) {
+            grid-row: span 1;
+        }
+        
+        .kids-overlay h4 {
+            font-size: 14px;
+        }
+        
+        .kids-overlay p {
+            font-size: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 3D HERO CANVAS -->
+<div id="hero-canvas-container">
+    <canvas id="hero-canvas"></canvas>
+    <div id="particles-canvas"></div>
+</div>
+
+<div class="scroll-down-hint">Scroll to Experience</div>
+<div class="scroll-progress" id="scroll-progress"></div>
+
+<!-- 3D PINNED HERO STORY CARDS -->
+<div id="story-scroll-container">
+    <div id="story-pinned">
+        <!-- Card 1 -->
+        <div class="story-card" data-index="0">
+            <img src="https://plus.unsplash.com/premium_photo-1680390327010-09e627ebd475?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Premium Sneakers" class="story-image">
+            <div class="story-text">
+                <h2>EQUILA <span>STYLE</span></h2>
+                <p>Premium footwear and apparel crafted by EQUILA STYLE. Every piece, every detail — designed for those who lead.</p>
+                <div class="story-actions">
+                    <a href="{% url 'products:product_list' %}?target_group=MEN" class="story-btn"><i class="fas fa-shopping-bag"></i> Shop Men</a>
+                    <a href="{% url 'products:product_list' %}?target_group=WOMEN" class="story-btn"><i class="fas fa-shopping-bag"></i> Shop Women</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="story-card" data-index="1">
+            <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&h=800&fit=crop" alt="Premium Quality" class="story-image">
+            <div class="story-text">
+                <h2>EQUILA <span>QUALITY</span></h2>
+                <p>Crafted from the world's finest sustainable materials by EQUILA STYLE. Engineered for performance and luxury.</p>
+                <div class="story-actions">
+                    <a href="{% url 'products:product_list' %}?category=shoes" class="story-btn"><i class="fas fa-shoe-prints"></i> Shop Shoes</a>
+                    <a href="{% url 'products:product_list' %}?category=clothing" class="story-btn"><i class="fas fa-tshirt"></i> Shop Clothing</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="story-card" data-index="2">
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=800&fit=crop" alt="Modern Design" class="story-image">
+            <div class="story-text">
+                <h2>EQUILA <span>DESIGN</span></h2>
+                <p>A fusion of architectural innovation and contemporary aesthetics by EQUILA STYLE. Discover the future of fashion.</p>
+                <div class="story-actions">
+                    <a href="{% url 'products:product_list' %}?category=accessories" class="story-btn"><i class="fas fa-gem"></i> Accessories</a>
+                    <a href="{% url 'products:product_list' %}?sort_by=newest" class="story-btn"><i class="fas fa-fire"></i> New Arrivals</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="story-card" data-index="3">
+            <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=800&fit=crop" alt="Exclusive Collection" class="story-image">
+            <div class="story-text">
+                <h2>EQUILA <span>EXCLUSIVE</span></h2>
+                <p>Join the EQUILA STYLE circle. Get exclusive access to limited edition pieces before they hit the market.</p>
+                <div class="story-actions">
+                    <a href="{% url 'products:product_list' %}?target_group=KIDS" class="story-btn"><i class="fas fa-child"></i> Shop Kids</a>
+                    <a href="{% url 'products:product_list' %}" class="story-btn"><i class="fas fa-star"></i> All Products</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="story-card" data-index="4">
+            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=800&fit=crop" alt="Lifestyle Fashion" class="story-image">
+            <div class="story-text">
+                <h2>EQUILA <span>LIFESTYLE</span></h2>
+                <p>The future of fashion is here with EQUILA STYLE. Experience the revolution in premium clothing and footwear.</p>
+                <div class="story-actions">
+                    <a href="{% url 'products:product_list' %}?sort_by=price_low" class="story-btn"><i class="fas fa-tags"></i> Best Deals</a>
+                    <a href="{% url 'products:product_list' %}?sort_by=bestselling" class="story-btn"><i class="fas fa-crown"></i> Bestsellers</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SHOES SHOWCASE SECTION -->
+<section class="shoes-showcase" style="position: relative; z-index: 20; background: var(--black); padding: 100px 0;">
+    <div class="container">
+        <div class="section-head text-center mb-5">
+            <div class="s-eyebrow justify-content-center">Premium Collection</div>
+            <h2 class="s-title">Featured Footwear</h2>
+        </div>
+        
+        <div class="shoes-grid">
+            <!-- Big Image -->
+            <div class="shoe-item shoe-large">
+                <div class="shoe-frame">
+                    <img src="{% static 'images/shoes/Airjordan.jpg' %}" alt="EQUILA STYLE" class="shoe-img">
+                    <div class="shoe-overlay">
+                        <h4>EQUILA STYLE</h4>
+                        <p>Legendary Performance</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Images -->
+            <div class="shoe-item shoe-small">
+                <div class="shoe-frame">
+                    <img src="{% static 'images/shoes/Nike.jpg' %}" alt="EQUILA STYLE" class="shoe-img">
+                    <div class="shoe-overlay">
+                        <h4>EQUILA STYLE</h4>
+                        <p>Modern Style</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shoe-item shoe-small">
+                <div class="shoe-frame">
+                    <img src="{% static 'images/shoes/Shoes_product.jpg' %}" alt="Shoes Product" class="shoe-img">
+                    <div class="shoe-overlay">
+                        <h4>Elite Series</h4>
+                        <p>Premium Quality</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Big Image -->
+            <div class="shoe-item shoe-large">
+                <div class="shoe-frame">
+                    <img src="{% static 'images/shoes/nike2.jpg' %}" alt="EQUILA STYLE" class="shoe-img">
+                    <div class="shoe-overlay">
+                        <h4>EQUILA STYLE</h4>
+                        <p>Advanced Design</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Images -->
+            <div class="shoe-item shoe-small">
+                <div class="shoe-frame">
+                    <img src="{% static 'images/shoes/shoe1.jpg' %}" alt="Shoe 1" class="shoe-img">
+                    <div class="shoe-overlay">
+                        <h4>Classic</h4>
+                        <p>Timeless Design</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shoe-item shoe-small">
+                <div class="shoe-frame">
+                    <img src="{% static 'images/shoes/Green NIKE Sneaker Shoe Png _ TopPNG.jpg' %}" alt="EQUILA STYLE" class="shoe-img">
+                    <div class="shoe-overlay">
+                        <h4>EQUILA STYLE</h4>
+                        <p>Eco Friendly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MARQUEE SECTION -->
+<div class="marquee-wrap" style="position: relative; z-index: 20;">
+  <div class="mq-track">
+    <div class="mq-item">EQUILA STYLE <span class="mq-sep"></span></div>
+    <div class="mq-item gold">EQUILA STYLE <span class="mq-sep"></span></div>
+    <div class="mq-item">EQUILA STYLE <span class="mq-sep"></span></div>
+    <div class="mq-item gold">EQUILA STYLE <span class="mq-sep"></span></div>
+    <div class="mq-item">EQUILA STYLE <span class="mq-sep"></span></div>
+    <div class="mq-item gold">EQUILA STYLE <span class="mq-sep"></span></div>
+    <div class="mq-item">EQUILA STYLE <span class="mq-sep"></span></div>
+  </div>
+</div>
+
+<!-- CLOTHING WEAR SECTION -->
+<section class="clothing-wear" style="position: relative; z-index: 20; background: var(--black); padding: 100px 0;">
+    <div class="container">
+        <div class="section-head text-center mb-5">
+            <div class="s-eyebrow justify-content-center">Fashion Collection</div>
+            <h2 class="s-title">Premium Wear</h2>
+        </div>
+        
+        <div class="clothing-grid">
+            <!-- Large Image -->
+            <div class="clothing-item clothing-large">
+                <div class="clothing-frame">
+                    <img src="{% static 'images/clothes/women.jpg' %}" alt="Women's Collection" class="clothing-img">
+                    <div class="clothing-overlay">
+                        <h4>Women's Collection</h4>
+                        <p>Elegant & Modern</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Images -->
+            <div class="clothing-item clothing-small">
+                <div class="clothing-frame">
+                    <img src="{% static 'images/clothes/tshirt.jpg' %}" alt="T-Shirt" class="clothing-img">
+                    <div class="clothing-overlay">
+                        <h4>Classic Tee</h4>
+                        <p>Essential Style</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="clothing-item clothing-small">
+                <div class="clothing-frame">
+                    <img src="{% static 'images/clothes/download.jpg' %}" alt="Casual Wear" class="clothing-img">
+                    <div class="clothing-overlay">
+                        <h4>Casual</h4>
+                        <p>Everyday Comfort</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Large Image -->
+            <div class="clothing-item clothing-large">
+                <div class="clothing-frame">
+                    <img src="{% static 'images/clothes/dress.jpg' %}" alt="Dress Collection" class="clothing-img">
+                    <div class="clothing-overlay">
+                        <h4>Dress Collection</h4>
+                        <p>Sophisticated Design</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Images -->
+            <div class="clothing-item clothing-small">
+                <div class="clothing-frame">
+                    <img src="{% static 'images/clothes/download2.jpg' %}" alt="Urban Style" class="clothing-img">
+                    <div class="clothing-overlay">
+                        <h4>Urban</h4>
+                        <p>Street Fashion</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- APPAREL LOOKBOOK SECTION -->
+<section class="lookbook-showcase" style="position: relative; z-index: 20; background: var(--black); padding: 100px 0;">
+    <div class="container">
+        <div class="section-head text-center mb-5">
+            <div class="s-eyebrow justify-content-center">Lookbook</div>
+            <h2 class="s-title">Season 2025</h2>
+        </div>
+        
+        <div class="lookbook-grid">
+            <!-- Belt Collection - Featured Large -->
+            <a href="{% url 'products:product_list' %}?category=belt" class="lookbook-item-link">
+                <div class="lookbook-item lookbook-featured">
+                    <div class="lookbook-image-container">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop" alt="Belt Collection" class="lookbook-img">
+                        <div class="lookbook-overlay">
+                            <div class="lookbook-content">
+                                <span class="lookbook-category">Premium Accessories</span>
+                                <h3 class="lookbook-title">Belt Collection</h3>
+                                <div class="lookbook-action">
+                                    <span>Shop Collection</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Cap Collection -->
+            <a href="{% url 'products:product_list' %}?category=cap" class="lookbook-item-link">
+                <div class="lookbook-item lookbook-regular">
+                    <div class="lookbook-image-container">
+                        <img src="https://img.magnific.com/premium-photo/green-baseball-cap-shelf-room-mockup-image_985688-12402.jpg?semt=ais_hybrid&w=740&q=80" alt="Cap Collection" class="lookbook-img">
+                        <div class="lookbook-overlay">
+                            <div class="lookbook-content">
+                                <span class="lookbook-category">Street Style</span>
+                                <h3 class="lookbook-title">Cap Collection</h3>
+                                <div class="lookbook-action">
+                                    <span>Shop Now</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Jeans Collection -->
+            <a href="{% url 'products:product_list' %}?category=jeans" class="lookbook-item-link">
+                <div class="lookbook-item lookbook-regular">
+                    <div class="lookbook-image-container">
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=600&fit=crop" alt="Jeans Collection" class="lookbook-img">
+                        <div class="lookbook-overlay">
+                            <div class="lookbook-content">
+                                <span class="lookbook-category">Classic Denim</span>
+                                <h3 class="lookbook-title">Jeans Collection</h3>
+                                <div class="lookbook-action">
+                                    <span>Shop Now</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Pants Collection - Featured Large -->
+            <a href="{% url 'products:product_list' %}?category=pants" class="lookbook-item-link">
+                <div class="lookbook-item lookbook-featured">
+                    <div class="lookbook-image-container">
+                        <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&h=600&fit=crop" alt="Pants Collection" class="lookbook-img">
+                        <div class="lookbook-overlay">
+                            <div class="lookbook-content">
+                                <span class="lookbook-category">Modern Tailoring</span>
+                                <h3 class="lookbook-title">Pants Collection</h3>
+                                <div class="lookbook-action">
+                                    <span>Shop Collection</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Lookbook Showcase Styles - Professional Redesign */
+.lookbook-showcase {
+    position: relative;
+    z-index: 20;
+    background: var(--black);
+    padding: 100px 0;
+    width: 100%;
+}
+
+.lookbook-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 25px;
+    margin-top: 60px;
+    width: 100%;
+}
+
+/* Web Responsive Styles - Desktop */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .lookbook-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        padding: 0 30px;
+    }
+    
+    .lookbook-featured {
+        grid-column: span 2;
+        grid-row: span 2;
+        min-height: 480px;
+    }
+    
+    .lookbook-regular {
+        grid-column: span 1;
+        grid-row: span 1;
+        min-height: 280px;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 1440px) {
+    .lookbook-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 28px;
+        padding: 0 40px;
+    }
+    
+    .lookbook-featured {
+        grid-column: span 2;
+        grid-row: span 2;
+        min-height: 520px;
+    }
+    
+    .lookbook-regular {
+        grid-column: span 1;
+        grid-row: span 1;
+        min-height: 300px;
+    }
+}
+
+@media (min-width: 1441px) {
+    .lookbook-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+        padding: 0 50px;
+        max-width: 1600px;
+        margin: 60px auto 0;
+    }
+    
+    .lookbook-featured {
+        grid-column: span 2;
+        grid-row: span 2;
+        min-height: 560px;
+    }
+    
+    .lookbook-regular {
+        grid-column: span 1;
+        grid-row: span 1;
+        min-height: 320px;
+    }
+}
+
+.lookbook-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(255, 215, 0, 0.02);
+    border: 1px solid rgba(255, 215, 0, 0.08);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    width: 100%;
+}
+
+.lookbook-item:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.25);
+}
+
+.lookbook-featured {
+    grid-column: span 6;
+    grid-row: span 2;
+    min-height: 500px;
+}
+
+.lookbook-regular {
+    grid-column: span 3;
+    grid-row: span 1;
+    min-height: 240px;
+}
+
+.lookbook-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.lookbook-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.6s ease;
+    filter: brightness(0.85) contrast(1.15);
+}
+
+.lookbook-item:hover .lookbook-img {
+    transform: scale(1.1);
+    filter: brightness(1) contrast(1.25);
+}
+
+.lookbook-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%);
+    transition: all 0.5s ease;
+}
+
+.lookbook-content {
+    padding: 35px 30px 30px;
+    width: 100%;
+    transform: translateY(15px);
+    transition: all 0.5s ease;
+}
+
+/* Web Responsive Content Padding */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .lookbook-content {
+        padding: 30px 26px 26px;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 1440px) {
+    .lookbook-content {
+        padding: 35px 30px 30px;
+    }
+}
+
+@media (min-width: 1441px) {
+    .lookbook-content {
+        padding: 45px 40px 40px;
+    }
+}
+
+.lookbook-item:hover .lookbook-content {
+    transform: translateY(0);
+}
+
+.lookbook-category {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: rgba(255, 215, 0, 0.9);
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease 0.1s;
+}
+
+.lookbook-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    color: var(--gold);
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+}
+
+/* Web Responsive Typography */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .lookbook-category {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+    
+    .lookbook-title {
+        font-size: 2rem;
+        margin-bottom: 18px;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 1440px) {
+    .lookbook-category {
+        font-size: 0.95rem;
+        margin-bottom: 14px;
+    }
+    
+    .lookbook-title {
+        font-size: 2.3rem;
+        margin-bottom: 20px;
+    }
+}
+
+@media (min-width: 1441px) {
+    .lookbook-category {
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+    
+    .lookbook-title {
+        font-size: 2.6rem;
+        margin-bottom: 24px;
+    }
+}
+
+.lookbook-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gold);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.4s ease 0.2s;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    width: fit-content;
+}
+
+/* Web Responsive Action Buttons */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .lookbook-action {
+        font-size: 0.9rem;
+        padding: 12px 18px;
+        gap: 10px;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 1440px) {
+    .lookbook-action {
+        font-size: 0.95rem;
+        padding: 14px 22px;
+        gap: 12px;
+    }
+}
+
+@media (min-width: 1441px) {
+    .lookbook-action {
+        font-size: 1.05rem;
+        padding: 16px 28px;
+        gap: 14px;
+    }
+}
+
+.lookbook-item:hover .lookbook-category,
+.lookbook-item:hover .lookbook-action {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.lookbook-action:hover {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.4);
+    transform: translateX(5px);
+}
+
+.lookbook-action i {
+    transition: transform 0.3s ease;
+}
+
+.lookbook-item:hover .lookbook-action i {
+    transform: translateX(8px);
+}
+
+.lookbook-item-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+/* Mobile Responsive Lookbook - Professional Design */
+@media (max-width: 768px) {
+    .lookbook-showcase {
+        padding: 60px 0;
+    }
+    
+    .lookbook-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 20px;
+        margin-top: 40px;
+    }
+    
+    .lookbook-featured {
+        grid-column: span 6;
+        grid-row: span 1;
+        min-height: 280px;
+    }
+    
+    .lookbook-regular {
+        grid-column: span 3;
+        grid-row: span 1;
+        min-height: 220px;
+    }
+    
+    .lookbook-content {
+        padding: 25px 20px 20px;
+    }
+    
+    .lookbook-category {
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+    }
+    
+    .lookbook-title {
+        font-size: 1.6rem;
+        margin-bottom: 15px;
+    }
+    
+    .lookbook-action {
+        font-size: 0.8rem;
+        padding: 10px 16px;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lookbook-showcase {
+        padding: 40px 0;
+    }
+    
+    .lookbook-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 30px;
+    }
+    
+    .lookbook-featured {
+        grid-column: span 1;
+        grid-row: span 1;
+        min-height: 240px;
+    }
+    
+    .lookbook-regular {
+        grid-column: span 1;
+        grid-row: span 1;
+        min-height: 180px;
+    }
+    
+    .lookbook-content {
+        padding: 20px 18px 18px;
+    }
+    
+    .lookbook-category {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+    
+    .lookbook-title {
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+    }
+    
+    .lookbook-action {
+        font-size: 0.75rem;
+        padding: 8px 14px;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 360px) {
+    .lookbook-showcase {
+        padding: 30px 0;
+    }
+    
+    .lookbook-grid {
+        gap: 12px;
+        margin-top: 25px;
+    }
+    
+    .lookbook-featured {
+        min-height: 200px;
+    }
+    
+    .lookbook-regular {
+        min-height: 160px;
+    }
+    
+    .lookbook-content {
+        padding: 18px 15px 15px;
+    }
+    
+    .lookbook-category {
+        font-size: 0.7rem;
+        margin-bottom: 5px;
+    }
+    
+    .lookbook-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .lookbook-action {
+        font-size: 0.7rem;
+        padding: 7px 12px;
+        gap: 5px;
+    }
+}
+</style>
+
+<style>
+/* Enhanced Lookbook Mobile Responsiveness */
+@media (max-width: 768px) {
+  #lookbook {
+    padding: 60px 20px !important;
+  }
+  
+  .lb-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    margin-top: 40px !important;
+  }
+  
+  .lb-a {
+    grid-column: 1/3 !important;
+    grid-row: 1/3 !important;
+    min-height: 300px !important;
+  }
+  
+  .lb-b {
+    grid-column: 1/3 !important;
+    min-height: 200px !important;
+  }
+  
+  .lb-c {
+    grid-column: 1/3 !important;
+    min-height: 200px !important;
+  }
+  
+  .lb-d {
+    grid-column: 1/3 !important;
+    min-height: 200px !important;
+  }
+  
+  .lb-name {
+    font-size: 1.5rem !important;
+  }
+  
+  .lb-tag {
+    font-size: 0.7rem !important;
+    padding: 4px 10px !important;
+  }
+  
+  .lb-action {
+    margin-top: 10px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #lookbook {
+    padding: 40px 15px !important;
+  }
+  
+  .lb-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+    margin-top: 30px !important;
+  }
+  
+  .lb-a, .lb-b, .lb-c, .lb-d {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    min-height: 250px !important;
+  }
+  
+  .lb-name {
+    font-size: 1.3rem !important;
+  }
+  
+  .lb-tag {
+    font-size: 0.65rem !important;
+    padding: 3px 8px !important;
+  }
+  
+  .lb-action {
+    margin-top: 8px !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+/* Lookbook Link Styles */
+.lb-item-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+}
+
+.lb-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.lb-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(255, 215, 0, 0.2);
+}
+
+.lb-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%);
+  transition: all 0.4s ease;
+}
+
+.lb-item:hover .lb-overlay {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.9) 100%);
+}
+
+.lb-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30px 25px;
+  z-index: 2;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+.lb-item:hover .lb-info {
+  transform: translateY(0);
+}
+
+.lb-tag {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--black);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.lb-name {
+  color: var(--white);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.lb-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gold);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+
+.lb-item:hover .lb-action {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lb-action i {
+  transition: transform 0.3s ease;
+}
+
+.lb-item:hover .lb-action i {
+  transform: translateX(5px);
+}
+</style>
+
+<!-- KIDS WEAR SECTION -->
+<section class="kids-wear" style="position: relative; z-index: 20; background: var(--black); padding: 100px 0;">
+    <div class="container">
+        <div class="section-head text-center mb-5">
+            <div class="s-eyebrow justify-content-center">Kids Collection</div>
+            <h2 class="s-title">Premium Kids Wear</h2>
+        </div>
+        
+        <div class="kids-grid">
+            <!-- Large Image -->
+            <div class="kids-item kids-large">
+                <div class="kids-frame">
+                    <img src="{% static 'images/kids/ZARA United States _ New Collection Online.jpg' %}" alt="EQUILA STYLE" class="kids-img">
+                    <div class="kids-overlay">
+                        <h4>EQUILA STYLE</h4>
+                        <p>Trendy & Comfortable</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Images -->
+            <div class="kids-item kids-small">
+                <div class="kids-frame">
+                    <img src="{% static 'images/kids/Kid\'s My-T T-Shirt Cotton Optical White _ T-Shirts Loro Piana CC.jpg' %}" alt="Kids T-Shirt" class="kids-img">
+                    <div class="kids-overlay">
+                        <h4>Premium Tee</h4>
+                        <p>Soft & Breathable</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kids-item kids-small">
+                <div class="kids-frame">
+                    <img src="{% static 'images/kids/download.jpg' %}" alt="Casual Kids Wear" class="kids-img">
+                    <div class="kids-overlay">
+                        <h4>Casual</h4>
+                        <p>Everyday Fun</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Large Image -->
+            <div class="kids-item kids-large">
+                <div class="kids-frame">
+                    <img src="{% static 'images/kids/Tween Boy Casual Korean Style Loose Apricot Color All-Match Tank Top And Long Pants Set, Suitable For Commuting, School, Daily Leisure, Sports, Spring_Summer Holiday, Teen Boys Green Two Pie.jpg' %}" alt="Tween Boy Set" class="kids-img">
+                    <div class="kids-overlay">
+                        <h4>Tween Set</h4>
+                        <p>Complete Outfit</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Images -->
+            <div class="kids-item kids-small">
+                <div class="kids-frame">
+                    <img src="{% static 'images/kids/download (1).jpg' %}" alt="Kids Style" class="kids-img">
+                    <div class="kids-overlay">
+                        <h4>Active Wear</h4>
+                        <p>Play & Movement</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kids-item kids-small">
+                <div class="kids-frame">
+                    <img src="{% static 'images/kids/Брюки LENNIE бежевые купить по ценам производителя в Санкт-Петербурге от российского бренда SOLIDAY.jpg' %}" alt="Kids Pants" class="kids-img">
+                    <div class="kids-overlay">
+                        <h4>Stylish Pants</h4>
+                        <p>Comfort & Style</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS SECTION -->
+<section id="stats" style="display: grid; grid-template-columns: repeat(4, 1fr); background: var(--black); border-top: 1px solid rgba(255, 215, 0, 0.1); position: relative; z-index: 20;">
+  <div class="stat-block" style="padding: 60px 40px; text-align: center; border-right: 1px solid rgba(255, 215, 0, 0.1);">
+    <div class="stat-n" style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 7vw, 90px); color: var(--gold); line-height: 1;">500+</div>
+    <div class="stat-l" style="font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(245, 245, 245, 0.4); margin-top: 8px;">EQUILA STYLE</div>
+  </div>
+  <div class="stat-block" style="padding: 60px 40px; text-align: center; border-right: 1px solid rgba(255, 215, 0, 0.1);">
+    <div class="stat-n" style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 7vw, 90px); color: var(--gold); line-height: 1;">50K+</div>
+    <div class="stat-l" style="font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(245, 245, 245, 0.4); margin-top: 8px;">Premium Members</div>
+  </div>
+  <div class="stat-block" style="padding: 60px 40px; text-align: center; border-right: 1px solid rgba(255, 215, 0, 0.1);">
+    <div class="stat-n" style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 7vw, 90px); color: var(--gold); line-height: 1;">98%</div>
+    <div class="stat-l" style="font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(245, 245, 245, 0.4); margin-top: 8px;">Satisfaction</div>
+  </div>
+  <div class="stat-block" style="padding: 60px 40px; text-align: center;">
+    <div class="stat-n" style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 7vw, 90px); color: var(--gold); line-height: 1;">24H</div>
+    <div class="stat-l" style="font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(245, 245, 245, 0.4); margin-top: 8px;">Elite Support</div>
+  </div>
+</section>
+
+<style>
+/* Mobile Responsive Stats */
+@media (max-width: 768px) {
+  #stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .stat-block {
+    padding: 40px 20px !important;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1) !important;
+  }
+  
+  .stat-block:nth-child(1),
+  .stat-block:nth-child(2) {
+    border-right: 1px solid rgba(255, 215, 0, 0.1) !important;
+  }
+  
+  .stat-block:nth-child(3),
+  .stat-block:nth-child(4) {
+    border-right: none !important;
+  }
+  
+  .stat-block:nth-child(3) {
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1) !important;
+  }
+  
+  .stat-n {
+    font-size: clamp(36px, 8vw, 56px) !important;
+  }
+  
+  .stat-l {
+    font-size: 9px !important;
+    letter-spacing: .2em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #stats {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .stat-block {
+    padding: 30px 15px !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1) !important;
+  }
+  
+  .stat-block:last-child {
+    border-bottom: none !important;
+  }
+  
+  .stat-n {
+    font-size: clamp(28px, 10vw, 42px) !important;
+  }
+  
+  .stat-l {
+    font-size: 8px !important;
+    letter-spacing: .15em !important;
+    margin-top: 6px !important;
+  }
+}
+</style>
+
+<!-- CTA SECTION -->
+<section class="cta-section" style="padding: 120px 60px; background: var(--dark-red); position: relative; z-index: 20;">
+    <div class="container text-center">
+        <h2 class="display-3 fw-bold text-white mb-4" style="font-family: 'Bebas Neue', sans-serif;">ELEVATE YOUR STYLE</h2>
+        <p class="lead text-white-50 mb-5" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.8rem;">Join the EQUILA STYLE community today</p>
+        <a href="{% url 'products:product_list' %}" class="btn-gold" style="padding: 20px 60px; font-size: 14px; background: var(--gold); color: var(--black); text-decoration: none; display: inline-block;"><span>Join the Club</span></a>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<!-- GSAP for 3D animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ═══════════════ 1. CANVAS FRAME RENDERING ═══════════════
+        const canvas = document.getElementById('hero-canvas');
+        const context = canvas.getContext('2d');
+        
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', setCanvasSize);
+        setCanvasSize();
+        
+        const frameCount = 192;
+        const images = [];
+        const frameSequence = { frame: 174 };
+        let lastRenderTime = 0;
+        const frameInterval = 1000 / 90;
+        
+        for (let i = 0; i < frameCount; i++) {
+            const img = new Image();
+            img.src = `/static/images/hero-frames/frame_${i.toString().padStart(4, '0')}.webp`;
+            images.push(img);
+        }
+
+        function renderCanvas(timestamp) {
+            if (timestamp - lastRenderTime < frameInterval) {
+                requestAnimationFrame(renderCanvas);
+                return;
+            }
+            lastRenderTime = timestamp;
+
+            const frameIndex = Math.round(frameSequence.frame);
+            const img = images[frameIndex];
+            
+            if (!img || !img.complete) {
+                requestAnimationFrame(renderCanvas);
+                return;
+            }
+            
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const canvasRatio = canvas.width / canvas.height;
+            const imgRatio = img.width / img.height;
+            let drawWidth, drawHeight, offsetX, offsetY;
+            
+            const isMobile = window.innerWidth <= 768;
+            const isWeb = window.innerWidth > 768 && window.innerWidth <= 1440;
+            let padding = 1.0;
+            
+            if (isMobile) padding = 0.9;
+            else if (isWeb) padding = 0.85;
+            
+            if (canvasRatio > imgRatio) {
+                drawWidth = canvas.width * padding;
+                drawHeight = (canvas.width * padding) / imgRatio;
+                offsetX = (canvas.width - drawWidth) / 2;
+                offsetY = (canvas.height - drawHeight) / 2;
+            } else {
+                drawWidth = (canvas.height * padding) * imgRatio;
+                drawHeight = canvas.height * padding;
+                offsetX = (canvas.width - drawWidth) / 2;
+                offsetY = (canvas.height - drawHeight) / 2;
+            }
+            
+            context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+            requestAnimationFrame(renderCanvas);
+        }
+
+        images[0].onload = () => {
+            requestAnimationFrame(renderCanvas);
+        };
+
+        // ═══════════════ 2. THREE.JS ANTI-GRAVITY PARTICLES ═══════════════
+        const particlesContainer = document.getElementById('particles-canvas');
+        const pScene = new THREE.Scene();
+        const pCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const pRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        pRenderer.setSize(window.innerWidth, window.innerHeight);
+        pRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        particlesContainer.appendChild(pRenderer.domElement);
+
+        // ═══════════════ 2. THREE.JS PARTICLES (OPTIMIZED FOR 90 FPS) ═══════════════
+        const particleCount = 60;
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const velocities = [];
+
+        const goldColor = new THREE.Color(0xFFD700);
+        const greenColor = new THREE.Color(0x2B4D3D);
+        const redColor = new THREE.Color(0x8B0000);
+
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 25;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 25;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
+
+            const colorChoice = Math.random();
+            let color;
+            if (colorChoice < 0.35) color = goldColor;
+            else if (colorChoice < 0.7) color = greenColor;
+            else color = redColor;
+
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+
+            velocities.push({
+                x: (Math.random() - 0.5) * 0.006,
+                y: Math.random() * 0.012 + 0.004,
+                z: (Math.random() - 0.5) * 0.004
+            });
+        }
+
+        const pGeometry = new THREE.BufferGeometry();
+        pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        pGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const pMaterial = new THREE.PointsMaterial({
+            size: 0.08,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true,
+            depthWrite: false
+        });
+
+        const particles = new THREE.Points(pGeometry, pMaterial);
+        particles.frustumCulled = false;
+        pScene.add(particles);
+        pCamera.position.z = 6;
+
+        // Visibility optimization
+        let isParticlesVisible = true;
+        const particleObserver = new IntersectionObserver((entries) => {
+            isParticlesVisible = entries[0].isIntersecting;
+        }, { threshold: 0 });
+        particleObserver.observe(document.getElementById('hero-canvas-container'));
+
+        let scrollVelocity = 0;
+        let lastScrollY = window.scrollY;
+        let time = 0;
+        let frameCounter = 0;
+        let lastFrameTime = performance.now();
+        const targetFrameTime = 1000 / 90;
+
+        function animateParticles(now) {
+            const delta = now - lastFrameTime;
+            if (delta < targetFrameTime) {
+                requestAnimationFrame(animateParticles);
+                return;
+            }
+            lastFrameTime = now - (delta % targetFrameTime);
+            frameCounter++;
+
+            // Skip 2 out of every 3 frames for particle updates (balance performance & sync)
+            if (isParticlesVisible && frameCounter % 3 === 0) {
+                time += 0.015;
+                const posArray = pGeometry.attributes.position.array;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const idx = i * 3;
+                    posArray[idx + 1] += velocities[i].y + scrollVelocity * 0.008;
+                    posArray[idx] += velocities[i].x + Math.sin(time + i * 0.1) * 0.002;
+                    posArray[idx + 2] += velocities[i].z + Math.cos(time + i * 0.1) * 0.001;
+
+                    if (posArray[idx + 1] > 12) {
+                        posArray[idx + 1] = -12;
+                        posArray[idx] = (Math.random() - 0.5) * 25;
+                    }
+                    if (posArray[idx] > 12) posArray[idx] = -12;
+                    if (posArray[idx] < -12) posArray[idx] = 12;
+                }
+
+                pGeometry.attributes.position.needsUpdate = true;
+                particles.rotation.y += 0.0002;
+            }
+            scrollVelocity *= 0.85;
+
+            pRenderer.render(pScene, pCamera);
+            requestAnimationFrame(animateParticles);
+        }
+        requestAnimationFrame(animateParticles);
+
+        let scrollTimeout;
+        let isScrolling = false;
+        window.addEventListener('scroll', () => {
+            if (!isScrolling) {
+                isScrolling = true;
+                requestAnimationFrame(() => {
+                    const currentScrollY = window.scrollY;
+                    scrollVelocity = (currentScrollY - lastScrollY) * 0.4;
+                    lastScrollY = currentScrollY;
+                    isScrolling = false;
+                });
+            }
+            
+            // Reduced debounce for better responsiveness
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                scrollVelocity *= 0.6;
+            }, 50);
+        }, { passive: true });
+
+        // ═══════════════ 3. PINNED 3D CARD SCROLL ANIMATION ═══════════════
+        const cards = gsap.utils.toArray('.story-card');
+        const scrollProgress = document.getElementById('scroll-progress');
+        const cardCount = cards.length;
+
+        // Set initial 3D states
+        gsap.set(cards, {
+            opacity: 0,
+            rotateY: 85,
+            rotateX: 12,
+            scale: 0.72,
+            z: -350,
+            transformOrigin: 'center center',
+            transformPerspective: 1400
+        });
+        gsap.set(cards[0], { opacity: 1, rotateY: 0, rotateX: 0, scale: 1, z: 0 });
+
+        // Build master timeline with pinned scroll (optimized for better sync)
+        const masterTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: '#story-scroll-container',
+                start: 'top top',
+                end: () => `+=${window.innerHeight * 1.1 * (cardCount - 1)}`,
+                pin: '#story-pinned',
+                scrub: 0.3,
+                fastScrollEnd: true,
+                preventOverlaps: true,
+                invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                    const newFrame = self.progress * (frameCount - 1);
+                    // Update canvas on every scroll for perfect sync
+                    frameSequence.frame = newFrame;
+                    if (scrollProgress) {
+                        scrollProgress.style.transform = `scaleX(${self.progress})`;
+                    }
+                }
+            }
+        });
+
+        // Card swap animations
+        for (let i = 0; i < cardCount - 1; i++) {
+            const current = cards[i];
+            const next = cards[i + 1];
+            
+            // Current card exits with 3D rotation (faster for better sync)
+            masterTl.to(current, {
+                opacity: 0,
+                rotateY: -85,
+                rotateX: -12,
+                scale: 0.72,
+                z: -350,
+                duration: 0.3,
+                ease: 'power2.inOut'
+            }, i);
+            
+            // Next card enters with 3D rotation (faster for better sync)
+            masterTl.fromTo(next,
+                { opacity: 0, rotateY: 85, rotateX: 12, scale: 0.72, z: -350 },
+                {
+                    opacity: 1,
+                    rotateY: 0,
+                    rotateX: 0,
+                    scale: 1,
+                    z: 0,
+                    duration: 0.3,
+                    ease: 'power2.inOut'
+                },
+                i + 0.2
+            );
+        }
+
+        // Hide scroll hint when entering pinned area (optimized)
+        const scrollHint = document.querySelector('.scroll-down-hint');
+        if (scrollHint) {
+            gsap.to(scrollHint, {
+                opacity: 0,
+                scrollTrigger: {
+                    trigger: '#story-scroll-container',
+                    start: 'top 95%',
+                    toggleActions: 'play none none none',
+                    once: true
+                }
+            });
+        }
+
+        // ═══════════════ 4. ANTI-GRAVITY FLOATING CARDS ═══════════════
+        const agCards = document.querySelectorAll('.ag-card');
+        
+        if (agCards.length > 0) {
+            gsap.set(agCards, { 
+                opacity: 0
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+                
+                agCards.forEach(card => {
+                    const speed = parseFloat(card.dataset.speed) || 0.5;
+                    gsap.to(card, {
+                        x: mouseX * 30 * speed, 
+                        y: mouseY * 30 * speed,
+                        rotationY: mouseX * 5, 
+                        rotationX: -mouseY * 5,
+                        duration: 1.2, 
+                        ease: 'power2.out'
+                    });
+                });
+            });
+        }
+
+        // ═══════════════ 5. 3D IMAGE SECTIONS ═══════════════
+        const shoeItems = document.querySelectorAll('.shoe-item');
+        if (shoeItems.length > 0) {
+            gsap.set(shoeItems, {
+                transformPerspective: 1000,
+                transformStyle: 'preserve-3d',
+                rotationY: 15,
+                rotationX: 5,
+                z: -50
+            });
+            
+            gsap.from(shoeItems, {
+                opacity: 0,
+                y: 40,
+                duration: 1.5,
+                stagger: 0.15,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: '.shoes-showcase',
+                    start: 'top 70%',
+                    once: true
+                }
+            });
+        }
+        
+        const kidsItems = document.querySelectorAll('.kids-item');
+        if (kidsItems.length > 0) {
+            gsap.set(kidsItems, {
+                transformPerspective: 800,
+                transformStyle: 'preserve-3d',
+                rotationY: -10,
+                rotationX: 8,
+                scale: 0.9
+            });
+            
+            gsap.from(kidsItems, {
+                opacity: 0,
+                y: 30,
+                duration: 1.2,
+                stagger: 0.2,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: '.kids-wear',
+                    start: 'top 75%',
+                    once: true
+                }
+            });
+        }
+        
+        shoeItems.forEach(item => {
+            const frame = item.querySelector('.shoe-frame');
+            item.addEventListener('mouseenter', () => {
+                gsap.to(frame, { rotationY: 10, rotationX: -5, scale: 1.05, duration: 0.5, ease: 'power2.out' });
+            });
+            item.addEventListener('mouseleave', () => {
+                gsap.to(frame, { rotationY: 0, rotationX: 0, scale: 1, duration: 0.5, ease: 'power2.out' });
+            });
+        });
+        
+        kidsItems.forEach(item => {
+            const frame = item.querySelector('.kids-frame');
+            item.addEventListener('mouseenter', () => {
+                gsap.to(frame, { rotationY: -8, rotationX: 5, scale: 1.08, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
+            });
+            item.addEventListener('mouseleave', () => {
+                gsap.to(frame, { rotationY: 0, rotationX: 0, scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
+            });
+        });
+
+        // ═══════════════ RESIZE HANDLER ═══════════════
+        window.addEventListener('resize', () => {
+            setCanvasSize();
+            pCamera.aspect = window.innerWidth / window.innerHeight;
+            pCamera.updateProjectionMatrix();
+            pRenderer.setSize(window.innerWidth, window.innerHeight);
+            ScrollTrigger.refresh();
+        });
+    });
+</script>
+{% endblock %}

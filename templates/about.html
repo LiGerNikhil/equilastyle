@@ -1,0 +1,1241 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}About EQUILA - Premium Fashion Experience{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Premium Experience Canvas Styles */
+    .premium-canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 1;
+        background: var(--black);
+    }
+    
+    .premium-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    
+    .scroll-hint-premium {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        color: var(--gold);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 12px;
+        letter-spacing: 2px;
+        padding: 12px 24px;
+        border-radius: 30px;
+        background: linear-gradient(135deg, var(--black) 0%, var(--dark-green) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        opacity: 0.9;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+    }
+    
+    /* Single Hero Section */
+    .hero-section {
+        position: relative;
+        z-index: 2;
+        background: transparent;
+        height: 400vh; /* Long scroll area for all frames */
+    }
+    
+    .hero-content-overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        text-align: center;
+        pointer-events: none;
+        width: 90%;
+        max-width: 800px;
+    }
+    
+    .hero-text-item {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .hero-text-item.active {
+        opacity: 1;
+    }
+    
+    .hero-text-item h2 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: clamp(32px, 6vw, 72px);
+        color: var(--gold);
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    }
+    
+    .hero-text-item h2 span {
+        color: var(--white);
+    }
+    
+    .hero-text-item p {
+        font-size: clamp(14px, 2vw, 20px);
+        line-height: 1.6;
+        color: var(--white);
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.9);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    /* Brand Logo Overlay */
+    .brand-overlay {
+        position: fixed;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        text-align: center;
+        opacity: 0;
+        animation: fadeInBrand 1.5s ease forwards 0.5s;
+    }
+    
+    .brand-overlay h1 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: clamp(24px, 4vw, 48px);
+        color: var(--gold);
+        letter-spacing: 8px;
+        text-transform: uppercase;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        margin: 0;
+    }
+    
+    .brand-overlay .brand-tagline {
+        font-size: clamp(10px, 1.5vw, 14px);
+        color: var(--white);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin-top: 5px;
+        opacity: 0.8;
+    }
+    
+    @keyframes fadeInBrand {
+        from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    
+    /* Progress Indicator */
+    .scroll-progress {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-shine));
+        z-index: 10;
+        width: 0%;
+        transition: width 0.1s linear;
+    }
+    
+    /* Enhanced Experience Grid */
+    .experience-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+    
+    /* Brand Heritage Section */
+    .brand-heritage {
+        padding: 100px 0;
+        background: linear-gradient(135deg, var(--black) 0%, var(--dark-green) 100%);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .heritage-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+    
+    .heritage-text p {
+        font-size: 18px;
+        line-height: 1.8;
+        color: var(--white);
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+    
+    .heritage-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 30px;
+        background: rgba(255, 215, 0, 0.1);
+        border: 1px solid var(--gold);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-item:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 215, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+    
+    .stat-number {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 48px;
+        color: var(--gold);
+        margin-bottom: 10px;
+        letter-spacing: 2px;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        color: var(--white);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* Antigravity Letters Section */
+    .antigravity-section {
+        padding: 150px 0;
+        background: linear-gradient(135deg, var(--black) 0%, var(--dark-green) 50%, var(--black) 100%);
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        min-height: 100vh;
+    }
+    
+    .antigravity-container {
+        text-align: center;
+        position: relative;
+    }
+    
+    .antigravity-title h2 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: clamp(42px, 7vw, 84px);
+        color: var(--gold);
+        margin-bottom: 20px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        text-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    }
+    
+    .antigravity-title p {
+        font-size: 20px;
+        color: var(--white);
+        opacity: 0.9;
+        margin-bottom: 80px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+    
+    .letters-container {
+        position: relative;
+        height: 500px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        perspective: 1500px;
+        margin: 50px 0;
+    }
+    
+    .letter {
+        position: absolute;
+        font-family: 'Bebas Neue', cursive;
+        font-size: clamp(80px, 12vw, 140px);
+        color: var(--gold);
+        font-weight: bold;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(-150vh) rotateX(180deg) scale(0) rotateZ(45deg);
+        text-shadow: 0 0 50px rgba(255, 215, 0, 1), 0 0 100px rgba(255, 215, 0, 0.5);
+        transition: all 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 10;
+    }
+    
+    .letter.animate {
+        opacity: 1;
+        transform: translateY(0) rotateX(0) scale(1) rotateZ(0);
+    }
+    
+    .letter.floating {
+        animation: enhancedFloat 4s ease-in-out infinite;
+    }
+    
+    @keyframes enhancedFloat {
+        0%, 100% { transform: translateY(0) rotateX(0) scale(1) rotateZ(0); }
+        25% { transform: translateY(-15px) rotateX(5deg) scale(1.02) rotateZ(2deg); }
+        50% { transform: translateY(-30px) rotateX(10deg) scale(1.05) rotateZ(-2deg); }
+        75% { transform: translateY(-15px) rotateX(5deg) scale(1.02) rotateZ(2deg); }
+    }
+    
+    /* Logo Image Styles */
+    .logo-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        opacity: 0;
+        transition: all 1.5s ease;
+    }
+    
+    .logo-container.animate {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    
+    .logo-container img {
+        width: clamp(200px, 30vw, 400px);
+        height: auto;
+        filter: brightness(1.2) contrast(1.1);
+        mix-blend-mode: screen;
+    }
+    
+    /* Particle Effects */
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--gold);
+        border-radius: 50%;
+        opacity: 0;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+    
+    .particle.animate {
+        animation: particleFloat 3s ease-in-out infinite;
+    }
+    
+    @keyframes particleFloat {
+        0% { opacity: 0; transform: translateY(0) scale(0); }
+        50% { opacity: 1; transform: translateY(-50px) scale(1); }
+        100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+    }
+    
+    /* Sustainability Section */
+    .sustainability-section {
+        padding: 100px 0;
+        background: linear-gradient(135deg, var(--dark-green) 0%, var(--black) 100%);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .sustainability-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: start;
+    }
+    
+    .sustainability-left h3 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 36px;
+        color: var(--gold);
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+    }
+    
+    .sustainability-left p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: var(--white);
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+    
+    .sustainability-right {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .sustainability-item {
+        padding: 30px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .sustainability-item:hover {
+        transform: translateY(-5px);
+        background: rgba(0, 0, 0, 0.5);
+        border-color: var(--gold);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+    }
+    
+    .sustainability-icon {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+    
+    .sustainability-item h4 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 20px;
+        color: var(--gold);
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+    
+    .sustainability-item p {
+        font-size: 14px;
+        color: var(--white);
+        line-height: 1.6;
+    }
+    
+    /* Innovation Section */
+    .innovation-section {
+        padding: 100px 0;
+        background: var(--black);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .innovation-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        margin-top: 50px;
+    }
+    
+    .innovation-item {
+        text-align: center;
+        padding: 40px 30px;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        border-radius: 20px;
+        transition: all 0.4s ease;
+    }
+    
+    .innovation-item:hover {
+        transform: translateY(-10px) scale(1.02);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
+        box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+    }
+    
+    .innovation-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+    
+    .innovation-item h3 {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 24px;
+        color: var(--gold);
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+    
+    .innovation-item p {
+        font-size: 16px;
+        color: var(--white);
+        line-height: 1.6;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .heritage-content,
+        .sustainability-content {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        .brand-heritage {
+            padding: 60px 0;
+        }
+        
+        .heritage-text p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .heritage-stats {
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            padding: 20px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+        }
+        
+        .letter {
+            font-size: 70px;
+        }
+        
+        .logo-container img {
+            width: 250px;
+        }
+        
+        .experience-grid,
+        .innovation-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+    
+    /* Tablet Responsiveness */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .heritage-content {
+            grid-template-columns: 1fr;
+            gap: 50px;
+        }
+        
+        .heritage-stats {
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            padding: 25px 20px;
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 40px;
+        }
+        
+        .heritage-text p {
+            font-size: 17px;
+        }
+    }
+    
+    /* Large Desktop */
+    @media (min-width: 1200px) {
+        .heritage-content {
+            gap: 80px;
+        }
+        
+        .heritage-stats {
+            gap: 40px;
+        }
+        
+        .stat-item {
+            padding: 35px 25px;
+        }
+        
+        .stat-number {
+            font-size: 52px;
+        }
+    }
+    
+    /* Premium Experience Section */
+    .premium-experience {
+        padding: 100px 0;
+        background: var(--black);
+        position: relative;
+        z-index: 20;
+    }
+    
+    .experience-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-top: 60px;
+    }
+    
+    .experience-item {
+        background: var(--dark-green);
+        border: 2px solid var(--gold);
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .experience-item:hover {
+        transform: translateY(-5px);
+        border-color: var(--gold-shine);
+        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+    }
+    
+    .experience-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: var(--gold);
+    }
+    
+    .experience-title {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 28px;
+        color: var(--gold);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    
+    .experience-description {
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--white);
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .experience-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .experience-item {
+            padding: 25px;
+        }
+        
+        .experience-title {
+            font-size: 24px;
+        }
+        
+        .experience-description {
+            font-size: 14px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .premium-experience {
+            padding: 60px 20px;
+        }
+        
+        .experience-item {
+            padding: 20px;
+        }
+        
+        .experience-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .experience-title {
+            font-size: 20px;
+        }
+        
+        .experience-description {
+            font-size: 13px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- PREMIUM EXPERIENCE CANVAS -->
+<div class="premium-canvas-container">
+    <canvas id="premium-canvas"></canvas>
+</div>
+
+<div class="scroll-hint-premium">Scroll to Experience Premium</div>
+
+<!-- BRAND OVERLAY -->
+<!-- <div class="brand-overlay">
+    <h1>EQUILA</h1>
+    <div class="brand-tagline">Premium Fashion Experience</div>
+</div> -->
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scroll-progress"></div>
+
+<!-- SINGLE HERO SECTION WITH CHANGING CONTENT -->
+<div class="hero-section" id="hero-section">
+    <div class="hero-content-overlay" id="hero-content-overlay">
+        <div class="hero-text-item active" data-start="0" data-end="0.15">
+            <h2>PREMIUM <span>HERITAGE</span></h2>
+            <p>Decades of excellence in fashion, crafted with precision and passion for the discerning individual.</p>
+        </div>
+        
+        <div class="hero-text-item" data-start="0.15" data-end="0.30">
+            <h2>LUXURY <span>CRAFTSMANSHIP</span></h2>
+            <p>Every piece tells a story of meticulous attention to detail, using only the finest materials and techniques.</p>
+        </div>
+        
+        <div class="hero-text-item" data-start="0.30" data-end="0.45">
+            <h2>EXCLUSIVE <span>COLLECTIONS</span></h2>
+            <p>Limited edition releases that define seasons and set trends, available only to our valued members.</p>
+        </div>
+        
+        <div class="hero-text-item" data-start="0.45" data-end="0.60">
+            <h2>GLOBAL <span>PRESENCE</span></h2>
+            <p>From Paris to Tokyo, our brand represents the pinnacle of contemporary fashion excellence.</p>
+        </div>
+        
+        <div class="hero-text-item" data-start="0.60" data-end="0.75">
+            <h2>TIMELESS <span>INNOVATION</span></h2>
+            <p>Where tradition meets tomorrow's vision, creating the future of premium fashion today.</p>
+        </div>
+        
+        <div class="hero-text-item" data-start="0.75" data-end="1.0">
+            <h2>ELEVATE YOUR <span>STYLE</span></h2>
+            <p>Experience the premium difference. Join the elite who choose EQUILA for their fashion journey.</p>
+        </div>
+    </div>
+</div>
+
+<!-- PREMIUM EXPERIENCE SECTION -->
+<section class="premium-experience">
+    <div class="container">
+        <div class="section-head text-center mb-5">
+            <div class="s-eyebrow justify-content-center">Why Choose EQUILA</div>
+            <h2 class="s-title">Premium Experience</h2>
+        </div>
+        
+        <div class="experience-grid">
+            <div class="experience-item">
+                <div class="experience-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.38 8.57l-1.23 1.85a8 8 0 0 1-.22 7.58H5.07A8 8 0 0 1 15.58 6.85l1.85-1.23A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1 10 10 0 0 0-.27-10.44z"/>
+                        <path d="M8.5 8.5L7 7l-1.5 1.5"/>
+                        <path d="M7 7v3"/>
+                        <path d="M15.5 15.5L17 17l1.5-1.5"/>
+                        <path d="M17 17v-3"/>
+                    </svg>
+                </div>
+                <h3 class="experience-title">Premium Clothing</h3>
+                <p class="experience-description">Curated collections from world's finest designers, featuring exclusive materials and cutting-edge designs that define contemporary luxury.</p>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 18h20"/>
+                        <path d="M5 18V7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v11"/>
+                        <path d="M9 18v3a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-3"/>
+                        <path d="M9 11h6"/>
+                        <path d="M9 14h6"/>
+                    </svg>
+                </div>
+                <h3 class="experience-title">Premium Wear</h3>
+                <p class="experience-description">Functional elegance meets sophisticated style, creating versatile pieces for every occasion with unmatched comfort and durability.</p>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        <polyline points="9,11 12,14 22,4"/>
+                    </svg>
+                </div>
+                <h3 class="experience-title">All Categories</h3>
+                <p class="experience-description">Complete range from footwear to accessories, covering every aspect of premium lifestyle with attention to every detail.</p>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </div>
+                <h3 class="experience-title">Exclusive Collections</h3>
+                <p class="experience-description">Limited edition pieces that embody the essence of luxury, crafted for those who appreciate the finer things in life.</p>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </div>
+                <h3 class="experience-title">Artisan Craftsmanship</h3>
+                <p class="experience-description">Handcrafted excellence passed down through generations, ensuring each piece tells a unique story of dedication and skill.</p>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                </div>
+                <h3 class="experience-title">Global Presence</h3>
+                <p class="experience-description">From Paris to Tokyo, our influence spans continents, bringing premium fashion to discerning customers worldwide.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BRAND HERITAGE SECTION -->
+<section class="brand-heritage">
+    <div class="container">
+        <div class="section-head text-center mb-5">
+            <div class="s-eyebrow justify-content-center">Our Legacy</div>
+            <h2 class="s-title">Decades of Excellence</h2>
+        </div>
+        
+        <div class="heritage-content">
+            <div class="heritage-text">
+                <p>Since our inception, EQUILA has been synonymous with uncompromising quality and innovative design. Our journey began with a simple vision: to create fashion that transcends time and trends, becoming a part of our customers' stories.</p>
+                <p>Today, we stand as a beacon of luxury fashion, with collections that grace the wardrobes of the world's most discerning individuals. Each piece in our collection represents not just style, but a commitment to excellence that has defined our brand for generations.</p>
+            </div>
+            <div class="heritage-stats">
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Years of Heritage</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Global Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Designer Collaborations</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ANTIGRAavity EQUILA LOGO SECTION -->
+<section class="antigravity-section">
+    <div class="antigravity-container">
+        <div class="antigravity-title">
+            <h2>Experience the Magic</h2>
+            <p>where premium meets perfection</p>
+        </div>
+        <div class="letters-container" id="letters-container">
+            <!-- Logo Image Background -->
+            <div class="logo-container" id="logo-container">
+                <img src="{% static 'images/logo.jpeg' %}" alt="EQUILA Logo">
+            </div>
+            <!-- Letters will be dynamically generated -->
+        </div>
+    </div>
+</section>
+
+<!-- SUSTAINABILITY SECTION -->
+<section class="sustainability-section">
+    <div class="container">
+        <div class="section-head text-center mb-5">
+            <div class="s-eyebrow justify-content-center">Our Commitment</div>
+            <h2 class="s-title">Sustainable Luxury</h2>
+        </div>
+        
+        <div class="sustainability-content">
+            <div class="sustainability-left">
+                <h3>Conscious Fashion</h3>
+                <p>We believe that true luxury should not come at the expense of our planet. Our commitment to sustainability is woven into every aspect of our business, from responsibly sourced materials to ethical manufacturing processes.</p>
+                <p>Each collection is designed with longevity in mind, creating pieces that become cherished heirlooms rather than disposable trends. This approach not only reduces environmental impact but also ensures that our customers receive garments that maintain their beauty and quality for years to come.</p>
+            </div>
+            <div class="sustainability-right">
+                <div class="sustainability-item">
+                    <div class="sustainability-icon">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v20"/>
+                            <path d="M8 6v4"/>
+                            <path d="M16 6v4"/>
+                            <path d="M4 10v4"/>
+                            <path d="M20 10v4"/>
+                            <path d="M6 14v4"/>
+                            <path d="M18 14v4"/>
+                            <path d="M12 22l-2-2h4l-2 2z"/>
+                        </svg>
+                    </div>
+                    <h4>Eco-Friendly Materials</h4>
+                    <p>Organic fabrics, recycled materials, and sustainable alternatives</p>
+                </div>
+                <div class="sustainability-item">
+                    <div class="sustainability-icon">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <path d="M20 8v6"/>
+                            <path d="M23 11h-6"/>
+                        </svg>
+                    </div>
+                    <h4>Ethical Production</h4>
+                    <p>Fair wages, safe working conditions, and transparent supply chains</p>
+                </div>
+                <div class="sustainability-item">
+                    <div class="sustainability-icon">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+                        </svg>
+                    </div>
+                    <h4>Circular Fashion</h4>
+                    <p>Recycling programs and upcycling initiatives for a zero-waste future</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INNOVATION SECTION -->
+<section class="innovation-section">
+    <div class="container">
+        <div class="section-head text-center mb-5">
+            <div class="s-eyebrow justify-content-center">Looking Forward</div>
+            <h2 class="s-title">Innovation & Technology</h2>
+        </div>
+        
+        <div class="innovation-grid">
+            <div class="innovation-item">
+                <div class="innovation-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4.5 16.5c0-1.5.5-3 1.5-4S9 11 9 11s2.5-1 4-1 3.5 1 4 1 2 1.5 2 3c0 1.5-.5 3-1.5 4s-2 1.5-3.5 1.5S9 18.5 8.5 18 7 16.5 7 15s.5-3 1.5-4z"/>
+                        <path d="M12 2v20"/>
+                        <path d="M12 2l3 3"/>
+                        <path d="M12 2l-3 3"/>
+                    </svg>
+                </div>
+                <h3>Smart Fabrics</h3>
+                <p>Integration of cutting-edge technology into traditional textiles, creating garments that adapt to your lifestyle and environment.</p>
+            </div>
+            <div class="innovation-item">
+                <div class="innovation-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="6"/>
+                        <circle cx="12" cy="12" r="2"/>
+                    </svg>
+                </div>
+                <h3>Precision Tailoring</h3>
+                <p>AI-powered customization and 3D modeling for the perfect fit, combining traditional craftsmanship with modern technology.</p>
+            </div>
+            <div class="innovation-item">
+                <div class="innovation-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                        <path d="M8 7h8"/>
+                        <path d="M8 11h8"/>
+                        <path d="M8 15h5"/>
+                    </svg>
+                </div>
+                <h3>Digital Experience</h3>
+                <p>Virtual try-ons, augmented reality shopping, and personalized styling powered by machine learning algorithms.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Premium Frame Sequence Implementation ---
+        const canvas = document.getElementById('premium-canvas');
+        const context = canvas.getContext('2d');
+        
+        // Set canvas size
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        setCanvasSize();
+        
+        // Premium frame settings (55 frames)
+        const frameCount = 55;
+        const images = [];
+        const frameSequence = { frame: 0 };
+        let animationFrameId = null;
+        let lastRenderTime = 0;
+        const targetFPS = 90;
+        const frameInterval = 1000 / targetFPS;
+        
+        // Preload all premium frames
+        for (let i = 0; i < frameCount; i++) {
+            const img = new Image();
+            img.src = `/static/images/premium-frames/frame_${i.toString().padStart(4, '0')}.webp`;
+            images.push(img);
+        }
+
+        function render(timestamp) {
+            if (timestamp - lastRenderTime < frameInterval) {
+                animationFrameId = requestAnimationFrame(render);
+                return;
+            }
+            lastRenderTime = timestamp;
+
+            const frameIndex = Math.round(frameSequence.frame);
+            const img = images[frameIndex];
+            
+            if (!img || !img.complete) {
+                animationFrameId = requestAnimationFrame(render);
+                return;
+            }
+            
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const canvasRatio = canvas.width / canvas.height;
+            const imgRatio = img.width / img.height;
+            let drawWidth, drawHeight, offsetX, offsetY;
+            
+            if (canvasRatio > imgRatio) {
+                drawWidth = canvas.width;
+                drawHeight = canvas.width / imgRatio;
+                offsetX = 0;
+                offsetY = (canvas.height - drawHeight) / 2;
+            } else {
+                drawWidth = canvas.height * imgRatio;
+                drawHeight = canvas.height;
+                offsetX = (canvas.width - drawWidth) / 2;
+                offsetY = 0;
+            }
+            
+            context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+            
+            animationFrameId = requestAnimationFrame(render);
+        }
+
+        // Start rendering immediately
+        images[0].onload = () => {
+            requestAnimationFrame(render);
+        };
+
+        // --- GSAP Scroll Sync for Premium Frames ---
+        const heroSection = document.getElementById('hero-section');
+        const heroContentOverlay = document.getElementById('hero-content-overlay');
+        const scrollProgress = document.getElementById('scroll-progress');
+        const textItems = document.querySelectorAll('.hero-text-item');
+        const brandOverlay = document.querySelector('.brand-overlay');
+        
+        // Hide content overlay when scrolling past hero
+        ScrollTrigger.create({
+            trigger: heroSection,
+            start: 'top top',
+            end: 'bottom top',
+            onUpdate: (self) => {
+                // Update frame based on scroll progress through hero section
+                frameSequence.frame = self.progress * (frameCount - 1);
+                const currentFrame = Math.round(frameSequence.frame);
+                
+                // Update scroll progress bar
+                if (scrollProgress) {
+                    scrollProgress.style.width = (self.progress * 100) + '%';
+                }
+                
+                // Update text content based on progress with smooth transitions
+                textItems.forEach(item => {
+                    const start = parseFloat(item.dataset.start);
+                    const end = parseFloat(item.dataset.end);
+                    const fadeInStart = start;
+                    const fadeInEnd = start + 0.03;
+                    const fadeOutStart = end - 0.03;
+                    const fadeOutEnd = end;
+                    
+                    if (self.progress >= fadeInStart && self.progress < fadeInEnd) {
+                        const fadeProgress = (self.progress - fadeInStart) / (fadeInEnd - fadeInStart);
+                        item.style.opacity = fadeProgress;
+                        item.style.transform = `translateY(${(1 - fadeProgress) * 20}px)`;
+                    } else if (self.progress >= fadeInEnd && self.progress < fadeOutStart) {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    } else if (self.progress >= fadeOutStart && self.progress < fadeOutEnd) {
+                        const fadeProgress = (self.progress - fadeOutStart) / (fadeOutEnd - fadeOutStart);
+                        item.style.opacity = 1 - fadeProgress;
+                        item.style.transform = `translateY(${fadeProgress * -20}px)`;
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(20px)';
+                    }
+                });
+                
+                // Fade out brand overlay as user scrolls
+                if (brandOverlay) {
+                    if (self.progress > 0.05) {
+                        brandOverlay.style.opacity = Math.max(0, 1 - (self.progress - 0.05) * 5);
+                    } else {
+                        brandOverlay.style.opacity = '1';
+                    }
+                }
+                
+                // Hide canvas and content when hero section is done
+                if (self.progress >= 0.98) {
+                    canvas.style.opacity = '0';
+                    heroContentOverlay.style.opacity = '0';
+                    document.querySelector('.scroll-hint-premium').style.opacity = '0';
+                    if (brandOverlay) brandOverlay.style.opacity = '0';
+                } else {
+                    canvas.style.opacity = '1';
+                    heroContentOverlay.style.opacity = '1';
+                }
+                
+                console.log('Premium Frame Progress:', self.progress.toFixed(3), 'Frame:', currentFrame, 'Total Frames:', frameCount);
+            }
+        });
+
+        // Hide scroll hint after starting scroll
+        gsap.to('.scroll-hint-premium', {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: '#hero-section',
+                start: 'top top',
+                end: '+=100',
+                scrub: true
+            }
+        });
+
+        // --- Experience Items Animation ---
+        gsap.utils.toArray('.experience-item').forEach((item, index) => {
+            gsap.fromTo(item, 
+                { opacity: 0, y: 50 }, 
+                {
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.8,
+                    delay: index * 0.2,
+                    scrollTrigger: {
+                        trigger: '.premium-experience',
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+
+        // Handle resize
+        window.addEventListener('resize', () => { 
+            setCanvasSize(); 
+            render(); 
+        });
+
+        // --- Animated Logo Only ---
+        function initAnimatedLogo() {
+            const logoContainer = document.getElementById('logo-container');
+            if (!logoContainer) return;
+            
+            // Set up scroll trigger for antigravity section
+            ScrollTrigger.create({
+                trigger: '.antigravity-section',
+                start: 'top 70%',
+                end: 'bottom 30%',
+                onEnter: () => {
+                    // Animate logo
+                    setTimeout(() => {
+                        if (logoContainer) {
+                            logoContainer.classList.add('animate');
+                        }
+                    }, 500);
+                },
+                onLeave: () => {
+                    // Reset when scrolling out
+                    if (logoContainer) {
+                        logoContainer.classList.remove('animate');
+                    }
+                },
+                onEnterBack: () => {
+                    // Re-animate when scrolling back
+                    setTimeout(() => {
+                        if (logoContainer) {
+                            logoContainer.classList.add('animate');
+                        }
+                    }, 500);
+                }
+            });
+        }
+        
+        // Initialize animated logo
+        initAnimatedLogo();
+        
+        // --- Additional Section Animations ---
+        // Animate heritage stats
+        gsap.utils.toArray('.stat-item').forEach((item, index) => {
+            gsap.fromTo(item, 
+                { opacity: 0, y: 50, scale: 0.8 }, 
+                {
+                    opacity: 1, 
+                    y: 0, 
+                    scale: 1,
+                    duration: 0.8,
+                    delay: index * 0.2,
+                    scrollTrigger: {
+                        trigger: '.brand-heritage',
+                        start: 'top 70%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        // Animate sustainability items
+        gsap.utils.toArray('.sustainability-item').forEach((item, index) => {
+            gsap.fromTo(item, 
+                { opacity: 0, x: -50 }, 
+                {
+                    opacity: 1, 
+                    x: 0, 
+                    duration: 0.8,
+                    delay: index * 0.2,
+                    scrollTrigger: {
+                        trigger: '.sustainability-section',
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        // Animate innovation items
+        gsap.utils.toArray('.innovation-item').forEach((item, index) => {
+            gsap.fromTo(item, 
+                { opacity: 0, y: 50, rotationY: 15 }, 
+                {
+                    opacity: 1, 
+                    y: 0, 
+                    rotationY: 0,
+                    duration: 0.8,
+                    delay: index * 0.2,
+                    scrollTrigger: {
+                        trigger: '.innovation-section',
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        // Parallax effect for antigravity section
+        gsap.to('.antigravity-section', {
+            backgroundPosition: '50% 100%',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.antigravity-section',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+    });
+</script>
+{% endblock %}

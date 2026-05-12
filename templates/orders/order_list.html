@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block title %}My Orders - EQUILA STYLE{% endblock %}
+
+{% block content %}
+<div class="orders-page">
+    <div class="container py-5">
+        <nav aria-label="breadcrumb">
+            <!-- <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'products:home' %}">Home</a></li>
+                <li class="breadcrumb-item active">My Orders</li>
+            </ol> -->
+        </nav>
+
+        <h1 class="page-title">My Orders</h1>
+
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-info">
+                        <span class="order-number">#{{ order.order_number }}</span>
+                        <span class="order-date">{{ order.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="order-badges">
+                        <span class="badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                        <span class="badge payment-{{ order.payment_status }}">{{ order.get_payment_status_display }}</span>
+                    </div>
+                </div>
+                <div class="order-body">
+                    <div class="order-items-preview">
+                        {% for item in order.items.all|slice:":3" %}
+                        <div class="preview-item">
+                            <img src="{% if item.product.images.first %}{{ item.product.images.first.image.url }}{% else %}https://picsum.photos/seed/{{ item.product.name }}/60/60{% endif %}" alt="{{ item.product.name }}">
+                            <div class="item-name">{{ item.product.name }}</div>
+                        </div>
+                        {% endfor %}
+                        {% if order.items.count > 3 %}
+                        <div class="more-items">+{{ order.items.count|add:"-3" }} more</div>
+                        {% endif %}
+                    </div>
+                    <div class="order-total">
+                        <span>Total:</span>
+                        <strong>₹{{ order.total_price }}</strong>
+                    </div>
+                </div>
+                <div class="order-footer">
+                    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-view">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-orders">
+            <i class="fas fa-shopping-bag"></i>
+            <h3>No orders yet</h3>
+            <p>You haven't placed any orders yet.</p>
+            <a href="{% url 'products:product_list' %}" class="btn btn-primary">Start Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .orders-page {
+        padding-top: 80px;
+        background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-green) 50%, var(--charcoal) 100%);
+        min-height: 100vh;
+        position: relative;
+        z-index: 1;
+    }
+    .page-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 3rem;
+        color: var(--gold);
+        margin-bottom: 30px;
+        letter-spacing: 0.05em;
+    }
+    .order-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(197, 160, 89, 0.2);
+        border-radius: 12px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+    }
+    .order-number {
+        font-weight: 700;
+        color: var(--white);
+        margin-right: 15px;
+    }
+    .order-date {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+    }
+    .badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-left: 8px;
+    }
+    .status-pending { background: #f0ad4e; color: #000; }
+    .status-confirmed { background: #5cb85c; color: #fff; }
+    .status-processing { background: #5bc0de; color: #000; }
+    .status-shipped { background: #337ab7; color: #fff; }
+    .status-delivered { background: #28a745; color: #fff; }
+    .status-cancelled { background: #d9534f; color: #fff; }
+
+    .payment-pending { background: #ffc107; color: #000; }
+    .payment-paid { background: #28a745; color: #fff; }
+    .payment-failed { background: #dc3545; color: #fff; }
+    .payment-refunded { background: #6c757d; color: #fff; }
+
+    .order-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+    }
+    .order-items-preview {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .preview-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    .preview-item img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid rgba(197, 160, 89, 0.2);
+    }
+    .preview-item .item-name {
+        font-size: 0.75rem;
+        color: var(--white);
+        text-align: center;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.2;
+    }
+    .more-items {
+        color: var(--gold);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    .order-total {
+        color: var(--white);
+        font-family: 'DM Sans', sans-serif;
+    }
+    .order-total strong {
+        color: var(--gold);
+        font-size: 1.2rem;
+        margin-left: 10px;
+    }
+    .order-footer {
+        padding: 15px 20px;
+        border-top: 1px solid rgba(197, 160, 89, 0.1);
+        text-align: right;
+    }
+    .btn-view {
+        background: transparent;
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 8px 20px;
+        border-radius: 6px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    .btn-view:hover {
+        background: var(--gold);
+        color: var(--black);
+    }
+    .empty-orders {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    .empty-orders i {
+        font-size: 4rem;
+        color: var(--gold);
+        margin-bottom: 20px;
+    }
+    .empty-orders h3 {
+        color: var(--white);
+        margin-bottom: 10px;
+    }
+    .empty-orders p {
+        color: var(--text-dim);
+        margin-bottom: 25px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,496 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}{% if mode == 'edit' %}Edit Product{% else %}Add Product{% endif %} - Admin Panel - EQUILA Fashion{% endblock %}
+
+{% block page_title %}{% if mode == 'edit' %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+
+{% block content %}
+<div class="product-form-container">
+    <form method="post" enctype="multipart/form-data" class="product-form">
+        {% csrf_token %}
+
+        <div class="form-actions-top">
+            <a href="{% url 'admin_panel:products' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Save Product
+            </button>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-grid">
+            <div class="card-panel">
+                <div class="card-header">
+                    <h3>Product Details</h3>
+                    <p>Core information for premium presentation.</p>
+                </div>
+
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Name</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}<div class="field-error">{{ form.name.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}<div class="field-error">{{ form.description.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Price</label>
+                            {{ form.price }}
+                            {% if form.price.errors %}<div class="field-error">{{ form.price.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Category</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}<div class="field-error">{{ form.category.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Target Group</label>
+                            {{ form.target_group }}
+                            {% if form.target_group.errors %}<div class="field-error">{{ form.target_group.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Gender</label>
+                            {{ form.gender }}
+                            {% if form.gender.errors %}<div class="field-error">{{ form.gender.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Availability</label>
+                            <div class="switch-row">
+                                {{ form.is_available }}
+                                <span class="switch-label">Available for listing</span>
+                            </div>
+                            {% if form.is_available.errors %}<div class="field-error">{{ form.is_available.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="card-header">
+                    <h3>Sizes & Stock</h3>
+                    <p>Add multiple size variants with stock. Availability will auto-disable if all stock is zero.</p>
+                </div>
+
+                <div class="card-body">
+                    {{ variant_formset.management_form }}
+
+                    {% if variant_formset.non_form_errors %}
+                    <div class="alert alert-danger">{{ variant_formset.non_form_errors }}</div>
+                    {% endif %}
+
+                    <div class="inline-table" id="variantsFormset" data-prefix="{{ variant_formset.prefix }}">
+                        <div class="inline-head">
+                            <div>Size</div>
+                            <div>Stock</div>
+                            <div>Available</div>
+                            <div></div>
+                        </div>
+
+                        {% for vform in variant_formset.forms %}
+                        <div class="inline-row variant-row">
+                            <div class="inline-cell">
+                                {{ vform.size }}
+                                {% if vform.size.errors %}<div class="field-error">{{ vform.size.errors }}</div>{% endif %}
+                            </div>
+                            <div class="inline-cell">
+                                {{ vform.stock }}
+                                {% if vform.stock.errors %}<div class="field-error">{{ vform.stock.errors }}</div>{% endif %}
+                            </div>
+                            <div class="inline-cell">
+                                {{ vform.is_available }}
+                                {% if vform.is_available.errors %}<div class="field-error">{{ vform.is_available.errors }}</div>{% endif %}
+                            </div>
+                            <div class="inline-cell inline-actions">
+                                {% if vform.instance.pk %}
+                                    {{ vform.id }}
+                                {% endif %}
+                                {% if variant_formset.can_delete %}
+                                    <label class="delete-toggle">{{ vform.DELETE }} Remove</label>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="button" class="btn btn-secondary btn-sm" id="addVariantBtn">
+                        <i class="fas fa-plus"></i>
+                        Add size
+                    </button>
+
+                    <template id="variantEmptyFormTemplate">
+                        <div class="inline-row variant-row">
+                            <div class="inline-cell">{{ variant_formset.empty_form.size }}</div>
+                            <div class="inline-cell">{{ variant_formset.empty_form.stock }}</div>
+                            <div class="inline-cell">{{ variant_formset.empty_form.is_available }}</div>
+                            <div class="inline-cell inline-actions">
+                                {% if variant_formset.can_delete %}
+                                    <label class="delete-toggle">{{ variant_formset.empty_form.DELETE }} Remove</label>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="card-header">
+                    <h3>Product Images</h3>
+                    <p>Upload premium imagery. Mark one as featured for thumbnails.</p>
+                </div>
+
+                <div class="card-body">
+                    {{ image_formset.management_form }}
+
+                    {% if image_formset.non_form_errors %}
+                    <div class="alert alert-danger">{{ image_formset.non_form_errors }}</div>
+                    {% endif %}
+
+                    <div class="images-grid" id="imagesFormset" data-prefix="{{ image_formset.prefix }}">
+                        {% for iform in image_formset.forms %}
+                        <div class="image-card">
+                            <div class="image-fields">
+                                <div class="mb-2">
+                                    <label class="form-label">Image</label>
+                                    {{ iform.image }}
+                                    {% if iform.image.errors %}<div class="field-error">{{ iform.image.errors }}</div>{% endif %}
+                                </div>
+
+                                <div class="mb-2">
+                                    <label class="form-label">Alt Text</label>
+                                    {{ iform.alt_text }}
+                                    {% if iform.alt_text.errors %}<div class="field-error">{{ iform.alt_text.errors }}</div>{% endif %}
+                                </div>
+
+                                <div class="switch-row">
+                                    {{ iform.is_featured }}
+                                    <span class="switch-label">Featured</span>
+                                </div>
+
+                                <div class="image-actions">
+                                    {% if iform.instance.pk %}
+                                        {{ iform.id }}
+                                    {% endif %}
+                                    {% if image_formset.can_delete %}
+                                        <label class="delete-toggle">{{ iform.DELETE }} Remove</label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="button" class="btn btn-secondary btn-sm" id="addImageBtn">
+                        <i class="fas fa-plus"></i>
+                        Add image
+                    </button>
+
+                    <template id="imageEmptyFormTemplate">
+                        <div class="image-card">
+                            <div class="image-fields">
+                                <div class="mb-2">
+                                    <label class="form-label">Image</label>
+                                    {{ image_formset.empty_form.image }}
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Alt Text</label>
+                                    {{ image_formset.empty_form.alt_text }}
+                                </div>
+                                <div class="switch-row">
+                                    {{ image_formset.empty_form.is_featured }}
+                                    <span class="switch-label">Featured</span>
+                                </div>
+                                <div class="image-actions">
+                                    {% if image_formset.can_delete %}
+                                        <label class="delete-toggle">{{ image_formset.empty_form.DELETE }} Remove</label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions-bottom">
+            <a href="{% url 'admin_panel:products' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Save Product
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('id_category');
+
+    function updateVariantSizeChoices() {
+        const categoryId = categorySelect ? categorySelect.value : '';
+        const url = '{% url "admin_panel:product_size_options" %}?category_id=' + encodeURIComponent(categoryId || '');
+
+        fetch(url, { credentials: 'same-origin' })
+            .then(r => r.json())
+            .then(data => {
+                const sizes = data && data.sizes ? data.sizes : null;
+                document.querySelectorAll('#variantsFormset select[id$="-size"]').forEach(function(sel) {
+                    if (!sizes) {
+                        sel.removeAttribute('data-sized');
+                        return;
+                    }
+
+                    const current = sel.value;
+                    sel.innerHTML = '';
+                    const empty = document.createElement('option');
+                    empty.value = '';
+                    empty.textContent = 'Select size';
+                    sel.appendChild(empty);
+
+                    sizes.forEach(function(s) {
+                        const opt = document.createElement('option');
+                        opt.value = s;
+                        opt.textContent = s;
+                        sel.appendChild(opt);
+                    });
+
+                    if (sizes.includes(current)) {
+                        sel.value = current;
+                    }
+                });
+            });
+    }
+
+    if (categorySelect) {
+        categorySelect.addEventListener('change', updateVariantSizeChoices);
+        updateVariantSizeChoices();
+    }
+
+    function addFormRow(containerId, totalInputId, templateId, prefix) {
+        const container = document.getElementById(containerId);
+        const totalInput = document.getElementById(totalInputId);
+        const template = document.getElementById(templateId);
+        if (!container || !totalInput || !template) return;
+
+        const index = parseInt(totalInput.value, 10);
+        const html = template.innerHTML.replaceAll(prefix + '-__prefix__-', prefix + '-' + index + '-');
+
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = html;
+        const nodes = Array.from(wrapper.children);
+        nodes.forEach(n => container.appendChild(n));
+
+        totalInput.value = String(index + 1);
+        updateVariantSizeChoices();
+    }
+
+    const addVariantBtn = document.getElementById('addVariantBtn');
+    if (addVariantBtn) {
+        addVariantBtn.addEventListener('click', function() {
+            addFormRow('variantsFormset', 'id_variants-TOTAL_FORMS', 'variantEmptyFormTemplate', 'variants');
+        });
+    }
+
+    const addImageBtn = document.getElementById('addImageBtn');
+    if (addImageBtn) {
+        addImageBtn.addEventListener('click', function() {
+            addFormRow('imagesFormset', 'id_images-TOTAL_FORMS', 'imageEmptyFormTemplate', 'images');
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.product-form-container {
+    padding: 20px;
+}
+
+.product-form {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.form-actions-top,
+.form-actions-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 12px;
+}
+
+.card-panel {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 215, 0, 0.18);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.14);
+}
+
+.card-header h3 {
+    margin: 0;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 0.5px;
+    color: var(--gold);
+    font-size: 22px;
+}
+
+.card-header p {
+    margin: 6px 0 0 0;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 13px;
+}
+
+.card-body {
+    padding: 18px;
+}
+
+.product-form input[type="text"],
+.product-form input[type="number"],
+.product-form input[type="file"],
+.product-form select,
+.product-form textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 10px 12px;
+    outline: none;
+}
+
+.product-form textarea {
+    min-height: 140px;
+}
+
+.form-label {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.field-error {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.switch-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.switch-label {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 13px;
+}
+
+.inline-table {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.inline-head,
+.inline-row {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 0.6fr 0.8fr;
+    gap: 10px;
+    align-items: start;
+}
+
+.inline-head {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.inline-row {
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.18);
+}
+
+.inline-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.delete-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.image-card {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.18);
+    padding: 12px;
+}
+
+.image-actions {
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .form-actions-top,
+    .form-actions-bottom {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inline-head,
+    .inline-row {
+        grid-template-columns: 1fr;
+    }
+
+    .inline-actions {
+        justify-content: flex-start;
+    }
+}
+</style>
+{% endblock %}

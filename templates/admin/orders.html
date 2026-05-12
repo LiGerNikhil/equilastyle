@@ -1,0 +1,559 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Orders - Admin Panel - EQUILA Fashion{% endblock %}
+
+{% block page_title %}Orders Management{% endblock %}
+
+{% block content %}
+<div class="orders-container">
+    <!-- Search and Filters -->
+    <div class="section-header">
+        <div class="search-filters">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search orders by ID, user, or email..." value="{{ search_query }}">
+                <button class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </div>
+            
+            <div class="filter-controls">
+                <select class="filter-dropdown" data-filter="status">
+                    <option value="">All Status</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="processing" {% if status_filter == 'processing' %}selected{% endif %}>Processing</option>
+                    <option value="shipped" {% if status_filter == 'shipped' %}selected{% endif %}>Shipped</option>
+                    <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <a href="#" class="btn btn-primary">
+                <i class="fas fa-download"></i>
+                Export Orders
+            </a>
+        </div>
+    </div>
+    
+    <!-- Results Count -->
+    <div class="results-info">
+        <span class="results-count">Showing {{ orders.count }} orders</span>
+    </div>
+    
+    <!-- Orders Table -->
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td data-id="{{ order.id }}">
+                        <span class="order-id">#{{ order.id }}</span>
+                    </td>
+                    <td data-customer="{{ order.user.username }}">
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                <img src="{% static 'images/logo.jpeg' %}" alt="{{ order.user.username }}">
+                            </div>
+                            <div class="customer-details">
+                                <span class="customer-name">{{ order.user.get_full_name|default:order.user.username }}</span>
+                                <span class="customer-email">{{ order.user.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-date="{{ order.created_at|date:'Y-m-d' }}">
+                        <span class="order-date">{{ order.created_at|date:'M d, Y' }}</span>
+                        <span class="order-time">{{ order.created_at|time:'h:i A' }}</span>
+                    </td>
+                    <td data-items="{{ order.items.count|default:'0' }}">
+                        <span class="item-count">{{ order.items.count|default:'0' }} items</span>
+                    </td>
+                    <td data-total="{{ order.total_price|default:'0' }}">
+                        <span class="order-total">${{ order.total_price|default:'0.00' }}</span>
+                    </td>
+                    <td data-status="{{ order.status|default:'pending' }}">
+                        <span class="status-badge status-{{ order.status|default:'pending' }}">{{ order.status|default:'Pending'|title }}</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-secondary view-btn" data-order-id="{{ order.id }}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary update-btn" data-order-id="{{ order.id }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            {% if order.status != 'cancelled' %}
+                            <button class="btn btn-sm btn-warning cancel-btn" data-order-id="{{ order.id }}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <div class="empty-state">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>No orders found</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="pagination">
+        <span class="page-info">
+            Page {{ orders.number }} of {{ orders.paginator.num_pages }}
+        </span>
+        
+        <div class="pagination-controls">
+            {% if orders.has_previous %}
+                <a href="?page={{ orders.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="btn btn-secondary">
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </a>
+            {% endif %}
+            
+            {% for num in orders.paginator.page_range %}
+                {% if orders.number == num %}
+                    <span class="btn btn-primary">{{ num }}</span>
+                {% elif num > orders.number|add:'-3' and num < orders.number|add:'3' %}
+                    <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="btn btn-secondary">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            
+            {% if orders.has_next %}
+                <a href="?page={{ orders.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="btn btn-secondary">
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Order management functions
+function viewOrder(orderId) {
+    window.location.href = '{% url "admin_panel:orders" %}' + orderId + '/';
+}
+
+function updateOrderStatus(orderId, currentStatus) {
+    var statuses = [
+        {value: 'pending', label: 'Pending'},
+        {value: 'confirmed', label: 'Confirmed'},
+        {value: 'processing', label: 'Processing'},
+        {value: 'shipped', label: 'Shipped'},
+        {value: 'delivered', label: 'Delivered'},
+        {value: 'cancelled', label: 'Cancelled'}
+    ];
+
+    var selectHtml = '<select id="status-select" class="form-select" style="padding:10px;border-radius:8px;border:1px solid var(--gold);background:#0a2e1d;color:var(--white);font-size:15px;">';
+    statuses.forEach(function(s) {
+        var selected = s.value === currentStatus ? 'selected' : '';
+        selectHtml += '<option value="' + s.value + '" ' + selected + '>' + s.label + '</option>';
+    });
+    selectHtml += '</select>';
+
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    overlay.innerHTML =
+        '<div style="background:rgba(30,30,30,0.95);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:30px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5);">' +
+        '<h3 style="color:var(--gold);margin-bottom:20px;font-family:Bebas Neue,sans-serif;font-size:1.8rem;letter-spacing:0.05em;">Update Order Status</h3>' +
+        '<div style="margin-bottom:25px;">' + selectHtml + '</div>' +
+        '<div style="display:flex;gap:10px;justify-content:flex-end;">' +
+        '<button id="cancel-status" class="btn btn-secondary" style="padding:8px 20px;">Cancel</button>' +
+        '<button id="save-status" class="btn btn-primary" style="padding:8px 20px;">Update Status</button>' +
+        '</div></div>';
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('#cancel-status').addEventListener('click', function() {
+        document.body.removeChild(overlay);
+    });
+
+    overlay.querySelector('#save-status').addEventListener('click', function() {
+        var newStatus = document.getElementById('status-select').value;
+        var url = '{% url "admin_panel:orders" %}' + orderId + '/update-status/';
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        var token = csrfToken ? csrfToken.value : '';
+
+        var formData = new FormData();
+        formData.append('status', newStatus);
+        if (token) formData.append('csrfmiddlewaretoken', token);
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': token
+            }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            document.body.removeChild(overlay);
+            if (data.success) {
+                window.adminUtils.showNotification('Order status updated to ' + data.status_display, 'success');
+                location.reload();
+            } else {
+                window.adminUtils.showNotification(data.detail || 'Failed to update status', 'error');
+            }
+        })
+        .catch(function(err) {
+            document.body.removeChild(overlay);
+            window.adminUtils.showNotification('Error: ' + err.message, 'error');
+        });
+    });
+}
+
+function cancelOrder(orderId) {
+    window.adminUtils.confirmAction('Are you sure you want to cancel this order?', function() {
+        var url = '{% url "admin_panel:orders" %}' + orderId + '/update-status/';
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        var token = csrfToken ? csrfToken.value : '';
+
+        var formData = new FormData();
+        formData.append('status', 'cancelled');
+        if (token) formData.append('csrfmiddlewaretoken', token);
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': token
+            }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                window.adminUtils.showNotification('Order cancelled successfully!', 'success');
+                location.reload();
+            } else {
+                window.adminUtils.showNotification(data.detail || 'Error cancelling order.', 'error');
+            }
+        })
+        .catch(function(err) {
+            window.adminUtils.showNotification('Error: ' + err.message, 'error');
+        });
+    });
+}
+
+// Event listeners for buttons
+document.addEventListener('DOMContentLoaded', function() {
+    // View buttons
+    document.querySelectorAll('.view-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var orderId = this.getAttribute('data-order-id');
+            viewOrder(orderId);
+        });
+    });
+
+    // Update buttons
+    document.querySelectorAll('.update-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var orderId = this.getAttribute('data-order-id');
+            var row = this.closest('tr');
+            var currentStatus = row.querySelector('[data-status]').getAttribute('data-status');
+            updateOrderStatus(orderId, currentStatus);
+        });
+    });
+
+    // Cancel buttons
+    document.querySelectorAll('.cancel-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var orderId = this.getAttribute('data-order-id');
+            cancelOrder(orderId);
+        });
+    });
+
+    // Filter dropdown
+    document.querySelector('.filter-dropdown').addEventListener('change', function() {
+        var status = this.value;
+        var currentUrl = new URL(window.location);
+        if (status) {
+            currentUrl.searchParams.set('status', status);
+        } else {
+            currentUrl.searchParams.delete('status');
+        }
+        window.location.href = currentUrl.toString();
+    });
+});
+</script>
+{% csrf_token %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.orders-container {
+    padding: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.search-filters {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex: 1;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    width: 300px;
+}
+
+.filter-dropdown {
+    padding: 10px 15px;
+    background: #0a2e1d;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
+    color: var(--white);
+    font-size: 14px;
+}
+
+.filter-dropdown:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.results-info {
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.table-container {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--gold);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.admin-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.order-id {
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.customer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.customer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.customer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.customer-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.customer-name {
+    font-weight: 500;
+    color: var(--gold);
+}
+
+.customer-email {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.order-date {
+    display: block;
+    font-weight: 500;
+}
+
+.order-time {
+    display: block;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.item-count {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.order-total {
+    font-weight: bold;
+    color: var(--gold);
+    font-size: 16px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+}
+
+.status-processing {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+.status-shipped {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.status-delivered {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.status-cancelled {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-sm {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-state i {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px 0;
+}
+
+.page-info {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+    }
+    
+    .search-input {
+        width: 100%;
+    }
+    
+    .header-actions {
+        justify-content: center;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .pagination {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .pagination-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+</style>
+{% endblock %}

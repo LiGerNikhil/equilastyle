@@ -1,0 +1,480 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - EQUILA STYLE{% endblock %}
+
+{% block content %}
+<div class="checkout-page">
+    <div class="container py-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'cart:cart_detail' %}">Cart</a></li>
+                <li class="breadcrumb-item active">Checkout</li>
+            </ol>
+        </nav>
+
+        <div class="row gx-5">
+            <!-- Order Form -->
+            <div class="col-lg-8">
+                <div class="checkout-card">
+                    <h3 class="checkout-title">Shipping & Payment Details</h3>
+                    <form method="post" id="order-form">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone Number</label>
+                                {{ form.phone_number }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Shipping Address</label>
+                            {{ form.shipping_address }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Billing Address</label>
+                            {{ form.billing_address }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Order Notes (Optional)</label>
+                            {{ form.notes }}
+                        </div>
+
+                        <!-- Payment Method Selection -->
+                        <div class="payment-section mb-4">
+                            <h4 class="section-title">Payment Method</h4>
+                            <div class="payment-options">
+                                {% for value, label in form.payment_method.field.choices %}
+                                <div class="payment-option">
+                                    <input type="radio" name="payment_method" value="{{ value }}" id="payment_{{ value }}"
+                                           class="form-check-input" {% if value == 'cod' %}checked{% endif %}>
+                                    <label for="payment_{{ value }}" class="payment-label">
+                                        {% if value == 'cod' %}
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        {% else %}
+                                        <i class="fas fa-credit-card"></i>
+                                        {% endif %}
+                                        <span>{{ label }}</span>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-checkout" id="place-order-btn">
+                            <span id="btn-text">Place Order</span>
+                            <span id="btn-loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+                <div class="order-summary-card">
+                    <h4 class="summary-title">Order Summary</h4>
+                    {% for item in cart_items %}
+                    <div class="summary-item">
+                        <div class="item-info">
+                            <img src="{% if item.product.images.first %}{{ item.product.images.first.image.url }}{% else %}https://picsum.photos/seed/{{ item.product.name }}/80/80{% endif %}"
+                                 alt="{{ item.product.name }}" class="item-img">
+                            <div class="item-details">
+                                <p class="item-name">{{ item.product.name }}</p>
+                                <p class="item-variant">{% if item.variant %}Size: {{ item.variant.size }}{% endif %}</p>
+                                <p class="item-qty">Qty: {{ item.quantity }}</p>
+                            </div>
+                        </div>
+                        <span class="item-price">₹{{ item.get_total_price }}</span>
+                    </div>
+                    {% endfor %}
+
+                    <div class="summary-totals">
+                        <div class="total-row">
+                            <span>Subtotal</span>
+                            <span>₹{{ cart.get_total_price }}</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Shipping</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <span>Total</span>
+                            <span>₹{{ cart.get_total_price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Razorpay Payment Modal -->
+<div class="modal fade" id="razorpayModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Complete Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Click the button below to complete your secure payment via Razorpay.</p>
+                <button type="button" class="btn btn-primary btn-lg" id="razorpay-btn">
+                    <i class="fas fa-lock me-2"></i>Pay ₹{{ cart.get_total_price }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById('order-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        const btn = document.getElementById('place-order-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoading = document.getElementById('btn-loading');
+
+        btn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline';
+
+        if (paymentMethod === 'online') {
+            // Create Razorpay order first
+            fetch('{% url "orders:create_razorpay_order" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    shipping_address: document.querySelector('[name="shipping_address"]').value,
+                    billing_address: document.querySelector('[name="billing_address"]').value,
+                    phone_number: document.querySelector('[name="phone_number"]').value,
+                    email: document.querySelector('[name="email"]').value,
+                    notes: document.querySelector('[name="notes"]').value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    openRazorpayCheckout(data);
+                } else {
+                    alert(data.message || 'Failed to create payment order');
+                    btn.disabled = false;
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred');
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            });
+        } else {
+            // COD - submit form directly
+            this.submit();
+        }
+    });
+
+    function openRazorpayCheckout(data) {
+        const options = {
+            key: data.razorpay_key,
+            amount: data.amount,
+            currency: data.currency,
+            name: 'EQUILA STYLE',
+            description: 'Order Payment',
+            order_id: data.razorpay_order_id,
+            handler: function(response) {
+                // Payment successful - verify on server
+                verifyPayment(response, data.order_id);
+            },
+            prefill: {
+                email: data.email,
+                contact: data.phone
+            },
+            theme: {
+                color: '#c5a059'
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+        // Reset button state
+        const btn = document.getElementById('place-order-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoading = document.getElementById('btn-loading');
+        btn.disabled = false;
+        btnText.style.display = 'inline';
+        btnLoading.style.display = 'none';
+    }
+
+    function verifyPayment(response, orderId) {
+        fetch('{% url "orders:verify_payment" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                order_id: orderId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect_url;
+            } else {
+                alert(data.message || 'Payment verification failed');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Payment verification error');
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-page {
+        padding-top: 160px;
+        padding-bottom: 60px;
+        background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-green) 50%, var(--charcoal) 100%);
+        min-height: 100vh;
+        position: relative;
+        z-index: 1;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        padding: 25px 0;
+        margin-bottom: 40px;
+    }
+
+    .breadcrumb-item a {
+        color: var(--gold);
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--white);
+    }
+
+    .checkout-card, .order-summary-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(197, 160, 89, 0.2);
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .checkout-title, .summary-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2rem;
+        color: var(--gold);
+        margin-bottom: 25px;
+        letter-spacing: 0.05em;
+    }
+
+    .form-label {
+        color: var(--white);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(197, 160, 89, 0.3);
+        color: var(--white);
+        border-radius: 8px;
+        padding: 12px 15px;
+    }
+
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--gold);
+        color: var(--white);
+        box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2);
+    }
+
+    .payment-section {
+        border-top: 1px solid rgba(197, 160, 89, 0.2);
+        padding-top: 25px;
+    }
+
+    .section-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.5rem;
+        color: var(--gold);
+        margin-bottom: 20px;
+    }
+
+    .payment-options {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .payment-option {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(197, 160, 89, 0.2);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .payment-option:hover {
+        border-color: var(--gold);
+        background: rgba(197, 160, 89, 0.1);
+    }
+
+    .payment-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--white);
+        font-family: 'DM Sans', sans-serif;
+        margin: 0;
+        cursor: pointer;
+        flex: 1;
+    }
+
+    .payment-label i {
+        font-size: 1.5rem;
+        color: var(--gold);
+    }
+
+    .btn-checkout {
+        width: 100%;
+        padding: 15px 25px;
+        background: var(--gold);
+        color: var(--black);
+        border: none;
+        border-radius: 8px;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 0.1em;
+        transition: all 0.3s ease;
+    }
+
+    .btn-checkout:hover {
+        background: var(--gold-shine);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(197, 160, 89, 0.3);
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+    }
+
+    .item-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid rgba(197, 160, 89, 0.2);
+    }
+
+    .item-name {
+        color: var(--white);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .item-variant, .item-qty {
+        color: var(--text-dim);
+        font-size: 0.8rem;
+        margin: 2px 0;
+    }
+
+    .item-price {
+        color: var(--gold);
+        font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .summary-totals {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(197, 160, 89, 0.2);
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: var(--text-dim);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .grand-total {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--gold);
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(197, 160, 89, 0.2);
+    }
+
+    @media (max-width: 768px) {
+        .checkout-page {
+            padding-top: 140px;
+            padding-bottom: 40px;
+        }
+
+        .checkout-card, .order-summary-card {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}

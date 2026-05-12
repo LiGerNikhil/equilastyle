@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Post - EQUILA STYLE Blog{% endblock %}
+
+{% block extra_css %}
+<style>
+    .create-post-page {
+        padding-top: 120px;
+        min-height: 100vh;
+        background: var(--black);
+    }
+    
+    .create-post-header {
+        text-align: center;
+        padding: 60px 20px 40px;
+        background: linear-gradient(135deg, #0a2e1d 0%, #000000 100%);
+        border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    }
+    
+    .create-post-header h1 {
+        font-size: 42px;
+        font-weight: 300;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 15px;
+    }
+    
+    .create-post-header .gold-line {
+        width: 80px;
+        height: 2px;
+        background: var(--gold);
+        margin: 0 auto 20px;
+    }
+    
+    .create-post-header p {
+        color: rgba(240, 235, 228, 0.6);
+        font-size: 16px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .create-post-form-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+    
+    .create-post-form {
+        background: linear-gradient(135deg, #0a2e1d 0%, #1a1a1a 100%);
+        padding: 40px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+    
+    .form-title {
+        color: var(--gold);
+        font-size: 24px;
+        margin-bottom: 30px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-align: center;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        color: rgba(240, 235, 228, 0.8);
+        font-size: 13px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    
+    .form-group .form-control {
+        width: 100%;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        border-radius: 8px;
+        color: var(--white);
+        font-size: 15px;
+        font-family: 'Cormorant Garamond', serif;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    
+    .form-group .form-control:focus {
+        outline: none;
+        border-color: var(--gold);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+    }
+    
+    .form-group textarea.form-control {
+        min-height: 200px;
+        resize: vertical;
+    }
+    
+    .form-group select.form-control {
+        cursor: pointer;
+    }
+    
+    .form-group select.form-control option {
+        background: #0a2e1d;
+        color: var(--white);
+    }
+    
+    .error-message {
+        color: #ff6b6b;
+        font-size: 13px;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, var(--gold) 0%, #c5a000 100%);
+        color: var(--black);
+        padding: 16px 32px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+    }
+    
+    .cancel-btn {
+        background: transparent;
+        color: rgba(240, 235, 228, 0.6);
+        padding: 16px 32px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .cancel-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+    }
+    
+    .help-text {
+        color: rgba(240, 235, 228, 0.5);
+        font-size: 12px;
+        margin-top: 5px;
+        font-style: italic;
+    }
+    
+    @media (max-width: 768px) {
+        .create-post-header h1 {
+            font-size: 28px;
+        }
+        
+        .create-post-form {
+            padding: 25px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .submit-btn,
+        .cancel-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="create-post-page">
+    <div class="create-post-header">
+        <h1>Create Post</h1>
+        <div class="gold-line"></div>
+        <p>Share your thoughts, experiences, and style insights with the EQUILA community.</p>
+    </div>
+    
+    <div class="create-post-form-container">
+        <div class="create-post-form">
+            <h2 class="form-title"><i class="fas fa-feather-alt"></i> Write Your Post</h2>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" style="
+                        background: {% if message.tags == 'success' %}rgba(76, 175, 80, 0.1){% elif message.tags == 'error' %}rgba(244, 67, 54, 0.1){% else %}rgba(255, 215, 0, 0.1){% endif %};
+                        border: 1px solid {% if message.tags == 'success' %}#4CAF50{% elif message.tags == 'error' %}#f44336{% else %}var(--gold){% endif %};
+                        color: {% if message.tags == 'success' %}#4CAF50{% elif message.tags == 'error' %}#f44336{% else %}var(--gold){% endif %};
+                        padding: 15px 20px;
+                        border-radius: 8px;
+                        margin-bottom: 20px;
+                    ">
+                        {{ message }}
+                        <button type="button" onclick="this.parentElement.style.display='none'" style="float: right; background: none; border: none; color: inherit; font-size: 20px; cursor: pointer;">×</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}">Post Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        {% for error in form.title.errors %}
+                            <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    <span class="help-text">Choose a catchy title that captures the essence of your post</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}">Category</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                        {% for error in form.category.errors %}
+                            <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    <span class="help-text">Select the most appropriate category for your post</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.excerpt.id_for_label }}">Short Description</label>
+                    {{ form.excerpt }}
+                    {% if form.excerpt.errors %}
+                        {% for error in form.excerpt.errors %}
+                            <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    <span class="help-text">Brief description that will appear in post previews (max 300 characters)</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.content.id_for_label }}">Content</label>
+                    {{ form.content }}
+                    {% if form.content.errors %}
+                        {% for error in form.content.errors %}
+                            <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    <span class="help-text">Write your full post content. You can use paragraphs, headings, and other formatting.</span>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Submit for Review
+                    </button>
+                    <a href="{% url 'blog:post_list' %}" class="cancel-btn">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-save draft functionality (optional enhancement)
+let autoSaveTimer;
+const form = document.querySelector('form');
+const inputs = form.querySelectorAll('input, textarea, select');
+
+inputs.forEach(input => {
+    input.addEventListener('input', () => {
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(() => {
+            // Save to localStorage as draft
+            const formData = new FormData(form);
+            const draft = {};
+            for (let [key, value] of formData.entries()) {
+                draft[key] = value;
+            }
+            localStorage.setItem('blog_draft', JSON.stringify(draft));
+            console.log('Draft saved automatically');
+        }, 30000); // Auto-save after 30 seconds of inactivity
+    });
+});
+
+// Load draft on page load
+window.addEventListener('load', () => {
+    const savedDraft = localStorage.getItem('blog_draft');
+    if (savedDraft) {
+        const draft = JSON.parse(savedDraft);
+        // Populate form with saved data (optional - can ask user first)
+        console.log('Draft found:', draft);
+    }
+});
+</script>
+{% endblock %}

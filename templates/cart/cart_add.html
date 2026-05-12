@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add to Cart - {{ product.name }} - EQUILA STYLE{% endblock %}
+
+{% block content %}
+<div class="cart-add-page">
+    <div class="container py-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'products:home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">Products</a></li>
+                <li class="breadcrumb-item"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></li>
+                <li class="breadcrumb-item active">Add to Cart</li>
+            </ol>
+        </nav>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="cart-add-card">
+                    <div class="cart-add-header">
+                        <h2 class="cart-add-title">Add to Cart</h2>
+                        <p class="cart-add-subtitle">{{ product.name }}</p>
+                    </div>
+                    
+                    <div class="cart-add-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="product-image-container">
+                                    <img src="{% if product.images.first %}{{ product.images.first.image.url }}{% else %}{% static 'images/placeholder-product.jpg' %}{% endif %}" 
+                                         alt="{{ product.name }}" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="product-info">
+                                    <h3>{{ product.name }}</h3>
+                                    <p class="product-category">{{ product.category.name }}</p>
+                                    <div class="price-display">
+                                        <span class="current-price">₹{{ product.price }}</span>
+                                        {% if product.original_price %}
+                                            <span class="original-price">₹{{ product.original_price }}</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% if product.variants.exists %}
+                                    <form method="post" action="{% url 'cart:cart_add' product.id %}">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="{{ form.variant.id }}" class="form-label">Size/Variant</label>
+                                            {{ form.variant }}
+                                            {% if form.variant.errors %}
+                                                <div class="text-danger">{{ form.variant.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="{{ form.quantity.id }}" class="form-label">Quantity</label>
+                                            {{ form.quantity }}
+                                            {% if form.quantity.errors %}
+                                                <div class="text-danger">{{ form.quantity.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <form method="post" action="{% url 'cart:cart_add' product.id %}">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="{{ form.quantity.id }}" class="form-label">Quantity</label>
+                                            {{ form.quantity }}
+                                            {% if form.quantity.errors %}
+                                                <div class="text-danger">{{ form.quantity.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.cart-add-page {
+    min-height: 100vh;
+    padding-top: 80px;
+    background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-green) 50%, var(--charcoal) 100%);
+}
+
+.cart-add-card {
+    background: var(--mid2);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.cart-add-header {
+    background: var(--mid);
+    padding: 30px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    text-align: center;
+}
+
+.cart-add-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.5rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+}
+
+.cart-add-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.cart-add-body {
+    padding: 40px;
+}
+
+.product-image-container {
+    background: var(--mid);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    padding: 20px;
+    border-radius: 0;
+}
+
+.product-image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.product-info h3 {
+    font-family: 'Bebas Neue', cursive;
+    color: var(--gold);
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.product-category {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.price-display {
+    margin-bottom: 30px;
+}
+
+.current-price {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.5rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+}
+
+.original-price {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dim);
+    text-decoration: line-through;
+    margin-left: 10px;
+    font-size: 1.2rem;
+}
+
+.form-label {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.form-control {
+    background: var(--mid);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    color: var(--white);
+    border-radius: 0;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+    background: var(--mid);
+    color: var(--white);
+}
+
+.btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    border-radius: 0;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 30px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: var(--gold-shine);
+    transform: translateY(-2px);
+}
+
+.text-danger {
+    color: var(--red) !important;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .cart-add-body {
+        padding: 20px;
+    }
+    
+    .cart-add-title {
+        font-size: 2rem;
+    }
+    
+    .product-info h3 {
+        font-size: 1.5rem;
+    }
+    
+    .current-price {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}

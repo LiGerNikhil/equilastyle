@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard - EQUILA{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="admin-container">
+    <!-- Sidebar -->
+    <nav class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="admin-logo">
+                <img src="{% static 'images/logo.jpeg' %}" alt="EQUILA" class="logo-img">
+                <h2>EQUILA</h2>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="menu-item {% if request.resolver_match.url_name == 'admin_panel:dashboard' %}active{% endif %}">
+                <a href="{% url 'admin_panel:dashboard' %}">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="menu-item {% if request.resolver_match.url_name == 'admin_panel:users' %}active{% endif %}">
+                <a href="{% url 'admin_panel:users' %}">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="menu-item {% if request.resolver_match.url_name == 'admin_panel:products' %}active{% endif %}">
+                <a href="{% url 'admin_panel:products' %}">
+                    <i class="fas fa-box"></i>
+                    <span>Products</span>
+                </a>
+            </li>
+            <li class="menu-item {% if request.resolver_match.url_name == 'admin_panel:orders' %}active{% endif %}">
+                <a href="{% url 'admin_panel:orders' %}">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Orders</span>
+                </a>
+            </li>
+            <li class="menu-item {% if request.resolver_match.url_name == 'admin_panel:blog' %}active{% endif %}">
+                <a href="{% url 'admin_panel:blog' %}">
+                    <i class="fas fa-blog"></i>
+                    <span>Blog</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <div class="admin-user">
+                <div class="user-avatar">
+                    <img src="{% static 'images/logo.jpeg' %}" alt="Admin">
+                </div>
+                <div class="user-info">
+                    <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
+                    <span class="user-role">Administrator</span>
+                </div>
+            </div>
+            <a href="{% url 'products:home' %}" class="btn-view-site">
+                <i class="fas fa-external-link-alt"></i>
+                View Site
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="admin-main">
+        <!-- Top Bar -->
+        <header class="admin-header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+            </div>
+            
+            <div class="header-right">
+                <div class="admin-notifications">
+                    <div class="notification-dropdown">
+                        <button class="notification-btn" id="notificationToggle">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationCount">0</span>
+                        </button>
+                        <div class="notification-dropdown-menu" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h4>Notifications</h4>
+                                <button class="mark-all-read" id="markAllRead">Mark all as read</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                            <div class="notification-footer">
+                                <a href="{% url 'admin_panel:orders' %}" class="view-all-orders">View All Orders</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-user-menu">
+                    <div class="user-dropdown">
+                        <button class="dropdown-toggle" data-bs-toggle="dropdown">
+                            <div class="user-avatar-small">
+                                <img src="{% static 'images/logo.jpeg' %}" alt="Admin">
+                            </div>
+                            <span class="user-name-small">{{ user.get_full_name|default:user.username }}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'accounts:profile' %}"><i class="fas fa-user"></i> Profile</a></li>
+                            <li class="logout-item">
+                                <form method="post" action="{% url 'accounts:logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="logout-btn">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Page Content -->
+        <main class="admin-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JS -->
+<script src="{% static 'js/admin.js' %}"></script>
+
+<script>
+// Sidebar Toggle
+document.getElementById('sidebarToggle').addEventListener('click', function() {
+    document.querySelector('.admin-container').classList.toggle('sidebar-collapsed');
+});
+
+// Notification Dropdown
+document.getElementById('notificationToggle').addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const dropdown = document.getElementById('notificationDropdown');
+    dropdown.classList.toggle('show');
+    loadNotifications();
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.matches('.dropdown-toggle') && !e.target.matches('#notificationToggle')) {
+        document.querySelectorAll('.dropdown-menu.show').forEach(function(dropdown) {
+            dropdown.classList.remove('show');
+        });
+        document.getElementById('notificationDropdown').classList.remove('show');
+    }
+});
+
+// Server-Sent Events for real-time notifications
+let eventSource;
+let notificationStreamActive = false;
+
+function startNotificationStream() {
+    if (notificationStreamActive) return;
+    
+    eventSource = new EventSource('/admin-panel/api/notifications/stream/');
+    notificationStreamActive = true;
+    
+    eventSource.onopen = function() {
+        console.log('Notification stream connected');
+    };
+    
+    eventSource.onmessage = function(event) {
+        const notification = JSON.parse(event.data);
+        addRealTimeNotification(notification);
+        updateNotificationCount();
+    };
+    
+    eventSource.onerror = function(event) {
+        console.log('Notification stream error, retrying in 5 seconds...');
+        notificationStreamActive = false;
+        setTimeout(startNotificationStream, 5000);
+    };
+    
+    eventSource.onclose = function() {
+        console.log('Notification stream closed');
+        notificationStreamActive = false;
+    };
+}
+
+// Add real-time notification to UI
+function addRealTimeNotification(notification) {
+    const notificationList = document.getElementById('notificationList');
+    
+    // Remove "no notifications" message if present
+    const noNotifications = notificationList.querySelector('.no-notifications');
+    if (noNotifications) {
+        noNotifications.remove();
+    }
+    
+    // Create notification element
+    const notificationElement = document.createElement('div');
+    notificationElement.className = 'notification-item unread';
+    notificationElement.dataset.id = notification.id;
+    notificationElement.innerHTML = `
+        <div class="notification-icon">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">${notification.title}</div>
+            <div class="notification-message">${notification.message}</div>
+            <div class="notification-time">${notification.time_ago}</div>
+        </div>
+        <div class="notification-actions">
+            <button class="mark-read-btn" data-id="${notification.id}" title="Mark as read">
+                <i class="fas fa-check"></i>
+            </button>
+        </div>
+    `;
+    
+    // Add to top of list
+    notificationList.insertBefore(notificationElement, notificationList.firstChild);
+    
+    // Add event listener to mark as read button
+    const markReadBtn = notificationElement.querySelector('.mark-read-btn');
+    markReadBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        markNotificationAsRead(this.dataset.id);
+    });
+    
+    // Show dropdown if it's not already visible
+    const dropdown = document.getElementById('notificationDropdown');
+    if (!dropdown.classList.contains('show')) {
+        dropdown.classList.add('show');
+        setTimeout(() => {
+            dropdown.classList.remove('show');
+        }, 5000); // Auto-hide after 5 seconds
+    }
+}
+
+// Update notification count
+function updateNotificationCount() {
+    fetch('/admin-panel/api/notifications/')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('notificationCount').textContent = data.unread_count;
+        })
+        .catch(error => console.error('Error updating notification count:', error));
+}
+
+// Load notifications
+function loadNotifications() {
+    fetch('/admin-panel/api/notifications/')
+        .then(response => response.json())
+        .then(data => {
+            updateNotificationUI(data);
+        })
+        .catch(error => console.error('Error loading notifications:', error));
+}
+
+// Update notification UI
+function updateNotificationUI(data) {
+    const notificationList = document.getElementById('notificationList');
+    const notificationCount = document.getElementById('notificationCount');
+    
+    notificationCount.textContent = data.unread_count;
+    
+    if (data.notifications.length === 0) {
+        notificationList.innerHTML = '<div class="notification-item no-notifications">No new notifications</div>';
+    } else {
+        notificationList.innerHTML = data.notifications.map(notification => `
+            <div class="notification-item ${notification.is_read ? 'read' : 'unread'}" data-id="${notification.id}">
+                <div class="notification-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${notification.time_ago}</div>
+                </div>
+                <div class="notification-actions">
+                    <button class="mark-read-btn" data-id="${notification.id}" title="Mark as read">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Add event listeners to mark as read buttons
+    document.querySelectorAll('.mark-read-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            markNotificationAsRead(this.dataset.id);
+        });
+    });
+}
+
+// Mark notification as read
+function markNotificationAsRead(notificationId) {
+    fetch(`/admin-panel/api/notifications/${notificationId}/mark-read/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            loadNotifications(); // Reload notifications
+        }
+    })
+    .catch(error => console.error('Error marking notification as read:', error));
+}
+
+// Mark all notifications as read
+document.getElementById('markAllRead').addEventListener('click', function() {
+    fetch('/admin-panel/api/notifications/mark-all-read/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            loadNotifications(); // Reload notifications
+        }
+    })
+    .catch(error => console.error('Error marking all notifications as read:', error));
+});
+
+// Get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Dropdown initialization
+document.querySelectorAll('.dropdown-toggle').forEach(function(element) {
+    element.addEventListener('click', function(e) {
+        e.preventDefault();
+        const dropdown = this.nextElementSibling;
+        if (dropdown) {
+            dropdown.classList.toggle('show');
+        }
+    });
+});
+
+// Start notification stream when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    startNotificationStream();
+    // Initial load of notifications
+    loadNotifications();
+});
+</script>
+
+<style>
+    .logout-item {
+        list-style: none;
+        margin-left: 20px;
+    }
+    
+    .logout-btn {
+        background: none;
+        border: none;
+        color: var(--gold);
+        font-size: 10px;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        cursor: pointer;
+        padding: 8px 12px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    
+    /* Notification Dropdown Styles */
+    .notification-dropdown {
+        position: relative;
+    }
+    
+    .notification-btn {
+        background: none;
+        border: none;
+        color: var(--gold);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 8px;
+        position: relative;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+    
+    .notification-btn:hover {
+        background: rgba(255, 215, 0, 0.1);
+        transform: scale(1.05);
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #ff4444;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 10px;
+        min-width: 16px;
+        text-align: center;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .notification-dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--dark-green);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        min-width: 350px;
+        max-width: 400px;
+        max-height: 500px;
+        overflow: hidden;
+        display: none;
+        z-index: 1000;
+    }
+    
+    .notification-dropdown-menu.show {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .notification-header h4 {
+        color: var(--gold);
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .mark-all-read {
+        background: none;
+        border: none;
+        color: var(--gold);
+        font-size: 12px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+    
+    .mark-all-read:hover {
+        background: rgba(255, 215, 0, 0.1);
+    }
+    
+    .notification-list {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+    
+    .notification-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(255, 215, 0, 0.05);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .notification-item:hover {
+        background: rgba(255, 215, 0, 0.05);
+    }
+    
+    .notification-item.unread {
+        background: rgba(255, 215, 0, 0.08);
+        border-left: 3px solid var(--gold);
+    }
+    
+    .notification-item.read {
+        opacity: 0.7;
+    }
+    
+    .notification-icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 215, 0, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: var(--gold);
+    }
+    
+    .notification-content {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .notification-title {
+        color: var(--gold);
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    
+    .notification-message {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 4px;
+    }
+    
+    .notification-time {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 11px;
+    }
+    
+    .notification-actions {
+        flex-shrink: 0;
+        margin-left: 10px;
+    }
+    
+    .mark-read-btn {
+        background: none;
+        border: none;
+        color: rgba(255, 215, 0, 0.6);
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+    
+    .mark-read-btn:hover {
+        color: var(--gold);
+        background: rgba(255, 215, 0, 0.1);
+    }
+    
+    .no-notifications {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+        padding: 20px;
+        font-style: italic;
+    }
+    
+    .notification-footer {
+        padding: 15px 20px;
+        border-top: 1px solid rgba(255, 215, 0, 0.1);
+        background: rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+    
+    .view-all-orders {
+        color: var(--gold);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .view-all-orders:hover {
+        color: var(--gold-shine);
+        text-decoration: underline;
+    }
+    
+    /* Scrollbar styles */
+    .notification-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .notification-list::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+    
+    .notification-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 215, 0, 0.3);
+        border-radius: 3px;
+    }
+    
+    .notification-list::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 215, 0, 0.5);
+    }
+    
+    .logout-btn:hover {
+        background: rgba(255, 215, 0, 0.1);
+        color: var(--gold);
+    }
+    
+    .logout-btn i {
+        margin-right: 5px;
+    }
+
+    .dropdown-menu {
+        background: #0a2e1d;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        border-radius: 8px;
+        padding: 8px 0;
+        min-width: 180px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .dropdown-menu li a {
+        color: var(--white);
+        padding: 10px 20px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.2s ease;
+    }
+
+    .dropdown-menu li a:hover {
+        background: rgba(255, 215, 0, 0.1);
+        color: var(--gold);
+    }
+
+    .dropdown-menu li a i {
+        width: 16px;
+        text-align: center;
+    }
+
+    .dropdown-menu.show {
+        display: block;
+    }
+</style>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
