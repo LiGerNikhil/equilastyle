@@ -26,14 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
-ALLOWED_HOSTS = ['equilastyle.com', '187.127.147.152', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['equilastyle.com', '187.127.147.152', 'localhost', '127.0.0.1',"a081-2401-4900-8846-a293-9da4-6b67-f096-faa1.ngrok-free.app"]
 CSRF_TRUSTED_ORIGINS = [
     "https://equilastyle.com",
     "http://equilastyle.com",
     "https://www.equilastyle.com",
     "http://www.equilastyle.com",
+    "https://a081-2401-4900-8846-a293-9da4-6b67-f096-faa1.ngrok-free.app"
 ]
 
 # Application definition

@@ -291,6 +291,10 @@ body.cur-hover #cur-d {
   #navbar {
     padding: 15px 20px;
     height: auto;
+    background: transparent !important;
+  }
+
+  #navbar.scrolled {
     background: var(--dark-green) !important;
   }
 
@@ -674,11 +678,13 @@ nav {
   display:flex;
   align-items:center;
   justify-content:space-between;
-  transition:transform .55s cubic-bezier(.23,1,.32,1),padding .4s,background .4s;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:transform .55s cubic-bezier(.23,1,.32,1),padding .4s,background .4s,border-color .4s,backdrop-filter .4s;
 }
 
 nav.scrolled { 
-  background:rgba(0,0,0,.9);
+  background: var(--dark-green);
   backdrop-filter:blur(28px) saturate(1.6);
   -webkit-backdrop-filter:blur(28px);
   border-bottom:1px solid rgba(255,215,0,.2);
@@ -1171,9 +1177,29 @@ nav.hidden-nav {
   padding: 28px 60px;
 }
 
-/* Additional navbar fixes for web view */
+/* Main nav: transparent at top (full-bleed hero video); green when scrolled */
 #navbar {
+  background: transparent !important;
+  border-bottom: 1px solid transparent;
+}
+
+#navbar.scrolled {
   background: var(--dark-green) !important;
+  background-color: var(--dark-green) !important;
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+#navbar:not(.scrolled) .nav-links a,
+#navbar:not(.scrolled) .nav-right a,
+#navbar:not(.scrolled) .nav-right button,
+#navbar:not(.scrolled) .nav-profile-link {
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.75);
+}
+
+#navbar:not(.scrolled) .logo-img {
+  filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.65));
 }
 
 .navbar-expand-lg {
@@ -1188,9 +1214,8 @@ header {
   background: var(--dark-green) !important;
 }
 
-/* Force green background on all navbar elements */
+/* Green bar for Bootstrap-style nav / header (site chrome); #navbar uses transparent → .scrolled above */
 .navbar,
-#navbar,
 .navbar-expand-lg,
 .navbar-dark,
 header,

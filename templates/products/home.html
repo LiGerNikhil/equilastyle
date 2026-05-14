@@ -25,12 +25,39 @@
         }
     }
 
-    #hero-canvas {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        position: relative;
+    .hero-video-parallax {
+        position: absolute;
+        inset: 0;
         z-index: 2;
+        transform-style: preserve-3d;
+        perspective: 1400px;
+        overflow: hidden;
+    }
+
+    #hero-bg-video {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate3d(-50%, -50%, 0);
+        object-fit: cover;
+        pointer-events: none;
+        z-index: 1;
+        /* Decode at source resolution; no canvas downscale */
+    }
+
+    .hero-video-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        background:
+            linear-gradient(135deg, rgba(26, 0, 0, 0.55) 0%, transparent 40%, rgba(75, 0, 0, 0.35) 100%),
+            radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0, 0, 0, 0.65) 0%, transparent 55%);
+        box-shadow: inset 0 0 120px rgba(255, 215, 0, 0.08);
     }
 
     .story-trigger {
@@ -133,11 +160,12 @@
     #story-scroll-container {
         position: relative;
         z-index: 15;
+        min-height: 100vh;
     }
 
+    /* position: relative — do not use sticky here; GSAP ScrollTrigger pin conflicts with sticky */
     #story-pinned {
-        position: sticky;
-        top: 0;
+        position: relative;
         height: 100vh;
         width: 100%;
         display: flex;
@@ -148,12 +176,21 @@
         overflow: hidden;
     }
 
+    .story-cards-parallax {
+        position: absolute;
+        inset: 0;
+        transform-style: preserve-3d;
+        transform-origin: center center;
+    }
+
     .story-card {
         position: absolute;
         width: 90%;
         max-width: 520px;
         height: 70vh;
         max-height: 640px;
+        left: 50%;
+        top: 50%;
         background: linear-gradient(
             135deg,
             rgba(26, 46, 29, 0.35) 0%,
@@ -232,7 +269,7 @@
         width: 100%;
         height: 100vh;
         pointer-events: none;
-        z-index: 3;
+        z-index: 5;
     }
 
     /* Scroll progress indicator */
@@ -651,12 +688,43 @@
         height: calc(100vh - 80px); /* Reduced height to leave space for footer */
         z-index: 1;
         background: var(--black);
+        overflow: hidden;
+        transform-style: preserve-3d;
+        perspective: 1600px;
     }
-    
-    #hero-canvas {
-        width: 100%;
-        height: 100%;
+
+    .hero-video-parallax {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        transform-style: preserve-3d;
+        overflow: hidden;
+    }
+
+    #hero-bg-video {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate3d(-50%, -50%, 0);
+        object-fit: cover;
         display: block;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .hero-video-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        background:
+            linear-gradient(135deg, rgba(26, 0, 0, 0.5) 0%, transparent 42%, rgba(75, 0, 0, 0.3) 100%),
+            radial-gradient(ellipse 85% 65% at 50% 100%, rgba(0, 0, 0, 0.6) 0%, transparent 55%);
+        box-shadow: inset 0 0 100px rgba(255, 215, 0, 0.06);
     }
     
     .scroll-down-hint {
@@ -777,6 +845,384 @@
     .material-footer {
         position: relative;
         z-index: 100 !important;
+    }
+
+    /* EQUILA STYLE — Fashion Top Rated (static showcase, enhanced-images) */
+    .equila-top-rated {
+        padding: 110px 0 100px;
+        background: var(--black);
+        border-top: 1px solid rgba(255, 215, 0, 0.08);
+        border-bottom: 1px solid rgba(255, 215, 0, 0.08);
+    }
+
+    .equila-top-rated-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    .equila-tr-lead {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        color: rgba(245, 245, 245, 0.55);
+        max-width: 640px;
+        margin: 20px auto 0;
+        line-height: 1.5;
+    }
+
+    .equila-tr-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+        margin-top: 56px;
+    }
+
+    .equila-tr-card {
+        position: relative;
+        background: linear-gradient(145deg, rgba(10, 31, 10, 0.9) 0%, rgba(0, 0, 0, 0.65) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.14);
+        overflow: hidden;
+        transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .equila-tr-card:hover {
+        border-color: rgba(255, 215, 0, 0.45);
+        box-shadow:
+            0 18px 48px rgba(0, 0, 0, 0.55),
+            0 0 28px rgba(255, 215, 0, 0.12);
+        transform: translateY(-4px);
+    }
+
+    .equila-tr-frame {
+        position: relative;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+    }
+
+    .equila-tr-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .equila-tr-card:hover .equila-tr-frame img {
+        transform: scale(1.06);
+    }
+
+    .equila-tr-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.05) 0%,
+            rgba(10, 31, 10, 0.25) 38%,
+            rgba(0, 0, 0, 0.5) 100%
+        );
+        pointer-events: none;
+    }
+
+    .equila-tr-shop {
+        pointer-events: auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 32px;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 13px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--gold);
+        border: 1px solid rgba(255, 215, 0, 0.45);
+        background: rgba(10, 31, 10, 0.35);
+        backdrop-filter: blur(12px) saturate(1.4);
+        -webkit-backdrop-filter: blur(12px) saturate(1.4);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .equila-tr-shop:hover {
+        color: var(--white);
+        border-color: var(--gold);
+        background: rgba(255, 215, 0, 0.12);
+        box-shadow: 0 6px 24px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 991px) {
+        .equila-tr-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .equila-top-rated {
+            padding: 80px 0 72px;
+        }
+
+        .equila-tr-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 40px;
+        }
+
+        .equila-tr-shop {
+            padding: 10px 20px;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .equila-top-rated-inner {
+            padding: 0 16px;
+        }
+
+        .equila-tr-grid {
+            gap: 12px;
+        }
+    }
+
+    /* EQUILA Premium Accessories — bento layout (img13–17), distinct from Top Rated grid */
+    .equila-acc-premium {
+        position: relative;
+        z-index: 20;
+        padding: 100px 0 96px;
+        background: linear-gradient(185deg, #050806 0%, var(--black) 42%, #0a1510 100%);
+        border-top: 1px solid rgba(255, 215, 0, 0.1);
+        border-bottom: 1px solid rgba(255, 215, 0, 0.06);
+    }
+
+    .equila-acc-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    .equila-acc-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 28px 40px;
+        margin-bottom: 44px;
+    }
+
+    .equila-acc-head-main {
+        flex: 1 1 320px;
+        max-width: 720px;
+        border-left: 4px solid var(--gold);
+        padding-left: 26px;
+        text-align: left;
+    }
+
+    .equila-acc-head-main .s-eyebrow {
+        justify-content: flex-start;
+    }
+
+    .equila-acc-head-main .s-title {
+        text-align: left;
+    }
+
+    .equila-acc-tag {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        color: rgba(245, 245, 245, 0.52);
+        line-height: 1.45;
+        margin-top: 14px;
+        max-width: 520px;
+    }
+
+    .equila-acc-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: minmax(240px, 30vh) minmax(240px, 30vh);
+        gap: 16px;
+    }
+
+    .equila-acc-tile {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        min-height: 100%;
+        border: 1px solid rgba(255, 215, 0, 0.22);
+        background: var(--dark-green);
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+        transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .equila-acc-tile:focus-visible {
+        outline: 2px solid var(--gold-shine);
+        outline-offset: 3px;
+    }
+
+    .equila-acc-tile--hero {
+        grid-column: 1;
+        grid-row: 1 / 3;
+    }
+
+    .equila-acc-tile--a {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .equila-acc-tile--b {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    .equila-acc-tile--c {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .equila-acc-tile--d {
+        grid-column: 3;
+        grid-row: 2;
+    }
+
+    .equila-acc-img {
+        width: 100%;
+        height: 100%;
+        min-height: 220px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .equila-acc-tile:hover .equila-acc-img {
+        transform: scale(1.06);
+    }
+
+    .equila-acc-tile:hover {
+        border-color: rgba(255, 215, 0, 0.55);
+        box-shadow:
+            inset 0 0 0 1px rgba(255, 215, 0, 0.12),
+            0 20px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .equila-acc-band {
+        position: absolute;
+        inset: 0;
+        top: 38%;
+        pointer-events: none;
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.92) 0%,
+            rgba(10, 31, 10, 0.42) 52%,
+            transparent 100%
+        );
+        clip-path: polygon(0 28%, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .equila-acc-cta {
+        position: absolute;
+        z-index: 2;
+        bottom: 22px;
+        left: 22px;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.38em;
+        text-transform: uppercase;
+        padding: 14px 30px;
+        color: var(--gold);
+        border: 2px solid var(--gold);
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: none;
+        transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .equila-acc-tile:hover .equila-acc-cta {
+        background: var(--gold);
+        color: var(--black);
+        border-color: var(--gold-shine);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 991px) {
+        .equila-acc-grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: minmax(260px, 34vh) repeat(2, minmax(200px, 26vh));
+        }
+
+        .equila-acc-tile--hero {
+            grid-column: 1 / -1;
+            grid-row: 1;
+        }
+
+        .equila-acc-tile--a {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .equila-acc-tile--b {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .equila-acc-tile--c {
+            grid-column: 1;
+            grid-row: 3;
+        }
+
+        .equila-acc-tile--d {
+            grid-column: 2;
+            grid-row: 3;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .equila-acc-premium {
+            padding: 72px 0 64px;
+        }
+
+        .equila-acc-head {
+            margin-bottom: 32px;
+        }
+
+        .equila-acc-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .equila-acc-tile--hero,
+        .equila-acc-tile--a,
+        .equila-acc-tile--b,
+        .equila-acc-tile--c,
+        .equila-acc-tile--d {
+            grid-column: unset;
+            grid-row: unset;
+            min-height: 260px;
+        }
+
+        .equila-acc-cta {
+            bottom: 18px;
+            left: 18px;
+            padding: 12px 22px;
+            font-size: 10px;
+            letter-spacing: 0.28em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .equila-acc-inner {
+            padding: 0 16px;
+        }
     }
     
     /* Shoes Showcase Styles */
@@ -1181,6 +1627,156 @@
         }
     }
     
+    /* Premium Collection Styles */
+    .premium-collection {
+        padding: 100px 0;
+        background: var(--black);
+    }
+    
+    .premium-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-top: 50px;
+    }
+    
+    .premium-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+    }
+    
+    .premium-frame {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border: 3px solid var(--gold);
+        border-radius: 15px;
+        overflow: hidden;
+        background: var(--dark-green);
+        transition: all 0.3s ease;
+    }
+    
+    .premium-frame:hover {
+        transform: scale(1.02);
+        border-color: var(--gold-shine);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+    
+    .premium-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        aspect-ratio: 3/4;
+    }
+    
+    .premium-frame:hover .premium-img {
+        transform: scale(1.1);
+    }
+    
+    .premium-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
+        padding: 30px 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .premium-overlay h4 {
+        color: var(--gold);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 24px;
+        margin: 0;
+        letter-spacing: 2px;
+    }
+    
+    .premium-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 28px;
+        font-family: 'Bebas Neue', cursive;
+        font-size: 14px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--gold);
+        border: 1px solid rgba(255, 215, 0, 0.4);
+        background: rgba(255, 215, 0, 0.1);
+        transition: all 0.3s ease;
+        border-radius: 5px;
+    }
+    
+    .premium-btn:hover {
+        background: var(--gold);
+        color: var(--black);
+        border-color: var(--gold);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    }
+    
+    /* Mobile Responsive for Premium Collection */
+    @media (max-width: 768px) {
+        .premium-collection {
+            padding: 60px 0;
+        }
+        
+        .premium-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .premium-overlay {
+            padding: 20px 15px 15px;
+        }
+        
+        .premium-overlay h4 {
+            font-size: 18px;
+        }
+        
+        .premium-btn {
+            padding: 10px 20px;
+            font-size: 12px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .premium-collection {
+            padding: 40px 0;
+        }
+        
+        .premium-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .premium-frame {
+            border-width: 2px;
+            border-radius: 12px;
+        }
+        
+        .premium-overlay {
+            padding: 15px 12px 12px;
+        }
+        
+        .premium-overlay h4 {
+            font-size: 16px;
+        }
+        
+        .premium-btn {
+            padding: 8px 16px;
+            font-size: 11px;
+        }
+    }
+
     /* Kids Wear Styles */
     .kids-wear {
         padding: 100px 0;
@@ -1392,9 +1988,14 @@
 {% endblock %}
 
 {% block content %}
-<!-- 3D HERO CANVAS -->
+<!-- 3D HERO VIDEO BACKGROUND -->
 <div id="hero-canvas-container">
-    <canvas id="hero-canvas"></canvas>
+    <div id="hero-video-parallax" class="hero-video-parallax">
+        <video id="hero-bg-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true">
+            <source src="{% static 'videos/equila-home-video.mp4' %}" type="video/mp4">
+        </video>
+        <div class="hero-video-overlay" aria-hidden="true"></div>
+    </div>
     <div id="particles-canvas"></div>
 </div>
 
@@ -1404,6 +2005,7 @@
 <!-- 3D PINNED HERO STORY CARDS -->
 <div id="story-scroll-container">
     <div id="story-pinned">
+        <div id="story-cards-parallax" class="story-cards-parallax">
         <!-- Card 1 -->
         <div class="story-card" data-index="0">
             <img src="https://plus.unsplash.com/premium_photo-1680390327010-09e627ebd475?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Premium Sneakers" class="story-image">
@@ -1464,8 +2066,134 @@
                 </div>
             </div>
         </div>
+        </div>
     </div>
 </div>
+
+<!-- EQUILA STYLE — Fashion Top Rated (static) -->
+<section class="equila-top-rated" id="equila-top-rated" style="position: relative; z-index: 20;">
+    <div class="equila-top-rated-inner">
+        <div class="section-head text-center mb-0">
+            <div class="s-eyebrow justify-content-center">EQUILA STYLE</div>
+            <h2 class="s-title">Fashion <em>Top Rated</em></h2>
+            <p class="equila-tr-lead">Hand-picked looks from our most-loved edits—step in and shop the full EQUILA STYLE range.</p>
+        </div>
+        <div class="equila-tr-grid">
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img1.jpeg' %}" alt="EQUILA STYLE top rated fashion 1" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img2.jpeg' %}" alt="EQUILA STYLE top rated fashion 2" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img3.jpeg' %}" alt="EQUILA STYLE top rated fashion 3" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img4.jpeg' %}" alt="EQUILA STYLE top rated fashion 4" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img5.jpeg' %}" alt="EQUILA STYLE top rated fashion 5" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img6.jpeg' %}" alt="EQUILA STYLE top rated fashion 6" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img7.jpeg' %}" alt="EQUILA STYLE top rated fashion 7" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img8.jpeg' %}" alt="EQUILA STYLE top rated fashion 8" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img9.jpeg' %}" alt="EQUILA STYLE top rated fashion 9" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img10.jpeg' %}" alt="EQUILA STYLE top rated fashion 10" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img11.jpeg' %}" alt="EQUILA STYLE top rated fashion 11" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+            <article class="equila-tr-card">
+                <div class="equila-tr-frame">
+                    <img src="{% static 'images/enhanced-images/img12.jpeg' %}" alt="EQUILA STYLE top rated fashion 12" loading="lazy" width="600" height="800">
+                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- EQUILA Premium Accessories & More (static, img13–17) -->
+<section class="equila-acc-premium" id="equila-acc-premium" aria-labelledby="equila-acc-heading">
+    <div class="equila-acc-inner">
+        <div class="equila-acc-head">
+            <div class="equila-acc-head-main">
+                <div class="s-eyebrow">Premium edit</div>
+                <h2 class="s-title" id="equila-acc-heading">EQUILA <em>Accessories</em> &amp; more</h2>
+                <p class="equila-acc-tag">Leather, metal, and finishing touches—curated to pair with your EQUILA STYLE wardrobe. Tap any frame to shop the full accessories line.</p>
+            </div>
+        </div>
+        <div class="equila-acc-grid">
+            <a class="equila-acc-tile equila-acc-tile--hero" href="{% url 'products:product_list' %}?category=accessories">
+                <img class="equila-acc-img" src="{% static 'images/enhanced-images/img13.jpeg' %}" alt="EQUILA STYLE premium accessories" loading="lazy" width="800" height="1000">
+                <span class="equila-acc-band" aria-hidden="true"></span>
+                <span class="equila-acc-cta">Shop All</span>
+            </a>
+            <a class="equila-acc-tile equila-acc-tile--a" href="{% url 'products:product_list' %}?category=accessories">
+                <img class="equila-acc-img" src="{% static 'images/enhanced-images/img14.jpeg' %}" alt="EQUILA STYLE accessories edit" loading="lazy" width="600" height="750">
+                <span class="equila-acc-band" aria-hidden="true"></span>
+                <span class="equila-acc-cta">Shop All</span>
+            </a>
+            <a class="equila-acc-tile equila-acc-tile--b" href="{% url 'products:product_list' %}?category=accessories">
+                <img class="equila-acc-img" src="{% static 'images/enhanced-images/img15.jpeg' %}" alt="EQUILA STYLE premium details" loading="lazy" width="600" height="750">
+                <span class="equila-acc-band" aria-hidden="true"></span>
+                <span class="equila-acc-cta">Shop All</span>
+            </a>
+            <a class="equila-acc-tile equila-acc-tile--c" href="{% url 'products:product_list' %}?category=accessories">
+                <img class="equila-acc-img" src="{% static 'images/enhanced-images/img16.jpeg' %}" alt="EQUILA STYLE accessories" loading="lazy" width="600" height="750">
+                <span class="equila-acc-band" aria-hidden="true"></span>
+                <span class="equila-acc-cta">Shop All</span>
+            </a>
+            <a class="equila-acc-tile equila-acc-tile--d" href="{% url 'products:product_list' %}?category=accessories">
+                <img class="equila-acc-img" src="{% static 'images/enhanced-images/img17.jpeg' %}" alt="EQUILA STYLE more from the edit" loading="lazy" width="600" height="750">
+                <span class="equila-acc-band" aria-hidden="true"></span>
+                <span class="equila-acc-cta">Shop All</span>
+            </a>
+        </div>
+    </div>
+</section>
 
 <!-- SHOES SHOWCASE SECTION -->
 <section class="shoes-showcase" style="position: relative; z-index: 20; background: var(--black); padding: 100px 0;">
@@ -2504,77 +3232,73 @@
     document.addEventListener('DOMContentLoaded', () => {
         gsap.registerPlugin(ScrollTrigger);
 
-        // ═══════════════ 1. CANVAS FRAME RENDERING ═══════════════
-        const canvas = document.getElementById('hero-canvas');
-        const context = canvas.getContext('2d');
-        
-        function setCanvasSize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        
-        window.addEventListener('resize', setCanvasSize);
-        setCanvasSize();
-        
-        const frameCount = 192;
-        const images = [];
-        const frameSequence = { frame: 174 };
-        let lastRenderTime = 0;
-        const frameInterval = 1000 / 90;
-        
-        for (let i = 0; i < frameCount; i++) {
-            const img = new Image();
-            img.src = `/static/images/hero-frames/frame_${i.toString().padStart(4, '0')}.webp`;
-            images.push(img);
+        // ═══════════════ 1. HERO BACKGROUND VIDEO + GLASSES-FREE 3D PARALLAX ═══════════════
+        const heroVideo = document.getElementById('hero-bg-video');
+        const heroVideoStage = document.getElementById('hero-video-parallax');
+        const storyCardsStage = document.getElementById('story-cards-parallax');
+        const heroFixed = document.getElementById('hero-canvas-container');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (heroVideo) {
+            heroVideo.defaultMuted = true;
+            heroVideo.setAttribute('muted', '');
+            const tryPlay = () => {
+                const p = heroVideo.play();
+                if (p && typeof p.catch === 'function') {
+                    p.catch(() => {});
+                }
+            };
+            tryPlay();
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) tryPlay();
+            });
         }
 
-        function renderCanvas(timestamp) {
-            if (timestamp - lastRenderTime < frameInterval) {
-                requestAnimationFrame(renderCanvas);
-                return;
-            }
-            lastRenderTime = timestamp;
+        let pointerTargetX = 0;
+        let pointerTargetY = 0;
+        let pointerCurX = 0;
+        let pointerCurY = 0;
 
-            const frameIndex = Math.round(frameSequence.frame);
-            const img = images[frameIndex];
-            
-            if (!img || !img.complete) {
-                requestAnimationFrame(renderCanvas);
-                return;
-            }
-            
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const canvasRatio = canvas.width / canvas.height;
-            const imgRatio = img.width / img.height;
-            let drawWidth, drawHeight, offsetX, offsetY;
-            
-            const isMobile = window.innerWidth <= 768;
-            const isWeb = window.innerWidth > 768 && window.innerWidth <= 1440;
-            let padding = 1.0;
-            
-            if (isMobile) padding = 0.9;
-            else if (isWeb) padding = 0.85;
-            
-            if (canvasRatio > imgRatio) {
-                drawWidth = canvas.width * padding;
-                drawHeight = (canvas.width * padding) / imgRatio;
-                offsetX = (canvas.width - drawWidth) / 2;
-                offsetY = (canvas.height - drawHeight) / 2;
-            } else {
-                drawWidth = (canvas.height * padding) * imgRatio;
-                drawHeight = canvas.height * padding;
-                offsetX = (canvas.width - drawWidth) / 2;
-                offsetY = (canvas.height - drawHeight) / 2;
-            }
-            
-            context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-            requestAnimationFrame(renderCanvas);
+        function onHeroPointer(clientX, clientY) {
+            if (!heroFixed) return;
+            const rect = heroFixed.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+            const nx = (clientX - rect.left) / rect.width - 0.5;
+            const ny = (clientY - rect.top) / rect.height - 0.5;
+            pointerTargetX = nx * 14;
+            pointerTargetY = -ny * 10;
         }
 
-        images[0].onload = () => {
-            requestAnimationFrame(renderCanvas);
-        };
+        if (!reducedMotion && heroFixed && heroVideoStage && storyCardsStage) {
+            window.addEventListener('mousemove', (e) => {
+                onHeroPointer(e.clientX, e.clientY);
+            }, { passive: true });
+            window.addEventListener('touchmove', (e) => {
+                const t = e.touches && e.touches[0];
+                if (t) onHeroPointer(t.clientX, t.clientY);
+            }, { passive: true });
+            heroFixed.addEventListener('mouseleave', () => {
+                pointerTargetX = 0;
+                pointerTargetY = 0;
+            });
+        }
+
+        function tickHeroParallax() {
+            if (!reducedMotion && heroVideoStage && storyCardsStage) {
+                pointerCurX += (pointerTargetX - pointerCurX) * 0.08;
+                pointerCurY += (pointerTargetY - pointerCurY) * 0.08;
+                const vrx = pointerCurX * 0.5;
+                const vry = pointerCurY * 0.42;
+                const crx = pointerCurX * 0.35;
+                const cry = pointerCurY * 0.28;
+                heroVideoStage.style.transform = `rotateY(${vrx}deg) rotateX(${vry}deg) scale(1.06) translateZ(-8px)`;
+                storyCardsStage.style.transform = `rotateY(${crx}deg) rotateX(${cry}deg) translateZ(24px)`;
+            }
+            requestAnimationFrame(tickHeroParallax);
+        }
+        if (!reducedMotion) {
+            requestAnimationFrame(tickHeroParallax);
+        }
 
         // ═══════════════ 2. THREE.JS ANTI-GRAVITY PARTICLES ═══════════════
         const particlesContainer = document.getElementById('particles-canvas');
@@ -2708,38 +3432,66 @@
             }, 50);
         }, { passive: true });
 
-        // ═══════════════ 3. PINNED 3D CARD SCROLL ANIMATION ═══════════════
+        // ═══════════════ 3. PINNED 3D CARD SCROLL (equal segments = one card per scroll band) ═══════════════
         const cards = gsap.utils.toArray('.story-card');
         const scrollProgress = document.getElementById('scroll-progress');
         const cardCount = cards.length;
+        const segmentCount = Math.max(1, cardCount - 1);
+        const stepSnap = 1 / segmentCount;
 
-        // Set initial 3D states
-        gsap.set(cards, {
+        if (cardCount >= 2) {
+        const fromState = {
             opacity: 0,
             rotateY: 85,
             rotateX: 12,
             scale: 0.72,
-            z: -350,
-            transformOrigin: 'center center',
-            transformPerspective: 1400
-        });
-        gsap.set(cards[0], { opacity: 1, rotateY: 0, rotateX: 0, scale: 1, z: 0 });
+            z: -350
+        };
+        const activeState = {
+            opacity: 1,
+            rotateY: 0,
+            rotateX: 0,
+            scale: 1,
+            z: 0
+        };
+        const exitState = {
+            opacity: 0,
+            rotateY: -85,
+            rotateX: -12,
+            scale: 0.72,
+            z: -350
+        };
 
-        // Build master timeline with pinned scroll (optimized for better sync)
+        gsap.set(cards, {
+            left: '50%',
+            top: '50%',
+            xPercent: -50,
+            yPercent: -50,
+            transformOrigin: 'center center',
+            transformPerspective: 1400,
+            ...fromState
+        });
+        gsap.set(cards[0], activeState);
+
         const masterTl = gsap.timeline({
             scrollTrigger: {
+                id: 'hero-story-cards',
                 trigger: '#story-scroll-container',
                 start: 'top top',
-                end: () => `+=${window.innerHeight * 1.1 * (cardCount - 1)}`,
+                end: () => `+=${window.innerHeight * 0.38 * segmentCount}`,
                 pin: '#story-pinned',
-                scrub: 0.3,
+                pinSpacing: true,
+                scrub: true,
+                anticipatePin: 1,
                 fastScrollEnd: true,
-                preventOverlaps: true,
                 invalidateOnRefresh: true,
+                snap: {
+                    snapTo: stepSnap,
+                    duration: { min: 0.03, max: 0.08 },
+                    delay: 0,
+                    ease: 'power2.out'
+                },
                 onUpdate: (self) => {
-                    const newFrame = self.progress * (frameCount - 1);
-                    // Update canvas on every scroll for perfect sync
-                    frameSequence.frame = newFrame;
                     if (scrollProgress) {
                         scrollProgress.style.transform = `scaleX(${self.progress})`;
                     }
@@ -2747,37 +3499,73 @@
             }
         });
 
-        // Card swap animations
-        for (let i = 0; i < cardCount - 1; i++) {
+        /* Tight timeline = motion reads fast; expo.out finishes the flip early in each segment */
+        const swapDur = 0.1;
+        const swapEase = 'expo.out';
+        for (let i = 0; i < segmentCount; i++) {
+            const t = i * swapDur;
             const current = cards[i];
             const next = cards[i + 1];
-            
-            // Current card exits with 3D rotation (faster for better sync)
-            masterTl.to(current, {
-                opacity: 0,
-                rotateY: -85,
-                rotateX: -12,
-                scale: 0.72,
-                z: -350,
-                duration: 0.3,
-                ease: 'power2.inOut'
-            }, i);
-            
-            // Next card enters with 3D rotation (faster for better sync)
-            masterTl.fromTo(next,
-                { opacity: 0, rotateY: 85, rotateX: 12, scale: 0.72, z: -350 },
-                {
-                    opacity: 1,
-                    rotateY: 0,
-                    rotateX: 0,
-                    scale: 1,
-                    z: 0,
-                    duration: 0.3,
-                    ease: 'power2.inOut'
-                },
-                i + 0.2
-            );
+            masterTl.to(current, { ...exitState, duration: swapDur, ease: swapEase }, t);
+            masterTl.fromTo(next, { ...fromState }, { ...activeState, duration: swapDur, ease: swapEase }, t);
         }
+
+        const storyST = masterTl.scrollTrigger;
+        const storyPinEl = document.getElementById('story-pinned');
+        const storyScrollProxy = { y: window.pageYOffset };
+
+        function storyScrollToSnappedProgress(targetP) {
+            if (!storyST || typeof storyST.start !== 'number' || typeof storyST.end !== 'number') return;
+            const range = storyST.end - storyST.start;
+            if (range <= 0) return;
+            const p = gsap.utils.clamp(0, 1, Math.round(targetP / stepSnap) * stepSnap);
+            const yTarget = storyST.start + p * range;
+            storyScrollProxy.y = window.pageYOffset;
+            gsap.killTweensOf(storyScrollProxy);
+            gsap.to(storyScrollProxy, {
+                y: yTarget,
+                duration: 0.2,
+                ease: 'power3.out',
+                overwrite: 'auto',
+                onUpdate: () => window.scrollTo(0, storyScrollProxy.y)
+            });
+        }
+
+        if (storyPinEl && storyST) {
+            let ty0 = 0;
+            let tx0 = 0;
+            const minSwipe = 40;
+
+            storyPinEl.addEventListener('touchstart', (e) => {
+                if (!e.touches || !e.touches[0]) return;
+                ty0 = e.touches[0].clientY;
+                tx0 = e.touches[0].clientX;
+            }, { passive: true });
+
+            storyPinEl.addEventListener('touchend', (e) => {
+                const ch = e.changedTouches && e.changedTouches[0];
+                if (!ch) return;
+                const dy = ty0 - ch.clientY;
+                const dx = tx0 - ch.clientX;
+                let dir = 0;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > minSwipe) {
+                    dir = dx > 0 ? 1 : -1;
+                } else if (Math.abs(dy) > minSwipe) {
+                    dir = dy > 0 ? 1 : -1;
+                }
+                if (!dir) return;
+                if (typeof storyST.start !== 'number' || typeof storyST.end !== 'number') return;
+                const range = storyST.end - storyST.start;
+                if (range <= 0) return;
+                let p = (window.pageYOffset - storyST.start) / range;
+                p = gsap.utils.clamp(0, 1, Math.round(p / stepSnap) * stepSnap + dir * stepSnap);
+                storyScrollToSnappedProgress(p);
+            }, { passive: true });
+        }
+
+        ScrollTrigger.refresh();
+
+        } // end cardCount >= 2
 
         // Hide scroll hint when entering pinned area (optimized)
         const scrollHint = document.querySelector('.scroll-down-hint');
@@ -2890,7 +3678,6 @@
 
         // ═══════════════ RESIZE HANDLER ═══════════════
         window.addEventListener('resize', () => {
-            setCanvasSize();
             pCamera.aspect = window.innerWidth / window.innerHeight;
             pCamera.updateProjectionMatrix();
             pRenderer.setSize(window.innerWidth, window.innerHeight);
