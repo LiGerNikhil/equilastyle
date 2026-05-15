@@ -6,150 +6,99 @@
 
 {% block extra_css %}
 <style>
-    /* Premium Experience Canvas Styles */
-    .premium-canvas-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        z-index: 1;
+    /* About — fullscreen video hero (no scroll storytelling) */
+    .about-hero {
+        position: relative;
+        z-index: 10;
+        min-height: 100vh;
+        min-height: 100svh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
         background: var(--black);
     }
-    
-    .premium-canvas {
-        width: 100%;
-        height: 100%;
-        display: block;
+
+    .about-hero-media {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
     }
-    
-    .scroll-hint-premium {
-        position: fixed;
-        bottom: 30px;
+
+    #about-hero-video {
+        position: absolute;
         left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
-        color: var(--gold);
-        font-family: 'Bebas Neue', cursive;
-        font-size: 12px;
-        letter-spacing: 2px;
-        padding: 12px 24px;
-        border-radius: 30px;
-        background: linear-gradient(135deg, var(--black) 0%, var(--dark-green) 100%);
-        border: 1px solid rgba(255, 215, 0, 0.2);
-        opacity: 0.9;
-        animation: pulse 2s infinite;
+        top: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        pointer-events: none;
     }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 0.7; }
-        50% { opacity: 1; }
+
+    .about-hero-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background:
+            linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.2) 45%, rgba(0, 0, 0, 0.65) 100%),
+            linear-gradient(135deg, rgba(26, 0, 0, 0.35) 0%, transparent 50%, rgba(10, 31, 10, 0.35) 100%);
     }
-    
-    /* Single Hero Section */
-    .hero-section {
+
+    .about-hero-content {
         position: relative;
         z-index: 2;
-        background: transparent;
-        height: 400vh; /* Long scroll area for all frames */
-    }
-    
-    .hero-content-overlay {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 5;
         text-align: center;
-        pointer-events: none;
-        width: 90%;
-        max-width: 800px;
-    }
-    
-    .hero-text-item {
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 100%;
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        max-width: 720px;
+        padding: calc(88px + env(safe-area-inset-top, 0px)) 24px calc(48px + env(safe-area-inset-bottom, 0px));
     }
-    
-    .hero-text-item.active {
-        opacity: 1;
+
+    .about-hero-content .s-eyebrow {
+        margin-bottom: 12px;
     }
-    
-    .hero-text-item h2 {
+
+    .about-hero-title {
         font-family: 'Bebas Neue', cursive;
-        font-size: clamp(32px, 6vw, 72px);
-        color: var(--gold);
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-    }
-    
-    .hero-text-item h2 span {
+        font-size: clamp(48px, 12vw, 96px);
+        line-height: 0.95;
+        letter-spacing: 0.12em;
         color: var(--white);
-    }
-    
-    .hero-text-item p {
-        font-size: clamp(14px, 2vw, 20px);
-        line-height: 1.6;
-        color: var(--white);
-        text-shadow: 1px 1px 5px rgba(0,0,0,0.9);
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    /* Brand Logo Overlay */
-    .brand-overlay {
-        position: fixed;
-        top: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
-        text-align: center;
-        opacity: 0;
-        animation: fadeInBrand 1.5s ease forwards 0.5s;
-    }
-    
-    .brand-overlay h1 {
-        font-family: 'Bebas Neue', cursive;
-        font-size: clamp(24px, 4vw, 48px);
-        color: var(--gold);
-        letter-spacing: 8px;
         text-transform: uppercase;
-        text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        margin: 0 0 16px;
+        text-shadow: 0 4px 32px rgba(0, 0, 0, 0.8);
+    }
+
+    .about-hero-title em {
+        font-style: normal;
+        color: var(--gold);
+    }
+
+    .about-hero-tagline {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(18px, 3vw, 26px);
+        font-style: italic;
+        color: rgba(245, 245, 245, 0.88);
         margin: 0;
+        line-height: 1.5;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
     }
-    
-    .brand-overlay .brand-tagline {
-        font-size: clamp(10px, 1.5vw, 14px);
-        color: var(--white);
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        margin-top: 5px;
-        opacity: 0.8;
+
+    @media (max-width: 768px) {
+        .about-hero-content {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .about-hero-title {
+            letter-spacing: 0.08em;
+        }
     }
-    
-    @keyframes fadeInBrand {
-        from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0); }
-    }
-    
-    /* Progress Indicator */
-    .scroll-progress {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--gold), var(--gold-shine));
-        z-index: 10;
-        width: 0%;
-        transition: width 0.1s linear;
-    }
-    
+
     /* Enhanced Experience Grid */
     .experience-grid {
         display: grid;
@@ -654,56 +603,20 @@
 {% endblock %}
 
 {% block content %}
-<!-- PREMIUM EXPERIENCE CANVAS -->
-<div class="premium-canvas-container">
-    <canvas id="premium-canvas"></canvas>
-</div>
-
-<div class="scroll-hint-premium">Scroll to Experience Premium</div>
-
-<!-- BRAND OVERLAY -->
-<!-- <div class="brand-overlay">
-    <h1>EQUILA</h1>
-    <div class="brand-tagline">Premium Fashion Experience</div>
-</div> -->
-
-<!-- SCROLL PROGRESS -->
-<div class="scroll-progress" id="scroll-progress"></div>
-
-<!-- SINGLE HERO SECTION WITH CHANGING CONTENT -->
-<div class="hero-section" id="hero-section">
-    <div class="hero-content-overlay" id="hero-content-overlay">
-        <div class="hero-text-item active" data-start="0" data-end="0.15">
-            <h2>PREMIUM <span>HERITAGE</span></h2>
-            <p>Decades of excellence in fashion, crafted with precision and passion for the discerning individual.</p>
-        </div>
-        
-        <div class="hero-text-item" data-start="0.15" data-end="0.30">
-            <h2>LUXURY <span>CRAFTSMANSHIP</span></h2>
-            <p>Every piece tells a story of meticulous attention to detail, using only the finest materials and techniques.</p>
-        </div>
-        
-        <div class="hero-text-item" data-start="0.30" data-end="0.45">
-            <h2>EXCLUSIVE <span>COLLECTIONS</span></h2>
-            <p>Limited edition releases that define seasons and set trends, available only to our valued members.</p>
-        </div>
-        
-        <div class="hero-text-item" data-start="0.45" data-end="0.60">
-            <h2>GLOBAL <span>PRESENCE</span></h2>
-            <p>From Paris to Tokyo, our brand represents the pinnacle of contemporary fashion excellence.</p>
-        </div>
-        
-        <div class="hero-text-item" data-start="0.60" data-end="0.75">
-            <h2>TIMELESS <span>INNOVATION</span></h2>
-            <p>Where tradition meets tomorrow's vision, creating the future of premium fashion today.</p>
-        </div>
-        
-        <div class="hero-text-item" data-start="0.75" data-end="1.0">
-            <h2>ELEVATE YOUR <span>STYLE</span></h2>
-            <p>Experience the premium difference. Join the elite who choose EQUILA for their fashion journey.</p>
-        </div>
+<!-- About hero — fullscreen background video -->
+<section class="about-hero" id="about-hero" aria-label="About EQUILA">
+    <div class="about-hero-media" aria-hidden="true">
+        <video id="about-hero-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true">
+            <source src="{% static 'videos/EQUILA_new.mp4' %}" type="video/mp4">
+        </video>
+        <div class="about-hero-overlay"></div>
     </div>
-</div>
+    <div class="about-hero-content">
+        <div class="s-eyebrow justify-content-center">About Us</div>
+        <h1 class="about-hero-title">EQUILA <em>STYLE</em></h1>
+        <p class="about-hero-tagline">Premium fashion, crafted for those who expect more.</p>
+    </div>
+</section>
 
 <!-- PREMIUM EXPERIENCE SECTION -->
 <section class="premium-experience">
@@ -948,171 +861,33 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        gsap.registerPlugin(ScrollTrigger);
-
-        // --- Premium Frame Sequence Implementation ---
-        const canvas = document.getElementById('premium-canvas');
-        const context = canvas.getContext('2d');
-        
-        // Set canvas size
-        function setCanvasSize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        setCanvasSize();
-        
-        // Premium frame settings (55 frames)
-        const frameCount = 55;
-        const images = [];
-        const frameSequence = { frame: 0 };
-        let animationFrameId = null;
-        let lastRenderTime = 0;
-        const targetFPS = 90;
-        const frameInterval = 1000 / targetFPS;
-        
-        // Preload all premium frames
-        for (let i = 0; i < frameCount; i++) {
-            const img = new Image();
-            img.src = `/static/images/premium-frames/frame_${i.toString().padStart(4, '0')}.webp`;
-            images.push(img);
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
         }
 
-        function render(timestamp) {
-            if (timestamp - lastRenderTime < frameInterval) {
-                animationFrameId = requestAnimationFrame(render);
-                return;
-            }
-            lastRenderTime = timestamp;
-
-            const frameIndex = Math.round(frameSequence.frame);
-            const img = images[frameIndex];
-            
-            if (!img || !img.complete) {
-                animationFrameId = requestAnimationFrame(render);
-                return;
-            }
-            
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const canvasRatio = canvas.width / canvas.height;
-            const imgRatio = img.width / img.height;
-            let drawWidth, drawHeight, offsetX, offsetY;
-            
-            if (canvasRatio > imgRatio) {
-                drawWidth = canvas.width;
-                drawHeight = canvas.width / imgRatio;
-                offsetX = 0;
-                offsetY = (canvas.height - drawHeight) / 2;
-            } else {
-                drawWidth = canvas.height * imgRatio;
-                drawHeight = canvas.height;
-                offsetX = (canvas.width - drawWidth) / 2;
-                offsetY = 0;
-            }
-            
-            context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-            
-            animationFrameId = requestAnimationFrame(render);
+        const aboutVideo = document.getElementById('about-hero-video');
+        if (aboutVideo) {
+            aboutVideo.muted = true;
+            const tryPlay = () => {
+                const p = aboutVideo.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            };
+            tryPlay();
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) tryPlay();
+            });
         }
 
-        // Start rendering immediately
-        images[0].onload = () => {
-            requestAnimationFrame(render);
-        };
+        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
 
-        // --- GSAP Scroll Sync for Premium Frames ---
-        const heroSection = document.getElementById('hero-section');
-        const heroContentOverlay = document.getElementById('hero-content-overlay');
-        const scrollProgress = document.getElementById('scroll-progress');
-        const textItems = document.querySelectorAll('.hero-text-item');
-        const brandOverlay = document.querySelector('.brand-overlay');
-        
-        // Hide content overlay when scrolling past hero
-        ScrollTrigger.create({
-            trigger: heroSection,
-            start: 'top top',
-            end: 'bottom top',
-            onUpdate: (self) => {
-                // Update frame based on scroll progress through hero section
-                frameSequence.frame = self.progress * (frameCount - 1);
-                const currentFrame = Math.round(frameSequence.frame);
-                
-                // Update scroll progress bar
-                if (scrollProgress) {
-                    scrollProgress.style.width = (self.progress * 100) + '%';
-                }
-                
-                // Update text content based on progress with smooth transitions
-                textItems.forEach(item => {
-                    const start = parseFloat(item.dataset.start);
-                    const end = parseFloat(item.dataset.end);
-                    const fadeInStart = start;
-                    const fadeInEnd = start + 0.03;
-                    const fadeOutStart = end - 0.03;
-                    const fadeOutEnd = end;
-                    
-                    if (self.progress >= fadeInStart && self.progress < fadeInEnd) {
-                        const fadeProgress = (self.progress - fadeInStart) / (fadeInEnd - fadeInStart);
-                        item.style.opacity = fadeProgress;
-                        item.style.transform = `translateY(${(1 - fadeProgress) * 20}px)`;
-                    } else if (self.progress >= fadeInEnd && self.progress < fadeOutStart) {
-                        item.style.opacity = '1';
-                        item.style.transform = 'translateY(0)';
-                    } else if (self.progress >= fadeOutStart && self.progress < fadeOutEnd) {
-                        const fadeProgress = (self.progress - fadeOutStart) / (fadeOutEnd - fadeOutStart);
-                        item.style.opacity = 1 - fadeProgress;
-                        item.style.transform = `translateY(${fadeProgress * -20}px)`;
-                    } else {
-                        item.style.opacity = '0';
-                        item.style.transform = 'translateY(20px)';
-                    }
-                });
-                
-                // Fade out brand overlay as user scrolls
-                if (brandOverlay) {
-                    if (self.progress > 0.05) {
-                        brandOverlay.style.opacity = Math.max(0, 1 - (self.progress - 0.05) * 5);
-                    } else {
-                        brandOverlay.style.opacity = '1';
-                    }
-                }
-                
-                // Hide canvas and content when hero section is done
-                if (self.progress >= 0.98) {
-                    canvas.style.opacity = '0';
-                    heroContentOverlay.style.opacity = '0';
-                    document.querySelector('.scroll-hint-premium').style.opacity = '0';
-                    if (brandOverlay) brandOverlay.style.opacity = '0';
-                } else {
-                    canvas.style.opacity = '1';
-                    heroContentOverlay.style.opacity = '1';
-                }
-                
-                console.log('Premium Frame Progress:', self.progress.toFixed(3), 'Frame:', currentFrame, 'Total Frames:', frameCount);
-            }
-        });
-
-        // Hide scroll hint after starting scroll
-        gsap.to('.scroll-hint-premium', {
-            opacity: 0,
-            scrollTrigger: {
-                trigger: '#hero-section',
-                start: 'top top',
-                end: '+=100',
-                scrub: true
-            }
-        });
-
-        // --- Experience Items Animation ---
         gsap.utils.toArray('.experience-item').forEach((item, index) => {
-            gsap.fromTo(item, 
-                { opacity: 0, y: 50 }, 
+            gsap.fromTo(item,
+                { opacity: 0, y: 50 },
                 {
-                    opacity: 1, 
-                    y: 0, 
+                    opacity: 1,
+                    y: 0,
                     duration: 0.8,
                     delay: index * 0.2,
                     scrollTrigger: {
@@ -1124,58 +899,32 @@
             );
         });
 
-        // Handle resize
-        window.addEventListener('resize', () => { 
-            setCanvasSize(); 
-            render(); 
-        });
-
-        // --- Animated Logo Only ---
         function initAnimatedLogo() {
             const logoContainer = document.getElementById('logo-container');
             if (!logoContainer) return;
-            
-            // Set up scroll trigger for antigravity section
+
             ScrollTrigger.create({
                 trigger: '.antigravity-section',
                 start: 'top 70%',
                 end: 'bottom 30%',
                 onEnter: () => {
-                    // Animate logo
-                    setTimeout(() => {
-                        if (logoContainer) {
-                            logoContainer.classList.add('animate');
-                        }
-                    }, 500);
+                    setTimeout(() => logoContainer.classList.add('animate'), 500);
                 },
-                onLeave: () => {
-                    // Reset when scrolling out
-                    if (logoContainer) {
-                        logoContainer.classList.remove('animate');
-                    }
-                },
+                onLeave: () => logoContainer.classList.remove('animate'),
                 onEnterBack: () => {
-                    // Re-animate when scrolling back
-                    setTimeout(() => {
-                        if (logoContainer) {
-                            logoContainer.classList.add('animate');
-                        }
-                    }, 500);
+                    setTimeout(() => logoContainer.classList.add('animate'), 500);
                 }
             });
         }
-        
-        // Initialize animated logo
+
         initAnimatedLogo();
-        
-        // --- Additional Section Animations ---
-        // Animate heritage stats
+
         gsap.utils.toArray('.stat-item').forEach((item, index) => {
-            gsap.fromTo(item, 
-                { opacity: 0, y: 50, scale: 0.8 }, 
+            gsap.fromTo(item,
+                { opacity: 0, y: 50, scale: 0.8 },
                 {
-                    opacity: 1, 
-                    y: 0, 
+                    opacity: 1,
+                    y: 0,
                     scale: 1,
                     duration: 0.8,
                     delay: index * 0.2,
@@ -1187,14 +936,13 @@
                 }
             );
         });
-        
-        // Animate sustainability items
+
         gsap.utils.toArray('.sustainability-item').forEach((item, index) => {
-            gsap.fromTo(item, 
-                { opacity: 0, x: -50 }, 
+            gsap.fromTo(item,
+                { opacity: 0, x: -50 },
                 {
-                    opacity: 1, 
-                    x: 0, 
+                    opacity: 1,
+                    x: 0,
                     duration: 0.8,
                     delay: index * 0.2,
                     scrollTrigger: {
@@ -1205,14 +953,13 @@
                 }
             );
         });
-        
-        // Animate innovation items
+
         gsap.utils.toArray('.innovation-item').forEach((item, index) => {
-            gsap.fromTo(item, 
-                { opacity: 0, y: 50, rotationY: 15 }, 
+            gsap.fromTo(item,
+                { opacity: 0, y: 50, rotationY: 15 },
                 {
-                    opacity: 1, 
-                    y: 0, 
+                    opacity: 1,
+                    y: 0,
                     rotationY: 0,
                     duration: 0.8,
                     delay: index * 0.2,
@@ -1224,8 +971,7 @@
                 }
             );
         });
-        
-        // Parallax effect for antigravity section
+
         gsap.to('.antigravity-section', {
             backgroundPosition: '50% 100%',
             ease: 'none',
