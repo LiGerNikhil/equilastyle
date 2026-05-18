@@ -575,48 +575,6 @@
         transform: translateZ(0);
     }
 
-    .equila-tr-overlay {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-        background: linear-gradient(
-            180deg,
-            rgba(0, 0, 0, 0.05) 0%,
-            rgba(10, 31, 10, 0.25) 38%,
-            rgba(0, 0, 0, 0.5) 100%
-        );
-        pointer-events: none;
-    }
-
-    .equila-tr-shop {
-        pointer-events: auto;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 32px;
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 13px;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        text-decoration: none;
-        color: var(--gold);
-        border: 1px solid rgba(255, 215, 0, 0.45);
-        background: rgba(10, 31, 10, 0.88);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-        transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
-    }
-
-    .equila-tr-shop:hover {
-        color: var(--white);
-        border-color: var(--gold);
-        background: rgba(255, 215, 0, 0.12);
-        box-shadow: 0 6px 24px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
-
     @media (max-width: 991px) {
         .equila-tr-grid {
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -635,11 +593,6 @@
             margin-top: 40px;
         }
 
-        .equila-tr-shop {
-            padding: 10px 20px;
-            font-size: 11px;
-            letter-spacing: 0.2em;
-        }
     }
 
     @media (max-width: 480px) {
@@ -789,30 +742,6 @@
         clip-path: polygon(0 28%, 100% 0, 100% 100%, 0 100%);
     }
 
-    .equila-acc-cta {
-        position: absolute;
-        z-index: 2;
-        bottom: 22px;
-        left: 22px;
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 11px;
-        letter-spacing: 0.38em;
-        text-transform: uppercase;
-        padding: 14px 30px;
-        color: var(--gold);
-        border: 2px solid var(--gold);
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: none;
-        transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .equila-acc-tile:hover .equila-acc-cta {
-        background: var(--gold);
-        color: var(--black);
-        border-color: var(--gold-shine);
-        transform: translateY(-2px);
-    }
-
     @media (max-width: 991px) {
         .equila-acc-grid {
             grid-template-columns: 1fr 1fr;
@@ -870,13 +799,6 @@
             min-height: 260px;
         }
 
-        .equila-acc-cta {
-            bottom: 18px;
-            left: 18px;
-            padding: 12px 22px;
-            font-size: 10px;
-            letter-spacing: 0.28em;
-        }
     }
 
     @media (max-width: 480px) {
@@ -1733,73 +1655,61 @@
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img1.jpeg' %}" alt="EQUILA STYLE top rated fashion 1" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img2.jpeg' %}" alt="EQUILA STYLE top rated fashion 2" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img3.jpeg' %}" alt="EQUILA STYLE top rated fashion 3" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img4.jpeg' %}" alt="EQUILA STYLE top rated fashion 4" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img5.jpeg' %}" alt="EQUILA STYLE top rated fashion 5" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img6.jpeg' %}" alt="EQUILA STYLE top rated fashion 6" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img7.jpeg' %}" alt="EQUILA STYLE top rated fashion 7" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img8.jpeg' %}" alt="EQUILA STYLE top rated fashion 8" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img9.jpeg' %}" alt="EQUILA STYLE top rated fashion 9" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img10.jpeg' %}" alt="EQUILA STYLE top rated fashion 10" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img11.jpeg' %}" alt="EQUILA STYLE top rated fashion 11" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
             <article class="equila-tr-card">
                 <div class="equila-tr-frame">
                     <img src="{% static 'images/enhanced-images/img12.jpeg' %}" alt="EQUILA STYLE top rated fashion 12" loading="lazy" decoding="async" fetchpriority="low" width="600" height="800">
-                    <div class="equila-tr-overlay"><a href="{% url 'products:product_list' %}" class="equila-tr-shop">Shop All</a></div>
                 </div>
             </article>
         </div>
@@ -1820,22 +1730,18 @@
             <a class="equila-acc-tile equila-acc-tile--hero" href="{% url 'products:product_list' %}?category=accessories">
                 <img class="equila-acc-img" src="{% static 'images/enhanced-images/img13.jpeg' %}" alt="EQUILA STYLE premium accessories" loading="lazy" width="800" height="1000">
                 <span class="equila-acc-band" aria-hidden="true"></span>
-                <span class="equila-acc-cta">Shop All</span>
             </a>
             <a class="equila-acc-tile equila-acc-tile--b" href="{% url 'products:product_list' %}?category=accessories">
                 <img class="equila-acc-img" src="{% static 'images/enhanced-images/img15.jpeg' %}" alt="EQUILA STYLE premium details" loading="lazy" width="600" height="750">
                 <span class="equila-acc-band" aria-hidden="true"></span>
-                <span class="equila-acc-cta">Shop All</span>
             </a>
             <a class="equila-acc-tile equila-acc-tile--c" href="{% url 'products:product_list' %}?category=accessories">
                 <img class="equila-acc-img" src="{% static 'images/enhanced-images/img16.jpeg' %}" alt="EQUILA STYLE accessories" loading="lazy" width="600" height="750">
                 <span class="equila-acc-band" aria-hidden="true"></span>
-                <span class="equila-acc-cta">Shop All</span>
             </a>
             <a class="equila-acc-tile equila-acc-tile--d" href="{% url 'products:product_list' %}?category=accessories">
                 <img class="equila-acc-img" src="{% static 'images/enhanced-images/img17.jpeg' %}" alt="EQUILA STYLE more from the edit" loading="lazy" width="600" height="750">
                 <span class="equila-acc-band" aria-hidden="true"></span>
-                <span class="equila-acc-cta">Shop All</span>
             </a>
         </div>
     </div>
