@@ -1,7 +1,43 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ product.name }} - EQUILA STYLE{% endblock %}
+{% block title %}{{ product.name }} | Buy Online — EQUILA STYLE{% endblock %}
+{% block meta_description %}{% if product.description %}{{ product.description|striptags|truncatewords:28 }}{% else %}Buy {{ product.name }} at EQUILA STYLE — premium {{ product.category.name|lower }} from EQUILA. Official equilastyle.com store.{% endif %}{% endblock %}
+{% block meta_keywords %}{{ product.name }}, EQUILA STYLE, EQUILA {{ product.category.name }}, buy {{ product.name }} online, premium {{ product.brand.name|default:"fashion" }} India{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ product.name }} | EQUILA STYLE{% endblock %}
+{% block og_description %}{% if product.description %}{{ product.description|striptags|truncatewords:28 }}{% else %}Shop {{ product.name }} at EQUILA STYLE — premium fashion at equilastyle.com.{% endif %}{% endblock %}
+{% block twitter_title %}{{ product.name }} | EQUILA STYLE{% endblock %}
+{% block twitter_description %}Buy {{ product.name }} online at EQUILA STYLE.{% endblock %}
+{% if product.images.first %}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{{ product.images.first.image.url }}{% endblock %}
+{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{{ product.images.first.image.url }}{% endblock %}
+{% endif %}
+
+{% block seo_structured_data %}
+{{ block.super }}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ product.name|escapejs }}",
+    "description": "{{ product.name|escapejs }} — premium fashion at EQUILA STYLE (equilastyle.com)",
+    "brand": {
+        "@type": "Brand",
+        "name": "{% if product.brand %}{{ product.brand.name|escapejs }}{% else %}EQUILA STYLE{% endif %}"
+    },
+    "category": "{{ product.category.name|escapejs }}",
+    "url": "{{ seo_canonical_url }}",
+    "offers": {
+        "@type": "Offer",
+        "url": "{{ seo_canonical_url }}",
+        "priceCurrency": "INR",
+        "price": "{{ product.price }}",
+        "availability": "{% if product.is_available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+    }
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <div class="product-detail-page">

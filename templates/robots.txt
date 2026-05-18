@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /admin-panel/
+Disallow: /accounts/
+Disallow: /cart/
+Disallow: /orders/
+Disallow: /api/
+
+Sitemap: https://www.equilastyle.com/sitemap.xml

@@ -1,10 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}EQUILA STYLE - Premium Fashion & Footwear{% endblock %}</title>
-    
+    <title>{% block title %}{{ seo_site_name }} — {{ seo_site_tagline }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ seo_default_description }}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{{ seo_default_keywords }}{% endblock %}">
+    <meta name="author" content="{{ seo_legal_name }}">
+    <meta name="robots" content="{% block meta_robots %}index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1{% endblock %}">
+    <meta name="googlebot" content="{% block meta_googlebot %}index, follow{% endblock %}">
+    <link rel="canonical" href="{% block canonical_url %}{{ seo_canonical_url }}{% endblock %}">
+
+    <!-- Open Graph -->
+    <meta property="og:locale" content="en_IN">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:site_name" content="{{ seo_site_name }}">
+    <meta property="og:title" content="{% block og_title %}{{ seo_site_name }} — {{ seo_site_tagline }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ seo_default_description }}{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}{{ seo_canonical_url }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ seo_og_image_default }}{% endblock %}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="{{ seo_twitter_site }}">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ seo_site_name }} — {{ seo_site_tagline }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ seo_default_description }}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ seo_og_image_default }}{% endblock %}">
+
+    <!-- Brand / geo hints -->
+    <meta name="application-name" content="{{ seo_site_name }}">
+    <meta name="theme-color" content="#0a1f0a">
+    <meta name="geo.region" content="IN-UP">
+    <meta name="geo.placename" content="Ghaziabad">
+
+    <link rel="icon" href="{% static 'images/logo.jpeg' %}" type="image/jpeg">
+
+    {% block seo_structured_data %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ seo_site_name }}",
+        "legalName": "{{ seo_legal_name }}",
+        "url": "{{ seo_site_url }}",
+        "logo": "{{ seo_og_image_default }}",
+        "email": "equilastyle@equilastyle.com",
+        "telephone": "+91-7417914416",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Shop No. C-226, Aadya Shopping Complex, Pratap Vihar Road, Sector 12",
+            "addressLocality": "Ghaziabad",
+            "addressRegion": "Uttar Pradesh",
+            "postalCode": "201009",
+            "addressCountry": "IN"
+        },
+        "sameAs": [
+            "https://www.facebook.com/share/1UMFEU2Wr7/",
+            "https://www.instagram.com/equilastyle"
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ seo_site_name }}",
+        "alternateName": ["EQUILA", "Equila Style", "equilastyle"],
+        "url": "{{ seo_site_url }}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ seo_site_url }}/products/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    {% endblock %}
+
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -22,7 +94,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
-    {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
     {% block extra_css %}{% endblock %}
@@ -681,15 +752,44 @@
                     </ul>
                 </div>
                 
-                <!-- Support Links -->
+                <!-- Support -->
                 <div class="link-section">
                     <h4 class="section-title">Support</h4>
                     <ul class="link-list">
-                        <li><a href="tel:7417914416">Contact: 7417914416</a></li>
                         <li><a href="{% url 'products:shipping' %}">Shipping</a></li>
                         <li><a href="{% url 'products:returns' %}">Returns</a></li>
                         <li><a href="{% url 'products:size_guide' %}">Size Guide</a></li>
                     </ul>
+                </div>
+                <div class="link-section footer-contact-block">
+                    <h4 class="section-title">Contact</h4>
+                    <ul class="footer-contact-list">
+                        <li class="footer-contact-row">
+                            <!-- <i class="fas fa-phone-alt footer-contact-icon" aria-hidden="true"></i> -->
+                            <span class="footer-contact-body">
+                                <!-- <span class="footer-contact-label">Customer care</span> -->
+                                <a href="tel:+917417914416" class="footer-contact-value">+91 74179 14416</a>
+                            </span>
+                        </li>
+                        <li class="footer-contact-row">
+                            <!-- <i class="fas fa-envelope footer-contact-icon" aria-hidden="true"></i> -->
+                            <span class="footer-contact-body">
+                                <!-- <span class="footer-contact-label">Email</span> -->
+                                <a href="mailto:equilastyle@equilastyle.com" class="footer-contact-value">equilastyle@equilastyle.com</a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="link-section footer-office-block">
+                    <h4 class="section-title">Registered Office</h4>
+                    <address class="footer-address">
+                        <strong class="footer-address-name">EQUILA SOLUTION PVT. LTD.</strong>
+                        <span>Shop No. C-226, Aadya Shopping Complex</span>
+                        <span>Pratap Vihar Road, Sector 12</span>
+                        <span>Ghaziabad, Uttar Pradesh 201009</span>
+                        <span class="footer-address-country">India</span>
+                    </address>
                 </div>
             </div>
         </div>
@@ -700,7 +800,8 @@
         <div class="container">
             <div class="footer-bottom-content">
                 <div class="copyright">
-                    <p>&copy; 2026 EQUILA STYLE. All rights reserved.</p>
+                    <p>&copy; 2026 Powered by EQUILA SOLUTION PVT. LTD.</p>
+                    
                     <!-- <p class="footer-email">Personal: <a href="mailto:Equilastyle@gmail.com">Equilastyle@gmail.com</a></p> -->
                     <p class="footer-email">Official Mail: <a href="mailto:Equilastyle@equilastyle.com">Equilastyle@equilastyle.com</a></p>
                     <p class="footer-email">Personal Mail: <a href="mailto:Equilastyle@gmail.com">Equilastyle@gmail.com</a></p>

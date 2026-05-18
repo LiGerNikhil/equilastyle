@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ post.title }} - EQUILA STYLE Blog{% endblock %}
+{% block title %}{{ post.title }} | EQUILA STYLE Blog{% endblock %}
+{% block meta_description %}{% if post.excerpt %}{{ post.excerpt|striptags|truncatewords:28 }}{% else %}{{ post.title }} — EQUILA STYLE fashion blog and reviews.{% endif %}{% endblock %}
+{% block meta_keywords %}{{ post.title }}, EQUILA STYLE blog, EQUILA reviews, fashion blog India{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.title }} | EQUILA STYLE{% endblock %}
+{% block og_description %}{% if post.excerpt %}{{ post.excerpt|striptags|truncatewords:28 }}{% else %}{{ post.title }} on EQUILA STYLE blog.{% endif %}{% endblock %}
+{% if post.featured_image %}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% endblock %}
+{% endif %}
 
 {% block extra_css %}
 <style>

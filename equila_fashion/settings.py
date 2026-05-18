@@ -28,13 +28,13 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['equilastyle.com', '187.127.147.152', 'localhost', '127.0.0.1',"a081-2401-4900-8846-a293-9da4-6b67-f096-faa1.ngrok-free.app"]
+ALLOWED_HOSTS = ['equilastyle.com', 'www.equilastyle.com', '187.127.147.152', 'localhost', '127.0.0.1',"a081-2401-4900-8846-a293-9da4-6b67-f096-faa1.ngrok-free.app"]
 CSRF_TRUSTED_ORIGINS = [
     "https://equilastyle.com",
     "http://equilastyle.com",
     "https://www.equilastyle.com",
     "http://www.equilastyle.com",
-    "https://a081-2401-4900-8846-a293-9da4-6b67-f096-faa1.ngrok-free.app"
+    "https://a081-2401-4900-8846-a293-9da4-6b67-f096-faa1.ngrok-free.app",
 ]
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'accounts',
     'products',
     'blog',
@@ -78,6 +79,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
+                'equila_fashion.context_processors.seo_context',
             ],
         },
     },
@@ -178,6 +180,9 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'products:home'
 LOGOUT_REDIRECT_URL = 'products:home'
+
+# SEO & site URL (used for canonical, Open Graph, sitemap)
+SITE_URL = config('SITE_URL', default='https://www.equilastyle.com')
 
 # Razorpay Configuration
 RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID', default='rzp_test_your_test_key_id')

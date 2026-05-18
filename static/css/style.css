@@ -237,6 +237,119 @@ body.cur-hover #cur-d {
   width: 100%;
 }
 
+/* Footer — contact & registered office */
+.footer-contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.footer-contact-row:last-child {
+  margin-bottom: 0;
+}
+
+.footer-contact-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+  color: var(--gold);
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  margin-top: 2px;
+}
+
+.footer-contact-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.footer-contact-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 215, 0, 0.65);
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.footer-contact-value {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14px;
+  line-height: 1.4;
+  text-decoration: none;
+  word-break: break-word;
+  transition: color 0.25s ease;
+}
+
+.footer-contact-value:hover {
+  color: var(--gold);
+}
+
+.footer-address {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.12);
+}
+
+.footer-address-name {
+  display: block;
+  color: var(--gold);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.footer-address span {
+  display: block;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.footer-address-country {
+  color: rgba(255, 215, 0, 0.5) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.footer-office-block .section-title,
+.footer-contact-block .section-title {
+  margin-bottom: 18px;
+}
+
+@media (max-width: 768px) {
+  .footer-contact-row {
+    margin-bottom: 14px;
+  }
+
+  .footer-address {
+    padding: 14px;
+  }
+}
+
 /* Footer Bottom - Material Design */
 .footer-bottom-material {
   background: #300000;
