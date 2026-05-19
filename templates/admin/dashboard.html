@@ -105,7 +105,7 @@
                             <span class="order-user">{{ order.user.username }}</span>
                         </div>
                         <div class="order-details">
-                            <span class="order-amount">${{ order.total_price|default:"0.00" }}</span>
+                            <span class="order-amount">₹{{ order.total_price|default:"0.00" }}</span>
                             <span class="order-date">{{ order.created_at|date:"M d, Y" }}</span>
                         </div>
                         <div class="order-status">

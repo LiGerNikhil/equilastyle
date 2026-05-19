@@ -82,7 +82,7 @@
                         <span class="item-count">{{ order.items.count|default:'0' }} items</span>
                     </td>
                     <td data-total="{{ order.total_price|default:'0' }}">
-                        <span class="order-total">${{ order.total_price|default:'0.00' }}</span>
+                        <span class="order-total">₹{{ order.total_price|default:'0.00' }}</span>
                     </td>
                     <td data-status="{{ order.status|default:'pending' }}">
                         <span class="status-badge status-{{ order.status|default:'pending' }}">{{ order.status|default:'Pending'|title }}</span>
