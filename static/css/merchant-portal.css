@@ -1,0 +1,1164 @@
+/**
+ * EQUILA STYLE — Merchant Portal
+ * Matches main site theme: black, dark green, gold accents, DM Sans + Bebas Neue
+ */
+
+:root {
+  --mp-black: #000000;
+  --mp-dark-green: #0a1f0a;
+  --mp-green: #1a3d1a;
+  --mp-gold: #ffd700;
+  --mp-gold-shine: #ffed4e;
+  --mp-gold-dark: #b8860b;
+  --mp-red: #8b0000;
+  --mp-charcoal: #0d0d0d;
+  --mp-mid: #1a1a1a;
+  --mp-mid2: #262626;
+  --mp-white: #f5f5f5;
+  --mp-muted: rgba(245, 245, 245, 0.65);
+  --mp-dim: rgba(245, 245, 245, 0.45);
+  --mp-border: rgba(255, 215, 0, 0.18);
+  --mp-border-soft: rgba(255, 215, 0, 0.08);
+  --mp-sidebar: 272px;
+  --mp-header: 72px;
+  --mp-radius: 14px;
+  --mp-radius-sm: 8px;
+  --mp-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Base ── */
+.merchant-portal,
+.merchant-portal body {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(145deg, var(--mp-black) 0%, var(--mp-dark-green) 42%, var(--mp-black) 100%);
+  color: var(--mp-white);
+  min-height: 100vh;
+}
+
+.merchant-portal * {
+  box-sizing: border-box;
+}
+
+.merchant-portal a {
+  color: var(--mp-gold);
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.merchant-portal a:hover {
+  color: var(--mp-gold-shine);
+}
+
+/* ── Layout ── */
+.merchant-portal .admin-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.merchant-portal .admin-sidebar {
+  width: var(--mp-sidebar);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.97) 0%, rgba(10, 31, 10, 0.95) 100%);
+  border-right: 1px solid var(--mp-border);
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.merchant-portal .sidebar-header {
+  padding: 1.5rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--mp-border-soft);
+  flex-shrink: 0;
+}
+
+.merchant-portal .admin-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.merchant-portal .admin-logo .logo-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--mp-border);
+}
+
+.merchant-portal .admin-logo h2 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.35rem;
+  color: var(--mp-gold);
+  margin: 0;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  flex: 1;
+  min-width: 0;
+}
+
+.merchant-portal .merchant-badge {
+  background: linear-gradient(135deg, var(--mp-gold) 0%, var(--mp-gold-dark) 100%);
+  color: var(--mp-black) !important;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+}
+
+.merchant-portal .merchant-id-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mp-dim);
+  margin: 0.75rem 0 0;
+}
+
+.merchant-portal .sidebar-menu {
+  list-style: none;
+  padding: 1rem 0;
+  margin: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.merchant-portal .menu-item a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 1.25rem;
+  color: var(--mp-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  border-left: 3px solid transparent;
+}
+
+.merchant-portal .menu-item a:hover {
+  background: rgba(255, 215, 0, 0.06);
+  color: var(--mp-gold-shine);
+}
+
+.merchant-portal .menu-item.active a {
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--mp-gold);
+  border-left-color: var(--mp-gold);
+}
+
+.merchant-portal .menu-item i {
+  width: 22px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.merchant-portal .sidebar-footer {
+  padding: 1rem 1.25rem 1.25rem;
+  border-top: 1px solid var(--mp-border-soft);
+  flex-shrink: 0;
+  position: static;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.merchant-portal .btn-view-site {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-sm);
+  color: var(--mp-gold) !important;
+  text-decoration: none !important;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  transition: all 0.25s ease;
+}
+
+.merchant-portal .btn-view-site:hover {
+  background: rgba(255, 215, 0, 0.16);
+  border-color: var(--mp-gold);
+  transform: translateY(-1px);
+}
+
+.merchant-portal .sidebar-footer .btn-outline-light {
+  border-color: var(--mp-border);
+  color: var(--mp-muted);
+  font-size: 0.8rem;
+}
+
+.merchant-portal .sidebar-footer .btn-outline-light:hover {
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--mp-gold);
+  border-color: var(--mp-gold);
+}
+
+/* Main */
+.merchant-portal .admin-main {
+  flex: 1;
+  margin-left: var(--mp-sidebar);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.merchant-portal .admin-header {
+  height: var(--mp-header);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--mp-border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.merchant-portal .header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.merchant-portal .sidebar-toggle {
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid var(--mp-border);
+  color: var(--mp-gold);
+  width: 42px;
+  height: 42px;
+  border-radius: var(--mp-radius-sm);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.merchant-portal .page-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.75rem;
+  color: var(--mp-gold);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.merchant-portal .admin-content {
+  padding: 1.75rem;
+  flex: 1;
+}
+
+.merchant-portal.admin-container.sidebar-collapsed .admin-sidebar {
+  transform: translateX(-100%);
+}
+
+.merchant-portal.admin-container.sidebar-collapsed .admin-main {
+  margin-left: 0;
+}
+
+/* Status pill */
+.merchant-portal .merchant-status-pill {
+  font-size: 0.7rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.merchant-portal .merchant-status-pill.status-active {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.merchant-portal .merchant-status-pill.status-pending {
+  background: rgba(255, 215, 0, 0.12);
+  color: var(--mp-gold);
+  border-color: var(--mp-border);
+}
+
+.merchant-portal .merchant-status-pill.status-suspended {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+/* ── Dashboard welcome ── */
+.mp-welcome {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.mp-welcome-text h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--mp-white);
+  margin: 0 0 0.35rem;
+}
+
+.mp-welcome-text p {
+  color: var(--mp-muted);
+  font-size: 0.95rem;
+  margin: 0;
+  max-width: 520px;
+}
+
+.mp-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.mp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--mp-radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.mp-btn-primary {
+  background: linear-gradient(135deg, var(--mp-gold) 0%, var(--mp-gold-dark) 100%);
+  color: var(--mp-black) !important;
+}
+
+.mp-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.35);
+  color: var(--mp-black) !important;
+}
+
+.mp-btn-outline {
+  background: transparent;
+  border: 1px solid var(--mp-border);
+  color: var(--mp-gold) !important;
+}
+
+.mp-btn-outline:hover {
+  background: rgba(255, 215, 0, 0.1);
+  border-color: var(--mp-gold);
+}
+
+/* Info banner */
+.merchant-portal .info-banner {
+  background: rgba(255, 215, 0, 0.06);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--mp-muted);
+  line-height: 1.5;
+}
+
+.merchant-portal .info-banner strong {
+  color: var(--mp-gold);
+}
+
+.merchant-portal .info-banner a {
+  font-weight: 600;
+}
+
+/* ── Stats grid ── */
+.merchant-portal .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.merchant-portal .stat-card {
+  background: var(--mp-mid);
+  border: 1px solid var(--mp-border-soft);
+  border-radius: var(--mp-radius);
+  padding: 1.35rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.merchant-portal .stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--mp-border);
+}
+
+.merchant-portal .stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--mp-gold), transparent);
+  opacity: 0.6;
+}
+
+.merchant-portal .stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.merchant-portal .stat-icon.revenue {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--mp-gold);
+}
+
+.merchant-portal .stat-icon.orders {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.merchant-portal .stat-icon.products {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.merchant-portal .stat-icon.pending {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.merchant-portal .stat-content h3 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.85rem;
+  color: var(--mp-white);
+  margin: 0 0 2px;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.merchant-portal .stat-content p {
+  font-size: 0.8rem;
+  color: var(--mp-dim);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Wallet row */
+.merchant-portal .wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.merchant-portal .wallet-tile {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--mp-radius-sm);
+  border: 1px solid var(--mp-border-soft);
+}
+
+.merchant-portal .wallet-tile strong {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mp-dim);
+  margin-bottom: 0.5rem;
+}
+
+.merchant-portal .wallet-tile span {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.5rem;
+  color: var(--mp-gold);
+}
+
+/* Activity grid */
+.merchant-portal .activity-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.merchant-portal .activity-card {
+  background: var(--mp-mid);
+  border: 1px solid var(--mp-border-soft);
+  border-radius: var(--mp-radius);
+  overflow: hidden;
+}
+
+.merchant-portal .activity-card .card-header {
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--mp-border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.merchant-portal .activity-card .card-header h3 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.15rem;
+  color: var(--mp-gold);
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.merchant-portal .view-all {
+  color: var(--mp-gold) !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none !important;
+}
+
+.merchant-portal .view-all:hover {
+  color: var(--mp-gold-shine) !important;
+}
+
+.merchant-portal .card-content {
+  padding: 0;
+}
+
+.merchant-portal .order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--mp-border-soft);
+  transition: background 0.2s ease;
+}
+
+.merchant-portal .order-item:hover {
+  background: rgba(255, 215, 0, 0.04);
+}
+
+.merchant-portal .order-item:last-child {
+  border-bottom: none;
+}
+
+.merchant-portal .order-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.merchant-portal .order-info .product-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--mp-border-soft);
+  flex-shrink: 0;
+}
+
+.merchant-portal .order-info .order-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.merchant-portal .order-id {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--mp-gold);
+  letter-spacing: 0.04em;
+}
+
+.merchant-portal .order-user,
+.merchant-portal .order-info > span:not(.order-id) {
+  font-size: 0.9rem;
+  color: var(--mp-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.merchant-portal .empty-state-inline {
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: var(--mp-dim);
+  font-size: 0.9rem;
+}
+
+.merchant-portal .empty-state-inline a {
+  font-weight: 600;
+}
+
+/* Badges */
+.merchant-portal .approval-badge,
+.merchant-portal .status-badge {
+  font-size: 0.65rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.merchant-portal .approval-approved { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.merchant-portal .approval-pending { background: rgba(255, 215, 0, 0.2); color: var(--mp-gold); }
+.merchant-portal .approval-draft { background: rgba(255, 255, 255, 0.1); color: var(--mp-muted); }
+.merchant-portal .approval-rejected { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+.merchant-portal .status-pending { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+.merchant-portal .status-accepted { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.merchant-portal .status-packed { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+.merchant-portal .status-shipped { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.merchant-portal .status-delivered { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.merchant-portal .status-cancelled,
+.merchant-portal .status-returned { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+/* Tables */
+.merchant-portal .table {
+  color: var(--mp-muted);
+  --bs-table-bg: transparent;
+  --bs-table-hover-bg: rgba(255, 215, 0, 0.04);
+  --bs-table-border-color: var(--mp-border-soft);
+}
+
+.merchant-portal .table thead th {
+  color: var(--mp-dim);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  border-bottom-color: var(--mp-border);
+}
+
+.merchant-portal .products-table img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--mp-border-soft);
+}
+
+/* Filter tabs */
+.merchant-portal .filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.merchant-portal .filter-tabs a {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  text-decoration: none !important;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--mp-border-soft);
+  color: var(--mp-muted) !important;
+  transition: all 0.2s ease;
+}
+
+.merchant-portal .filter-tabs a:hover {
+  border-color: var(--mp-border);
+  color: var(--mp-gold) !important;
+}
+
+.merchant-portal .filter-tabs a.active {
+  background: var(--mp-gold);
+  color: var(--mp-black) !important;
+  border-color: var(--mp-gold);
+  font-weight: 600;
+}
+
+.merchant-portal .quick-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+/* Forms & inputs */
+.merchant-portal .form-control,
+.merchant-portal .form-select {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--mp-border-soft);
+  color: var(--mp-white);
+  border-radius: var(--mp-radius-sm);
+}
+
+.merchant-portal .form-control:focus,
+.merchant-portal .form-select:focus {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: var(--mp-gold);
+  color: var(--mp-white);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.12);
+}
+
+.merchant-portal .btn-primary {
+  background: linear-gradient(135deg, var(--mp-gold), var(--mp-gold-dark));
+  border: none;
+  color: var(--mp-black);
+  font-weight: 600;
+}
+
+.merchant-portal .btn-primary:hover {
+  background: linear-gradient(135deg, var(--mp-gold-shine), var(--mp-gold));
+  color: var(--mp-black);
+}
+
+.merchant-portal .btn-secondary {
+  background: var(--mp-mid2);
+  border: 1px solid var(--mp-border-soft);
+  color: var(--mp-muted);
+}
+
+.merchant-portal .btn-danger {
+  background: var(--mp-red);
+  border: none;
+}
+
+.merchant-portal .alert {
+  border-radius: var(--mp-radius-sm);
+  border: 1px solid var(--mp-border-soft);
+}
+
+.merchant-portal .alert-success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.merchant-portal .alert-warning {
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--mp-gold);
+}
+
+.merchant-portal .alert-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+
+/* Product form (portal) */
+.merchant-portal .product-form-container {
+  max-width: 1100px;
+}
+
+.merchant-portal .card-panel {
+  background: var(--mp-mid);
+  border: 1px solid var(--mp-border-soft);
+  border-radius: var(--mp-radius);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.merchant-portal .card-panel .card-header {
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--mp-border-soft);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.merchant-portal .card-panel .card-header h3 {
+  font-family: 'Bebas Neue', cursive;
+  color: var(--mp-gold);
+  font-size: 1.2rem;
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.merchant-portal .card-panel .card-header p {
+  margin: 0.35rem 0 0;
+  font-size: 0.8rem;
+  color: var(--mp-dim);
+}
+
+.merchant-portal .card-panel .card-body {
+  padding: 1.25rem;
+}
+
+.merchant-portal .product-form input[type="text"],
+.merchant-portal .product-form input[type="number"],
+.merchant-portal .product-form input[type="file"],
+.merchant-portal .product-form select,
+.merchant-portal .product-form textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--mp-border-soft);
+  border-radius: var(--mp-radius-sm);
+  color: var(--mp-white);
+  padding: 10px 12px;
+}
+
+.merchant-portal .form-label {
+  color: var(--mp-muted);
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.merchant-portal .field-error {
+  color: #f87171;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.merchant-portal .form-actions-top,
+.merchant-portal .form-actions-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.merchant-portal .inline-head,
+.merchant-portal .inline-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.6fr 0.8fr;
+  gap: 10px;
+}
+
+.merchant-portal .inline-head {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mp-dim);
+  margin-bottom: 8px;
+}
+
+.merchant-portal .images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.merchant-portal .image-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--mp-border-soft);
+  border-radius: var(--mp-radius-sm);
+  padding: 1rem;
+}
+
+/* Pagination */
+.merchant-portal .pagination .page-link {
+  background: var(--mp-mid);
+  border-color: var(--mp-border-soft);
+  color: var(--mp-muted);
+}
+
+.merchant-portal .pagination .page-item.active .page-link {
+  background: var(--mp-gold);
+  border-color: var(--mp-gold);
+  color: var(--mp-black);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .merchant-portal .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .merchant-portal .activity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .merchant-portal .wallet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .merchant-portal .admin-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .merchant-portal .admin-main {
+    margin-left: 0;
+  }
+
+  .merchant-portal .sidebar-toggle {
+    display: flex;
+  }
+
+  .merchant-portal.admin-container.sidebar-collapsed .admin-sidebar {
+    transform: translateX(0);
+  }
+
+  .merchant-portal .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .merchant-portal .admin-content {
+    padding: 1.25rem;
+  }
+
+  .merchant-portal .mp-welcome {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 769px) {
+  .merchant-portal .sidebar-toggle {
+    display: none;
+  }
+}
+
+/* ── Extra responsive helpers ── */
+
+/* Tables: stack on very small screens */
+@media (max-width: 576px) {
+  .merchant-portal .table-responsive table,
+  .merchant-portal .products-table table {
+    font-size: 0.75rem;
+  }
+
+  .merchant-portal .table thead th,
+  .merchant-portal .products-table thead th {
+    font-size: 0.6rem;
+    white-space: nowrap;
+  }
+
+  .merchant-portal .table td,
+  .merchant-portal .table th {
+    padding: 0.4rem 0.35rem;
+  }
+
+  .merchant-portal .products-table img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .merchant-portal .products-table td:first-child {
+    width: 32px;
+  }
+
+  .merchant-portal .products-table td:nth-child(2) strong {
+    font-size: 0.75rem;
+  }
+
+  .merchant-portal .products-table td:nth-child(2) br {
+    display: none;
+  }
+
+  .merchant-portal .btn-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.65rem;
+  }
+
+  /* Wallet grid: 2 columns then 1 */
+  .merchant-portal .wallet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .merchant-portal .wallet-tile span {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .merchant-portal .wallet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Variants inline form: responsive */
+@media (max-width: 768px) {
+  .merchant-portal .inline-head,
+  .merchant-portal .inline-row {
+    grid-template-columns: 1fr 0.8fr 0.5fr 0.7fr;
+    gap: 6px;
+  }
+
+  .merchant-portal .inline-head div,
+  .merchant-portal .inline-row .inline-cell {
+    font-size: 0.7rem;
+  }
+
+  .merchant-portal .inline-row .inline-cell select,
+  .merchant-portal .inline-row .inline-cell input {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+
+  .merchant-portal .inline-actions .delete-toggle {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .merchant-portal .inline-head,
+  .merchant-portal .inline-row {
+    grid-template-columns: 1fr 0.7fr 0.4fr 0.6fr;
+    gap: 4px;
+  }
+
+  .merchant-portal .inline-row .inline-cell select,
+  .merchant-portal .inline-row .inline-cell input {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+  }
+}
+
+/* Form actions: stack buttons on mobile */
+@media (max-width: 576px) {
+  .merchant-portal .form-actions-top,
+  .merchant-portal .form-actions-bottom {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .merchant-portal .form-actions-top .d-flex,
+  .merchant-portal .form-actions-bottom .d-flex {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .merchant-portal .form-actions-top .d-flex .btn,
+  .merchant-portal .form-actions-bottom .d-flex .btn,
+  .merchant-portal .form-actions-top .btn,
+  .merchant-portal .form-actions-bottom .btn {
+    width: 100%;
+  }
+
+  .merchant-portal .quick-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .merchant-portal .quick-actions-bar .btn,
+  .merchant-portal .quick-actions-bar form {
+    width: 100%;
+  }
+
+  .merchant-portal .quick-actions-bar form input {
+    min-width: 0 !important;
+  }
+
+  .merchant-portal .quick-actions-bar .btn {
+    text-align: center;
+  }
+
+  .merchant-portal .mp-welcome {
+    flex-direction: column;
+  }
+
+  .merchant-portal .mp-quick-actions {
+    width: 100%;
+  }
+
+  .merchant-portal .mp-quick-actions .mp-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .merchant-portal .filter-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .merchant-portal .filter-tabs a {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .merchant-portal .images-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Order table: compact */
+  .merchant-portal .table td .form-select-sm {
+    max-width: 110px !important;
+    font-size: 0.65rem;
+  }
+
+  /* Order filter form */
+  .merchant-portal .activity-card form.d-flex {
+    flex-direction: column;
+  }
+
+  .merchant-portal .activity-card form.d-flex select,
+  .merchant-portal .activity-card form.d-flex .btn {
+    max-width: 100% !important;
+  }
+}
+
+/* Header right: wrap status pill on small screens */
+@media (max-width: 480px) {
+  .merchant-portal .admin-header {
+    padding: 0 0.75rem;
+  }
+
+  .merchant-portal .page-title {
+    font-size: 1.25rem;
+  }
+
+  .merchant-portal .header-left {
+    gap: 0.5rem;
+  }
+
+  .merchant-portal .sidebar-toggle {
+    width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
+  }
+
+  .merchant-portal .merchant-status-pill {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .merchant-portal .admin-content {
+    padding: 0.75rem;
+  }
+
+  .merchant-portal .mp-welcome-text h2 {
+    font-size: 1.3rem;
+  }
+
+  .merchant-portal .stat-card {
+    padding: 0.9rem 0.75rem;
+  }
+
+  .merchant-portal .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .merchant-portal .stat-content h3 {
+    font-size: 1.4rem;
+  }
+
+  .merchant-portal .wallet-tile {
+    padding: 0.65rem;
+  }
+}

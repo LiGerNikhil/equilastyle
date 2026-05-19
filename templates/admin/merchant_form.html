@@ -1,0 +1,89 @@
+﻿{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}{% if mode == 'edit' %}Edit Merchant{% else %}Add Merchant{% endif %} - Admin Panel{% endblock %}
+{% block page_title %}{% if mode == 'edit' %}Edit Merchant{% else %}Add Merchant{% endif %}{% endblock %}
+
+{% block content %}
+<div class="product-form-container">
+    <form method="post" enctype="multipart/form-data" class="product-form">
+        {% csrf_token %}
+        <div class="form-actions-top">
+            <a href="{% url 'admin_panel:merchants' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Merchant</button>
+        </div>
+
+        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+
+        <div class="form-grid">
+            <div class="card-panel">
+                <div class="card-header"><h3>Login Account</h3></div>
+                <p class="text-muted small px-3 mb-0">Merchant signs in at <strong>/accounts/login/</strong> with the email and password you set here.</p>
+                <div class="card-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">{{ form.login_email.label }}</label>
+                        {{ form.login_email }}
+                        {% if form.login_email.help_text %}<small class="form-text text-muted d-block">{{ form.login_email.help_text }}</small>{% endif %}
+                        {% for e in form.login_email.errors %}<div class="field-error text-danger small">{{ e }}</div>{% endfor %}
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ form.login_password.label }}</label>
+                        {{ form.login_password }}
+                        {% if form.login_password.help_text %}<small class="form-text text-muted d-block">{{ form.login_password.help_text }}</small>{% endif %}
+                        {% for e in form.login_password.errors %}<div class="field-error text-danger small">{{ e }}</div>{% endfor %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ form.login_password_confirm.label }}</label>
+                        {{ form.login_password_confirm }}
+                        {% for e in form.login_password_confirm.errors %}<div class="field-error text-danger small">{{ e }}</div>{% endfor %}
+                    </div>
+                    {% if mode == 'edit' and merchant.owner_user %}
+                    <div class="col-12">
+                        <span class="badge bg-secondary">Linked account: {{ merchant.owner_user.email }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="card-header"><h3>Business Details</h3></div>
+                <div class="card-body row g-3">
+                    <div class="col-md-6"><label class="form-label">Business Name</label>{{ form.business_name }}</div>
+                    <div class="col-md-6"><label class="form-label">Owner Name</label>{{ form.owner_name }}</div>
+                    <div class="col-md-6"><label class="form-label">Business Email</label>{{ form.email }}</div>
+                    <div class="col-md-6"><label class="form-label">Phone</label>{{ form.phone }}</div>
+                    <div class="col-md-6"><label class="form-label">GST Number</label>{{ form.gst_number }}</div>
+                    <div class="col-md-6"><label class="form-label">Franchise Type</label>{{ form.franchise_type }}</div>
+                    <div class="col-md-4"><label class="form-label">Commission Rate (%)</label>{{ form.commission_rate }}</div>
+                    <div class="col-md-4"><label class="form-label">Territory</label>{{ form.territory }}</div>
+                    <div class="col-md-4"><label class="form-label">Status</label>{{ form.status }}</div>
+                    <div class="col-md-6"><label class="form-label">Verification</label>{{ form.verification_status }}</div>
+                    <div class="col-md-6"><label class="form-label">Regional Manager</label>{{ form.regional_manager }}</div>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="card-header"><h3>Address</h3></div>
+                <div class="card-body row g-3">
+                    <div class="col-12"><label class="form-label">Address</label>{{ form.address }}</div>
+                    <div class="col-md-4"><label class="form-label">City</label>{{ form.city }}</div>
+                    <div class="col-md-4"><label class="form-label">State</label>{{ form.state }}</div>
+                    <div class="col-md-4"><label class="form-label">Pincode</label>{{ form.pincode }}</div>
+                    <div class="col-md-6"><label class="form-label">Country</label>{{ form.country }}</div>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="card-header"><h3>Branding and Policies</h3></div>
+                <div class="card-body row g-3">
+                    <div class="col-md-6"><label class="form-label">Logo</label>{{ form.logo }}</div>
+                    <div class="col-md-6"><label class="form-label">Banner</label>{{ form.banner }}</div>
+                    <div class="col-12"><label class="form-label">About</label>{{ form.about_text }}</div>
+                    <div class="col-12"><label class="form-label">Store Policy</label>{{ form.store_policy }}</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

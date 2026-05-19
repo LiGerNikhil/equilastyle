@@ -9,20 +9,32 @@
 <div class="products-container">
     <!-- Search and Actions -->
     <div class="section-header">
-        <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Search products by name, brand, or description..." value="{{ search_query }}">
-            <button class="btn btn-primary">
+        <form method="get" class="search-bar">
+            <input type="text" name="search" class="search-input" placeholder="Search products, merchant..." value="{{ search_query }}">
+            {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+            <button type="submit" class="btn btn-primary">
                 <i class="fas fa-search"></i>
                 Search
             </button>
-        </div>
+        </form>
         
         <div class="header-actions">
+            <a href="{% url 'admin_panel:product_approvals' %}" class="btn btn-warning">
+                <i class="fas fa-clipboard-check"></i>
+                Approvals{% if admin_pending_product_count %} ({{ admin_pending_product_count }}){% endif %}
+            </a>
             <a href="{% url 'admin_panel:product_add' %}" class="btn btn-primary">
                 <i class="fas fa-plus-circle"></i>
                 Add Product
             </a>
         </div>
+    </div>
+
+    <div class="filter-tabs" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        <a href="{% url 'admin_panel:products' %}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-secondary{% endif %}">All ({{ counts.all }})</a>
+        <a href="?status=pending" class="btn btn-sm {% if status_filter == 'pending' %}btn-primary{% else %}btn-secondary{% endif %}">Pending ({{ counts.pending }})</a>
+        <a href="?status=approved" class="btn btn-sm {% if status_filter == 'approved' %}btn-primary{% else %}btn-secondary{% endif %}">Approved ({{ counts.approved }})</a>
+        <a href="?status=rejected" class="btn btn-sm {% if status_filter == 'rejected' %}btn-primary{% else %}btn-secondary{% endif %}">Rejected ({{ counts.rejected }})</a>
     </div>
     
     <!-- Results Count -->
@@ -41,11 +53,8 @@
                     <img src="{% static 'images/logo.jpeg' %}" alt="{{ product.name }}">
                 {% endif %}
                 <div class="product-status">
-                    {% if product.is_available %}
-                        <span class="status-badge status-active">Available</span>
-                    {% else %}
-                        <span class="status-badge status-inactive">Unavailable</span>
-                    {% endif %}
+                    <span class="status-badge approval-{{ product.approval_status }}">{{ product.get_approval_status_display }}</span>
+                    {% if product.merchant %}<span class="status-badge" style="background:#8b6914;font-size:0.65rem;">{{ product.merchant.business_name|truncatechars:12 }}</span>{% endif %}
                 </div>
             </div>
             
@@ -62,6 +71,11 @@
             </div>
             
             <div class="product-actions">
+                {% if product.approval_status == 'pending' and product.merchant %}
+                <a href="{% url 'admin_panel:product_review' product.id %}" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i> Review</a>
+                <button type="button" class="btn btn-sm btn-success prod-approve-btn" data-id="{{ product.id }}"><i class="fas fa-check"></i> Approve</button>
+                <button type="button" class="btn btn-sm btn-danger prod-reject-btn" data-id="{{ product.id }}" data-name="{{ product.name }}"><i class="fas fa-times"></i></button>
+                {% endif %}
                 <button class="btn btn-sm btn-secondary edit-btn" data-product-id="{{ product.id }}" data-edit-url="{% url 'admin_panel:product_edit' product.id %}">
                     <i class="fas fa-edit"></i>
                     Edit
@@ -180,6 +194,34 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteProduct(productId);
         });
     });
+
+    var csrf = '{{ csrf_token }}';
+    document.querySelectorAll('.prod-approve-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (!confirm('Approve this product?')) return;
+            var fd = new FormData();
+            fd.append('action', 'approve');
+            fetch('/admin-panel/products/' + btn.dataset.id + '/approve/', {
+                method: 'POST', headers: {'X-CSRFToken': csrf}, body: fd
+            }).then(function(r) { return r.json(); }).then(function(d) {
+                if (d.success) location.reload();
+            });
+        });
+    });
+    document.querySelectorAll('.prod-reject-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var reason = prompt('Rejection reason (optional):');
+            if (reason === null) return;
+            var fd = new FormData();
+            fd.append('action', 'reject');
+            fd.append('reason', reason);
+            fetch('/admin-panel/products/' + btn.dataset.id + '/approve/', {
+                method: 'POST', headers: {'X-CSRFToken': csrf}, body: fd
+            }).then(function(r) { return r.json(); }).then(function(d) {
+                if (d.success) location.reload();
+            });
+        });
+    });
 });
 </script>
 {% endblock %}
@@ -279,6 +321,13 @@ document.addEventListener('DOMContentLoaded', function() {
     background: rgba(239, 68, 68, 0.2);
     color: #ef4444;
 }
+
+.approval-approved { background: rgba(34, 197, 94, 0.25); color: #4ade80; }
+.approval-pending { background: rgba(251, 191, 36, 0.25); color: #fbbf24; }
+.approval-rejected { background: rgba(239, 68, 68, 0.25); color: #f87171; }
+.approval-draft { background: rgba(255, 255, 255, 0.15); color: rgba(255,255,255,0.7); }
+.product-status { display: flex; flex-wrap: wrap; gap: 4px; top: 8px; right: 8px; left: auto; }
+.product-actions { flex-wrap: wrap; }
 
 .product-info {
     padding: 20px;
@@ -509,5 +558,12 @@ document.addEventListener('DOMContentLoaded', function() {
         font-size: 16px;
     }
 }
+
+.approval-approved { background: rgba(34, 197, 94, 0.25); color: #4ade80; }
+.approval-pending { background: rgba(251, 191, 36, 0.25); color: #fbbf24; }
+.approval-rejected { background: rgba(239, 68, 68, 0.25); color: #f87171; }
+.approval-draft { background: rgba(255, 255, 255, 0.15); color: rgba(255,255,255,0.7); }
+.product-status { display: flex; flex-wrap: wrap; gap: 4px; position: absolute; top: 8px; right: 8px; left: auto; }
+.product-actions { flex-wrap: wrap; gap: 6px; }
 </style>
 {% endblock %}

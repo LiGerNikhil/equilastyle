@@ -1,0 +1,141 @@
+{% extends 'merchants/portal_base.html' %}
+{% load static %}
+
+{% block title %}Dashboard — {{ merchant.business_name }}{% endblock %}
+{% block page_title %}Store Overview{% endblock %}
+
+{% block content %}
+<div class="mp-welcome">
+    <div class="mp-welcome-text">
+        <h2>Welcome back, {{ merchant.owner_name|default:merchant.business_name }}</h2>
+        <p>Manage your EQUILA STYLE storefront, track sales, and upload products for approval.</p>
+    </div>
+    <div class="mp-quick-actions">
+        <a href="{% url 'merchants:product_add' %}" class="mp-btn mp-btn-primary">
+            <i class="fas fa-plus"></i> Add Product
+        </a>
+        <a href="{% url 'merchants:products' %}" class="mp-btn mp-btn-outline">
+            <i class="fas fa-box"></i> All Products
+        </a>
+        <a href="{% url 'merchants:store_home' merchant.slug %}" class="mp-btn mp-btn-outline" target="_blank">
+            <i class="fas fa-store"></i> View Store
+        </a>
+    </div>
+</div>
+
+<div class="info-banner">
+    <i class="fas fa-info-circle me-2"></i>
+    Products you submit are reviewed by EQUILA admin. Once <strong>approved</strong>, they appear on the
+    <a href="{% url 'products:product_list' %}">main shop</a> for all customers.
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon revenue"><i class="fas fa-indian-rupee-sign"></i></div>
+        <div class="stat-content">
+            <h3>₹{{ stats.revenue|floatformat:0 }}</h3>
+            <p>Revenue (30 days)</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orders"><i class="fas fa-shopping-bag"></i></div>
+        <div class="stat-content">
+            <h3>{{ stats.orders }}</h3>
+            <p>Orders (30 days)</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon products"><i class="fas fa-tshirt"></i></div>
+        <div class="stat-content">
+            <h3>{{ stats.products }}</h3>
+            <p>Total Products</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon pending"><i class="fas fa-hourglass-half"></i></div>
+        <div class="stat-content">
+            <h3>{{ stats.pending_products }}</h3>
+            <p>Pending Approval</p>
+        </div>
+    </div>
+</div>
+
+{% if wallet %}
+<div class="activity-card mb-4">
+    <div class="card-header">
+        <h3><i class="fas fa-wallet me-2"></i>Earnings</h3>
+        <a href="{% url 'merchants:wallet' %}" class="view-all">View wallet</a>
+    </div>
+    <div class="wallet-grid">
+        <div class="wallet-tile">
+            <strong>Pending</strong>
+            <span>₹{{ wallet.pending_balance }}</span>
+        </div>
+        <div class="wallet-tile">
+            <strong>Withdrawable</strong>
+            <span>₹{{ wallet.withdrawable_balance }}</span>
+        </div>
+        <div class="wallet-tile">
+            <strong>Total earned</strong>
+            <span>₹{{ wallet.total_earned }}</span>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="activity-grid">
+    <div class="activity-card">
+        <div class="card-header">
+            <h3>Your Products</h3>
+            <a href="{% url 'merchants:product_add' %}" class="view-all"><i class="fas fa-plus me-1"></i> Add new</a>
+        </div>
+        <div class="card-content">
+            {% for product in recent_products %}
+            <div class="order-item">
+                <div class="order-info">
+                    {% with img=product.images.first %}
+                    {% if img %}
+                    <img src="{{ img.image.url }}" alt="" class="product-thumb">
+                    {% else %}
+                    <img src="{% static 'images/logo.jpeg' %}" alt="" class="product-thumb">
+                    {% endif %}
+                    {% endwith %}
+                    <div class="order-meta">
+                        <span class="order-user">{{ product.name }}</span>
+                        <span class="order-id">₹{{ product.price }} · {{ product.category.name }}</span>
+                    </div>
+                </div>
+                <span class="approval-badge approval-{{ product.approval_status }}">{{ product.get_approval_status_display }}</span>
+            </div>
+            {% empty %}
+            <div class="empty-state-inline">
+                No products yet.<br>
+                <a href="{% url 'merchants:product_add' %}">Upload your first product</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="activity-card">
+        <div class="card-header">
+            <h3>Recent Orders</h3>
+            <a href="{% url 'merchants:orders' %}" class="view-all">View all</a>
+        </div>
+        <div class="card-content">
+            {% for item in recent_orders %}
+            <div class="order-item">
+                <div class="order-info">
+                    <div class="order-meta">
+                        <span class="order-id">#{{ item.order.order_number }}</span>
+                        <span class="order-user">{{ item.product.name }}</span>
+                    </div>
+                </div>
+                <span class="status-badge status-{{ item.fulfillment_status }}">{{ item.get_fulfillment_status_display }}</span>
+            </div>
+            {% empty %}
+            <div class="empty-state-inline">No orders yet. They will appear here when customers buy your products.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

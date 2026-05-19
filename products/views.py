@@ -3,11 +3,12 @@ from django.db.models import Q, Avg, Min, Max
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from .models import Product, Category, Brand, ProductImage, ProductVariant
+from merchants.services import public_product_queryset
 
 
 def home(request):
-    featured_products = Product.objects.filter(is_featured=True, is_active=True)[:8]
-    premium_products = Product.objects.filter(is_premium=True, is_active=True)[:8]
+    featured_products = public_product_queryset().filter(is_featured=True)[:8]
+    premium_products = public_product_queryset().filter(is_premium=True)[:8]
     categories = Category.objects.all()[:6]
     brands = Brand.objects.filter(is_featured=True)[:6]
     
@@ -56,7 +57,7 @@ def size_guide(request):
 
 
 def product_list(request):
-    products = Product.objects.filter(is_available=True).select_related('category', 'brand').prefetch_related('images', 'variants')
+    products = public_product_queryset().select_related('category', 'brand', 'merchant').prefetch_related('images', 'variants')
     categories = Category.objects.all()
     
     # Get filter parameters
@@ -145,10 +146,9 @@ def product_list(request):
 
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, is_active=True)
-    related_products = Product.objects.filter(
+    product = get_object_or_404(public_product_queryset(), slug=slug)
+    related_products = public_product_queryset().filter(
         category=product.category,
-        is_active=True
     ).exclude(id=product.id)[:4]
     
     context = {
@@ -160,7 +160,7 @@ def product_detail(request, slug):
 
 def category_products(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    products = Product.objects.filter(category=category, is_active=True)
+    products = public_product_queryset().filter(category=category)
     
     context = {
         'category': category,
@@ -171,7 +171,7 @@ def category_products(request, slug):
 
 def brand_products(request, slug):
     brand = get_object_or_404(Brand, slug=slug)
-    products = Product.objects.filter(brand=brand, is_active=True)
+    products = public_product_queryset().filter(brand=brand)
     
     context = {
         'brand': brand,
@@ -194,10 +194,7 @@ def search_products(request):
         })
     
     # Search products
-    products = Product.objects.filter(
-        is_available=True,
-        is_active=True
-    ).filter(
+    products = public_product_queryset().filter(
         Q(name__icontains=query) |
         Q(description__icontains=query) |
         Q(category__name__icontains=query) |

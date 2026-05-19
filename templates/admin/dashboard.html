@@ -42,18 +42,52 @@
             </div>
         </div>
         
-        <div class="stat-card">
+<a href="{% url 'admin_panel:product_approvals' %}" class="stat-card" style="text-decoration:none;color:inherit;">
             <div class="stat-icon blog">
-                <i class="fas fa-blog"></i>
+                <i class="fas fa-clipboard-check"></i>
             </div>
             <div class="stat-content">
-                <h3>{{ total_posts }}</h3>
-                <p>Blog Posts</p>
-                <span class="stat-change neutral">+5% from last month</span>
+                <h3>{{ pending_product_count }}</h3>
+                <p>Pending Approvals</p>
+                {% if pending_product_count %}
+                <span class="stat-change neutral">Needs review</span>
+                {% else %}
+                <span class="stat-change positive">All clear</span>
+                {% endif %}
             </div>
-        </div>
+        </a>
+
     </div>
     
+
+    {% if pending_product_count %}
+    <div class="activity-card" style="margin-bottom:24px;">
+        <div class="card-header">
+            <h3><i class="fas fa-hourglass-half me-2"></i>Product approval requests</h3>
+            <a href="{% url 'admin_panel:product_approvals' %}" class="view-all">Review all ({{ pending_product_count }})</a>
+        </div>
+        <div class="card-content">
+            {% for product in pending_products %}
+            <div class="order-item">
+                <div class="order-info" style="flex-direction:row;align-items:center;gap:12px;">
+                    {% with img=product.images.first %}
+                    {% if img %}<img src="{{ img.image.url }}" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">{% endif %}
+                    {% endwith %}
+                    <div>
+                        <span class="order-id">{{ product.name }}</span>
+                        <span class="order-user">{{ product.merchant.business_name }} · ₹{{ product.price }}</span>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                    <a href="{% url 'admin_panel:product_review' product.id %}" class="btn btn-sm btn-secondary">Review</a>
+                    <button type="button" class="btn btn-sm btn-success dash-approve" data-id="{{ product.id }}">Approve</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Recent Activity -->
     <div class="activity-grid">
         <!-- Recent Orders -->

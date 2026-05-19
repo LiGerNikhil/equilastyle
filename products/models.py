@@ -45,6 +45,13 @@ class Brand(models.Model):
 
 
 class Product(models.Model):
+    class ApprovalStatus(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        PENDING = 'pending', 'Pending Approval'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+        ARCHIVED = 'archived', 'Archived'
+
     TARGET_GROUP_CHOICES = [
         ('MEN', 'Men'),
         ('WOMEN', 'Women'),
@@ -73,11 +80,44 @@ class Product(models.Model):
     is_premium = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    # Multi-merchant: NULL merchant = HQ / platform-owned catalog
+    merchant = models.ForeignKey(
+        'merchants.Merchant',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='products',
+    )
+    approval_status = models.CharField(
+        max_length=20,
+        choices=ApprovalStatus.choices,
+        default=ApprovalStatus.APPROVED,
+        db_index=True,
+    )
+    published_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='published_products',
+    )
+    approved_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='approved_products',
+    )
+    rejection_reason = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['approval_status', 'is_available']),
+            models.Index(fields=['merchant', 'approval_status']),
+        ]
     
     def __str__(self):
         return self.name

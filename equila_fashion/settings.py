@@ -12,8 +12,23 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-import dj_database_url
-from decouple import config, Csv
+
+try:
+    import dj_database_url
+except ImportError:
+    dj_database_url = None
+
+try:
+    from decouple import config, Csv
+except ImportError:
+    def config(key, default=None, cast=None):
+        val = os.environ.get(key, default)
+        if cast and val is not None:
+            return cast(val)
+        return val
+
+    def Csv():
+        return lambda v: [x.strip() for x in v.split(',') if x.strip()]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -53,6 +68,7 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'admin_panel',
+    'merchants',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +96,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
                 'equila_fashion.context_processors.seo_context',
+                'admin_panel.context_processors.admin_panel_context',
             ],
         },
     },
@@ -101,17 +118,21 @@ if DEBUG:
         }
     }
 else:
-    # Production database
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': config('DATABASE_URL', default=dj_database_url.config(
+    # Production database — parse DATABASE_URL when dj-database-url is available
+    if dj_database_url:
+        DATABASES = {
+            'default': dj_database_url.config(
                 default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-                engine='django.db.backends.sqlite3',
-                conn_max_age=600
-            )),
+                conn_max_age=600,
+            )
         }
-    }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 # Security settings for production
 if not DEBUG:

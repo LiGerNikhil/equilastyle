@@ -1,0 +1,54 @@
+{% extends 'admin/base.html' %}
+{% block title %}Orders — {{ merchant.business_name }}{% endblock %}
+{% block page_title %}Order Management{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <form method="get" class="mb-3">
+        <select name="status" class="form-select" style="max-width:200px;display:inline-block;">
+            <option value="">All statuses</option>
+            {% for val, label in fulfillment_choices %}
+            <option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-primary btn-sm">Filter</button>
+    </form>
+    <div class="table-responsive">
+    <table class="table table-striped">
+        <thead><tr><th>Order</th><th>Product</th><th>Qty</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for item in page_obj %}
+        <tr>
+            <td>#{{ item.order.order_number }}</td>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.get_fulfillment_status_display }}</td>
+            <td>
+                <select class="form-select form-select-sm item-status" data-id="{{ item.id }}" style="max-width:140px;">
+                    {% for val, label in fulfillment_choices %}
+                    <option value="{{ val }}" {% if item.fulfillment_status == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No orders for your store yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.querySelectorAll('.item-status').forEach(sel => {
+    sel.addEventListener('change', async () => {
+        const fd = new FormData();
+        fd.append('fulfillment_status', sel.value);
+        const r = await fetch(`/portal/orders/items/${sel.dataset.id}/status/`, {
+            method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'}, body: fd
+        });
+        if ((await r.json()).success) location.reload();
+    });
+});
+</script>
+{% endblock %}

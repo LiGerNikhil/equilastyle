@@ -14,9 +14,13 @@ from django.template.loader import render_to_string
 import json
 from accounts.models import User
 from orders.models import Order, OrderItem
-from products.models import Product, ProductVariant, ProductImage
+from products.models import Category, Product, ProductVariant, ProductImage
 from blog.models import Post
 from blog.forms import PostCreateForm
+
+from merchants.forms import MerchantForm
+from merchants.models import Merchant, Territory
+from merchants.services import notify_user
 
 from .forms import ProductForm, ProductImageForm, ProductVariantForm, RequiredAtLeastOneInlineFormSet
 from .models import Notification
@@ -45,6 +49,20 @@ def admin_dashboard(request):
     # Sales data (last 30 days)
     thirty_days_ago = timezone.now() - timedelta(days=30)
     recent_orders_count = Order.objects.filter(created_at__gte=thirty_days_ago).count()
+
+    pending_products = (
+        Product.objects.filter(
+            approval_status=Product.ApprovalStatus.PENDING,
+            merchant__isnull=False,
+        )
+        .select_related('merchant', 'category', 'published_by')
+        .prefetch_related('images', 'variants')
+        .order_by('-updated_at')[:10]
+    )
+    pending_product_count = Product.objects.filter(
+        approval_status=Product.ApprovalStatus.PENDING,
+        merchant__isnull=False,
+    ).count()
     
     context = {
         'total_users': total_users,
@@ -54,6 +72,8 @@ def admin_dashboard(request):
         'recent_orders': recent_orders,
         'recent_users': recent_users,
         'recent_orders_count': recent_orders_count,
+        'pending_products': pending_products,
+        'pending_product_count': pending_product_count,
     }
     
     return render(request, 'admin/dashboard.html', context)
@@ -90,11 +110,15 @@ def admin_products(request):
     """Admin products management page"""
 
     products = (
-        Product.objects.select_related('category', 'brand')
+        Product.objects.select_related('category', 'brand', 'merchant', 'published_by')
         .prefetch_related('images', 'variants')
         .all()
         .order_by('-created_at')
     )
+
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        products = products.filter(approval_status=status_filter)
     
     # Filter by search
     search_query = request.GET.get('search', '')
@@ -102,12 +126,23 @@ def admin_products(request):
         products = products.filter(
             Q(name__icontains=search_query) |
             Q(description__icontains=search_query) |
-            Q(brand__name__icontains=search_query)
+            Q(brand__name__icontains=search_query) |
+            Q(merchant__business_name__icontains=search_query)
         )
+
+    counts = {
+        'all': Product.objects.count(),
+        'pending': Product.objects.filter(approval_status=Product.ApprovalStatus.PENDING).count(),
+        'approved': Product.objects.filter(approval_status=Product.ApprovalStatus.APPROVED).count(),
+        'rejected': Product.objects.filter(approval_status=Product.ApprovalStatus.REJECTED).count(),
+    }
     
     context = {
         'products': products,
         'search_query': search_query,
+        'status_filter': status_filter,
+        'counts': counts,
+        'approval_choices': Product.ApprovalStatus.choices,
     }
     
     return render(request, 'admin/products.html', context)
@@ -319,6 +354,227 @@ def admin_order_update_status(request, order_id: int):
         'status': order.status,
         'status_display': order.get_status_display()
     }, status=200)
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_merchants(request):
+    """Merchant / franchise management."""
+    merchants = Merchant.objects.select_related('territory', 'owner_user', 'regional_manager').order_by('-joined_at')
+    search_query = request.GET.get('search', '')
+    status_filter = request.GET.get('status', '')
+    if search_query:
+        merchants = merchants.filter(
+            Q(business_name__icontains=search_query)
+            | Q(merchant_id__icontains=search_query)
+            | Q(email__icontains=search_query)
+            | Q(owner_name__icontains=search_query)
+            | Q(city__icontains=search_query)
+        )
+    if status_filter:
+        merchants = merchants.filter(status=status_filter)
+    context = {
+        'merchants': merchants,
+        'search_query': search_query,
+        'status_filter': status_filter,
+        'status_choices': Merchant.Status.choices,
+    }
+    return render(request, 'admin/merchants.html', context)
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_merchant_create(request):
+    if request.method == 'POST':
+        form = MerchantForm(request.POST, request.FILES)
+        if form.is_valid():
+            merchant = form.save()
+            Notification.objects.create(
+                title='New merchant registered',
+                message=f'{merchant.business_name} ({merchant.merchant_id}) awaits verification.',
+                notification_type='merchant',
+            )
+            login_email = form.cleaned_data['login_email']
+            messages.success(
+                request,
+                f'Merchant {merchant.business_name} created. Login: {login_email}',
+            )
+            return redirect('admin_panel:merchants')
+    else:
+        form = MerchantForm()
+    return render(request, 'admin/merchant_form.html', {'form': form, 'mode': 'create', 'merchant': None})
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_merchant_edit(request, merchant_id: int):
+    merchant = get_object_or_404(Merchant, pk=merchant_id)
+    if request.method == 'POST':
+        form = MerchantForm(request.POST, request.FILES, instance=merchant)
+        if form.is_valid():
+            merchant = form.save()
+            msg = 'Merchant updated successfully.'
+            if form.cleaned_data.get('login_password'):
+                msg += ' Login password was reset.'
+            messages.success(request, msg)
+            return redirect('admin_panel:merchants')
+    else:
+        form = MerchantForm(instance=merchant)
+    return render(request, 'admin/merchant_form.html', {'form': form, 'mode': 'edit', 'merchant': merchant})
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_merchant_toggle_status(request, merchant_id: int):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'detail': 'Method not allowed.'}, status=405)
+    merchant = get_object_or_404(Merchant, pk=merchant_id)
+    if merchant.status == Merchant.Status.ACTIVE:
+        merchant.status = Merchant.Status.SUSPENDED
+    else:
+        merchant.status = Merchant.Status.ACTIVE
+    merchant.save(update_fields=['status', 'updated_at'])
+    return JsonResponse({
+        'success': True,
+        'status': merchant.status,
+        'status_display': merchant.get_status_display(),
+    })
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_merchant_verify(request, merchant_id: int):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'detail': 'Method not allowed.'}, status=405)
+    merchant = get_object_or_404(Merchant, pk=merchant_id)
+    action = request.POST.get('action', 'verify')
+    if action == 'reject':
+        merchant.verification_status = Merchant.VerificationStatus.REJECTED
+    else:
+        merchant.verification_status = Merchant.VerificationStatus.VERIFIED
+        if merchant.status == Merchant.Status.PENDING:
+            merchant.status = Merchant.Status.ACTIVE
+    merchant.save(update_fields=['verification_status', 'status', 'updated_at'])
+    if merchant.owner_user_id:
+        notify_user(
+            recipient=merchant.owner_user,
+            merchant=merchant,
+            notification_type='verification',
+            title='Verification update',
+            message=f'Your store verification status is now: {merchant.get_verification_status_display()}.',
+            send_email=True,
+        )
+    return JsonResponse({
+        'success': True,
+        'verification_status': merchant.verification_status,
+        'display': merchant.get_verification_status_display(),
+    })
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_merchant_delete(request, merchant_id: int):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'detail': 'Method not allowed.'}, status=405)
+    merchant = get_object_or_404(Merchant, pk=merchant_id)
+    name = merchant.business_name
+    merchant.delete()
+    return JsonResponse({'success': True, 'message': f'Merchant {name} deleted.'})
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_product_approvals(request):
+    """Queue of merchant products waiting for admin approval."""
+    products = (
+        Product.objects.filter(
+            approval_status=Product.ApprovalStatus.PENDING,
+            merchant__isnull=False,
+        )
+        .select_related('merchant', 'category', 'brand', 'published_by')
+        .prefetch_related('images', 'variants')
+        .order_by('-updated_at')
+    )
+    search = request.GET.get('search', '').strip()
+    if search:
+        products = products.filter(
+            Q(name__icontains=search)
+            | Q(merchant__business_name__icontains=search)
+            | Q(merchant__merchant_id__icontains=search)
+        )
+    context = {
+        'products': products,
+        'search_query': search,
+        'pending_count': products.count() if not search else products.count(),
+    }
+    return render(request, 'admin/product_approvals.html', context)
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_product_review(request, product_id: int):
+    """Review a single merchant product before approve/reject."""
+    product = get_object_or_404(
+        Product.objects.select_related('merchant', 'category', 'brand', 'published_by', 'approved_by')
+        .prefetch_related('images', 'variants'),
+        pk=product_id,
+    )
+    if request.method == 'POST':
+        action = request.POST.get('action', 'approve')
+        _apply_product_approval(product, request.user, action, request.POST.get('reason', ''))
+        if action == 'approve':
+            messages.success(request, f'"{product.name}" approved and is now live on the shop.')
+        else:
+            messages.warning(request, f'"{product.name}" was rejected.')
+        return redirect('admin_panel:product_approvals')
+    return render(request, 'admin/product_review.html', {'product': product})
+
+
+def _apply_product_approval(product, admin_user, action, reason=''):
+    """Shared approve/reject logic for products."""
+    if action == 'reject':
+        product.approval_status = Product.ApprovalStatus.REJECTED
+        product.rejection_reason = (reason or '')[:500]
+        product.is_available = False
+        product.is_active = False
+        notification_type = 'product_rejection'
+        msg = f'Your product "{product.name}" was rejected.'
+        if product.rejection_reason:
+            msg += f' Reason: {product.rejection_reason}'
+    else:
+        product.approval_status = Product.ApprovalStatus.APPROVED
+        product.approved_by = admin_user
+        product.rejection_reason = ''
+        product.refresh_availability_from_variants(save=False)
+        product.is_active = bool(product.is_available)
+        notification_type = 'product_approval'
+        msg = f'Your product "{product.name}" is approved and live on EQUILA STYLE.'
+    product.save()
+    if product.merchant_id and product.published_by_id:
+        notify_user(
+            recipient=product.published_by,
+            merchant=product.merchant,
+            notification_type=notification_type,
+            title='Product review update',
+            message=msg,
+            send_email=True,
+        )
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_product_approve(request, product_id: int):
+    """Approve or reject merchant-submitted products (AJAX)."""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'detail': 'Method not allowed.'}, status=405)
+    product = get_object_or_404(Product, pk=product_id)
+    action = request.POST.get('action', 'approve')
+    _apply_product_approval(product, request.user, action, request.POST.get('reason', ''))
+    return JsonResponse({
+        'success': True,
+        'approval_status': product.approval_status,
+        'display': product.get_approval_status_display(),
+    })
 
 
 @login_required

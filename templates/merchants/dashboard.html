@@ -1,0 +1,37 @@
+{% extends 'admin/base.html' %}
+{% block title %}Merchant Dashboard — {{ merchant.business_name }}{% endblock %}
+{% block page_title %}{{ merchant.business_name }} Dashboard{% endblock %}
+{% block content %}
+<div class="dashboard-stats row g-3 mb-4">
+    <div class="col-md-3"><div class="stat-card"><h4>₹{{ stats.revenue }}</h4><p>Revenue (30d)</p></div></div>
+    <div class="col-md-3"><div class="stat-card"><h4>{{ stats.orders }}</h4><p>Orders (30d)</p></div></div>
+    <div class="col-md-3"><div class="stat-card"><h4>{{ stats.products }}</h4><p>Products</p></div></div>
+    <div class="col-md-3"><div class="stat-card"><h4>{{ stats.pending_products }}</h4><p>Pending Approval</p></div></div>
+</div>
+{% if wallet %}
+<div class="mb-4"><strong>Wallet:</strong> Pending ₹{{ wallet.pending_balance }} · Withdrawable ₹{{ wallet.withdrawable_balance }}</div>
+{% endif %}
+<div class="row g-4">
+    <div class="col-md-6">
+        <h3>Top Products</h3>
+        <ul class="list-group">
+            {% for p in top_products %}
+            <li class="list-group-item d-flex justify-content-between">{{ p.product__name }}<span>{{ p.qty }} sold</span></li>
+            {% empty %}<li class="list-group-item">No sales yet</li>{% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h3>Recent Order Items</h3>
+        <ul class="list-group">
+            {% for item in recent_orders %}
+            <li class="list-group-item">{{ item.product.name }} × {{ item.quantity }} — {{ item.get_fulfillment_status_display }}</li>
+            {% empty %}<li class="list-group-item">No orders</li>{% endfor %}
+        </ul>
+    </div>
+</div>
+<div class="mt-4">
+    <a href="{% url 'merchants:orders' %}" class="btn btn-primary me-2">Orders</a>
+    <a href="{% url 'merchants:products' %}" class="btn btn-secondary me-2">Products</a>
+    <a href="{% url 'merchants:wallet' %}" class="btn btn-secondary">Wallet</a>
+</div>
+{% endblock %}

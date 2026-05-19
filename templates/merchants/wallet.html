@@ -1,0 +1,47 @@
+{% extends 'admin/base.html' %}
+{% block title %}Wallet — {{ merchant.business_name }}{% endblock %}
+{% block page_title %}Earnings & Wallet{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="stat-card"><h4>₹{{ wallet.pending_balance }}</h4><p>Pending</p></div></div>
+    <div class="col-md-4"><div class="stat-card"><h4>₹{{ wallet.withdrawable_balance }}</h4><p>Withdrawable</p></div></div>
+    <div class="col-md-4"><div class="stat-card"><h4>₹{{ wallet.total_earned }}</h4><p>Total Earned</p></div></div>
+</div>
+<h3>Recent Transactions</h3>
+<div class="table-responsive">
+<table class="table table-sm">
+    <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Net</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for tx in transactions %}
+    <tr>
+        <td>{{ tx.created_at|date:'M d, Y' }}</td>
+        <td>{{ tx.get_transaction_type_display }}</td>
+        <td>₹{{ tx.amount }}</td>
+        <td>₹{{ tx.net_amount }}</td>
+        <td>{{ tx.get_status_display }}</td>
+    </tr>
+    {% empty %}<tr><td colspan="5">No transactions yet.</td></tr>{% endfor %}
+    </tbody>
+</table>
+</div>
+<h3 class="mt-4">Payout Requests</h3>
+<div class="table-responsive">
+<table class="table table-sm">
+    <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for p in payouts %}
+    <tr><td>{{ p.created_at|date:'M d, Y' }}</td><td>₹{{ p.amount }}</td><td>{{ p.get_status_display }}</td></tr>
+    {% empty %}<tr><td colspan="3">No payout requests yet.</td></tr>{% endfor %}
+    </tbody>
+</table>
+</div>
+<h3 class="mt-4">Payout Requests</h3>
+<table class="table table-sm">
+    <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for p in payouts %}
+    <tr><td>{{ p.created_at|date:'M d, Y' }}</td><td>₹{{ p.amount }}</td><td>{{ p.get_status_display }}</td></tr>
+    {% empty %}<tr><td colspan="3">No payout requests.</td></tr>{% endfor %}
+    </tbody>
+</table>
+{% endblock %}

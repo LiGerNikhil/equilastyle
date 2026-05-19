@@ -10,6 +10,10 @@ class Notification(models.Model):
         ('order', 'New Order'),
         ('user', 'New User'),
         ('product', 'Product Update'),
+        ('product_approval', 'Product Approval'),
+        ('merchant', 'Merchant Update'),
+        ('payout', 'Payout Update'),
+        ('inventory', 'Low Inventory'),
         ('system', 'System Alert'),
     ]
     

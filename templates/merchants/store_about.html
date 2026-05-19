@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}About — {{ merchant.business_name }}{% endblock %}
+{% block content %}
+<div class="store-page">
+<div class="container py-5">
+    <h1>{{ merchant.business_name }}</h1>
+    <p class="text-muted">{{ merchant.owner_name }} · {{ merchant.city }}, {{ merchant.state }}</p>
+    {% if merchant.about_text %}<div class="mt-4">{{ merchant.about_text|linebreaks }}</div>{% endif %}
+    {% if merchant.store_policy %}<h3 class="mt-4">Store Policy</h3><div>{{ merchant.store_policy|linebreaks }}</div>{% endif %}
+    <h3 class="mt-4">Contact</h3>
+    <p>Email: {{ merchant.email }}<br>Phone: {{ merchant.phone }}<br>{{ merchant.address }}</p>
+    <a href="{% url 'merchants:store_products' merchant.slug %}" class="btn btn-dark mt-3">Shop Now</a>
+</div>
+</div>
+{% endblock %}

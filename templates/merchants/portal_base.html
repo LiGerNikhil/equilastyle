@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Merchant Portal — {{ merchant.business_name }}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/merchant-portal.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="merchant-portal">
+<div class="admin-container merchant-portal" id="merchantPortal">
+    <nav class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="admin-logo">
+                {% if merchant.logo %}
+                <img src="{{ merchant.logo.url }}" alt="" class="logo-img">
+                {% else %}
+                <img src="{% static 'images/logo.jpeg' %}" alt="EQUILA" class="logo-img">
+                {% endif %}
+                <h2>{{ merchant.business_name|truncatechars:16 }}</h2>
+                <span class="admin-badge merchant-badge">Merchant</span>
+            </div>
+            <p class="merchant-id-label">{{ merchant.merchant_id }}</p>
+        </div>
+
+        <ul class="sidebar-menu">
+            {% with url_name=request.resolver_match.url_name %}
+            <li class="menu-item {% if url_name == 'dashboard' %}active{% endif %}">
+                <a href="{% url 'merchants:dashboard' %}"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+            </li>
+            <li class="menu-item {% if 'product' in url_name %}active{% endif %}">
+                <a href="{% url 'merchants:products' %}"><i class="fas fa-tshirt"></i><span>Products</span></a>
+            </li>
+            <li class="menu-item {% if url_name == 'orders' %}active{% endif %}">
+                <a href="{% url 'merchants:orders' %}"><i class="fas fa-shopping-bag"></i><span>Orders</span></a>
+            </li>
+            <li class="menu-item {% if url_name == 'wallet' %}active{% endif %}">
+                <a href="{% url 'merchants:wallet' %}"><i class="fas fa-wallet"></i><span>Wallet</span></a>
+            </li>
+            {% endwith %}
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="{% url 'merchants:store_home' merchant.slug %}" class="btn-view-site" target="_blank" rel="noopener">
+                <i class="fas fa-store"></i> View My Store
+            </a>
+            <a href="{% url 'products:product_list' %}" class="btn-view-site">
+                <i class="fas fa-external-link-alt"></i> EQUILA Shop
+            </a>
+            <form method="post" action="{% url 'accounts:logout' %}" class="mt-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-light btn-sm w-100">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="admin-main">
+        <header class="admin-header">
+            <div class="header-left">
+                <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+            </div>
+            <div class="header-right">
+                <span class="merchant-status-pill status-{{ merchant.status }}">{{ merchant.get_status_display }}</span>
+            </div>
+        </header>
+        <main class="admin-content">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+    document.getElementById('merchantPortal')?.classList.toggle('sidebar-collapsed');
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

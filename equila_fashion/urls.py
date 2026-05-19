@@ -49,6 +49,7 @@ urlpatterns = [
     path('orders/', include('orders.urls')),
     path('', include('products.urls')),
     path('admin-panel/', include('admin_panel.urls')),
+    path('', include('merchants.urls')),
 ]
 
 if settings.DEBUG:

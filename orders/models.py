@@ -62,14 +62,73 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
+    FULFILLMENT_TYPE_CHOICES = [
+        ('hq', 'HQ Fulfillment'),
+        ('merchant', 'Merchant Fulfillment'),
+    ]
+
+    FULFILLMENT_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('packed', 'Packed'),
+        ('shipped', 'Shipped'),
+        ('delivered', 'Delivered'),
+        ('returned', 'Returned'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    PAYOUT_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('credited', 'Credited'),
+        ('paid_out', 'Paid Out'),
+        ('refunded', 'Refunded'),
+    ]
+
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    merchant = models.ForeignKey(
+        'merchants.Merchant',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='order_items',
+    )
+    fulfillment_type = models.CharField(
+        max_length=20,
+        choices=FULFILLMENT_TYPE_CHOICES,
+        default='hq',
+    )
+    fulfillment_status = models.CharField(
+        max_length=20,
+        choices=FULFILLMENT_STATUS_CHOICES,
+        default='pending',
+    )
+    payout_status = models.CharField(
+        max_length=20,
+        choices=PAYOUT_STATUS_CHOICES,
+        default='pending',
+    )
     
+    class Meta:
+        indexes = [
+            models.Index(fields=['merchant', 'fulfillment_status']),
+            models.Index(fields=['order', 'merchant']),
+        ]
+
     def __str__(self):
         return f"{self.product.name} - {self.quantity}"
     
     def get_total_price(self):
         return self.price * self.quantity
+
+    def save(self, *args, **kwargs):
+        # Auto-route merchant from product on create
+        if self.product_id and not self.merchant_id:
+            product = self.product
+            if product.merchant_id:
+                self.merchant_id = product.merchant_id
+                self.fulfillment_type = 'merchant'
+        super().save(*args, **kwargs)

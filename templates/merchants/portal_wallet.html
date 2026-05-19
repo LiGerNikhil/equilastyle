@@ -1,0 +1,61 @@
+{% extends 'merchants/portal_base.html' %}
+{% block title %}Wallet — {{ merchant.business_name }}{% endblock %}
+{% block page_title %}Earnings & Wallet{% endblock %}
+{% block content %}
+<div class="stats-grid mb-4">
+    <div class="stat-card">
+        <div class="stat-icon revenue"><i class="fas fa-clock"></i></div>
+        <div class="stat-content"><h3>₹{{ wallet.pending_balance }}</h3><p>Pending</p></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orders"><i class="fas fa-wallet"></i></div>
+        <div class="stat-content"><h3>₹{{ wallet.withdrawable_balance }}</h3><p>Withdrawable</p></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon products"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-content"><h3>₹{{ wallet.total_earned }}</h3><p>Total earned</p></div>
+    </div>
+</div>
+
+<div class="activity-card mb-4">
+    <div class="card-header"><h3>Transactions</h3></div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Net</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for tx in transactions %}
+            <tr>
+                <td>{{ tx.created_at|date:'M d, Y' }}</td>
+                <td>{{ tx.get_transaction_type_display }}</td>
+                <td>₹{{ tx.amount }}</td>
+                <td>₹{{ tx.net_amount }}</td>
+                <td><span class="approval-badge approval-approved">{{ tx.get_status_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center py-4 text-muted">No transactions yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="activity-card">
+    <div class="card-header"><h3>Payout requests</h3></div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for p in payouts %}
+            <tr>
+                <td>{{ p.created_at|date:'M d, Y' }}</td>
+                <td>₹{{ p.amount }}</td>
+                <td><span class="approval-badge approval-pending">{{ p.get_status_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center py-4 text-muted">No payout requests yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

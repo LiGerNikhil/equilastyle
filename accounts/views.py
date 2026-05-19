@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from .auth_redirect import redirect_after_login
 from .forms import CustomUserCreationForm, UserUpdateForm, ProfileUpdateForm, AddressForm
 from .models import Profile
 
@@ -15,10 +16,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            # Redirect admin users to admin dashboard
-            if user.is_staff:
-                return redirect('admin_panel:dashboard')
-            return redirect('products:home')
+            return redirect_after_login(user)
     else:
         form = CustomUserCreationForm()
     
@@ -31,10 +29,7 @@ def register(request):
 @csrf_protect
 def login_view(request):
     if request.user.is_authenticated:
-        # Redirect admin users to admin dashboard
-        if request.user.is_staff:
-            return redirect('admin_panel:dashboard')
-        return redirect('products:home')
+        return redirect_after_login(request.user)
     
     from django.contrib.auth.forms import AuthenticationForm
     
@@ -43,10 +38,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            # Redirect admin users to admin dashboard
-            if user.is_staff:
-                return redirect('admin_panel:dashboard')
-            return redirect('products:home')
+            return redirect_after_login(user)
     else:
         form = AuthenticationForm()
     

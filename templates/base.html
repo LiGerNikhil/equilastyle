@@ -609,6 +609,8 @@
     {% if user.is_authenticated %}
         {% if user.is_staff %}
             <a href="{% url 'admin_panel:dashboard' %}" class="nav-cta" style="background: linear-gradient(135deg, var(--dark-green) 0%, var(--red) 100%);">Admin Panel</a>
+        {% elif user.role == 'merchant' or user.role == 'merchant_staff' %}
+            <a href="{% url 'merchants:dashboard' %}" class="nav-cta" style="background: linear-gradient(135deg, var(--dark-green) 0%, var(--gold-dark) 100%);">Merchant Dashboard</a>
         {% else %}
             <a href="{% url 'products:product_list' %}" class="nav-cta">Shop Now</a>
         {% endif %}
@@ -673,6 +675,8 @@
                 <li><a href="{% url 'orders:order_list' %}"><i class="fas fa-box"></i> My Orders</a></li>
                 {% if user.is_staff %}
                 <li><a href="{% url 'admin_panel:dashboard' %}"><i class="fas fa-cog"></i> Admin Panel</a></li>
+                {% elif user.role == 'merchant' or user.role == 'merchant_staff' %}
+                <li><a href="{% url 'merchants:dashboard' %}"><i class="fas fa-store"></i> Merchant Dashboard</a></li>
                 {% endif %}
                 <li>
                     <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">

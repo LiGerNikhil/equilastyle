@@ -9,10 +9,15 @@ from .models import Order, OrderItem
 from .forms import OrderCreateForm
 from cart.models import Cart, CartItem
 
-import razorpay
+try:
+    import razorpay
+except ImportError:
+    razorpay = None
 
 
 def get_razorpay_client():
+    if razorpay is None:
+        raise RuntimeError('razorpay package is not installed')
     return razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 
@@ -44,14 +49,18 @@ def order_create(request):
 
             order.save()
 
-            # Create order items
+            # Create order items (merchant routing from product ownership)
             for cart_item in cart_items:
+                product = cart_item.product
+                merchant = product.merchant
                 OrderItem.objects.create(
                     order=order,
-                    product=cart_item.product,
+                    product=product,
                     variant=cart_item.variant,
                     quantity=cart_item.quantity,
-                    price=cart_item.get_price()
+                    price=cart_item.get_price(),
+                    merchant=merchant,
+                    fulfillment_type='merchant' if merchant else 'hq',
                 )
 
             # Clear cart for COD orders
@@ -125,14 +134,18 @@ def create_razorpay_order(request):
             razorpay_order_id=razorpay_order['id']
         )
 
-        # Create order items
+        # Create order items (merchant routing)
         for cart_item in cart_items:
+            product = cart_item.product
+            merchant = product.merchant
             OrderItem.objects.create(
                 order=order,
-                product=cart_item.product,
+                product=product,
                 variant=cart_item.variant,
                 quantity=cart_item.quantity,
-                price=cart_item.get_price()
+                price=cart_item.get_price(),
+                merchant=merchant,
+                fulfillment_type='merchant' if merchant else 'hq',
             )
 
         return JsonResponse({

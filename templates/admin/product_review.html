@@ -1,0 +1,94 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Review {{ product.name }} - Admin{% endblock %}
+{% block page_title %}Review Product{% endblock %}
+
+{% block content %}
+<div class="review-container">
+    <a href="{% url 'admin_panel:product_approvals' %}" class="btn btn-secondary mb-3">
+        <i class="fas fa-arrow-left"></i> Back to approvals
+    </a>
+
+    <div class="review-layout">
+        <div class="review-gallery">
+            {% for img in product.images.all %}
+            <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.name }}" class="review-img">
+            {% empty %}
+            <img src="{% static 'images/logo.jpeg' %}" alt="" class="review-img">
+            {% endfor %}
+        </div>
+
+        <div class="review-details">
+            <span class="badge-pending-lg">Pending approval</span>
+            <h1>{{ product.name }}</h1>
+            <p class="merchant-line">
+                <i class="fas fa-store"></i> {{ product.merchant.business_name }}
+                ({{ product.merchant.merchant_id }})
+            </p>
+
+            <div class="review-meta-grid">
+                <div><strong>Price</strong><br>₹{{ product.price }}</div>
+                <div><strong>Category</strong><br>{{ product.category.name }}</div>
+                <div><strong>Target</strong><br>{{ product.get_target_group_display }}</div>
+                <div><strong>Gender</strong><br>{{ product.get_gender_display }}</div>
+            </div>
+
+            <h3>Description</h3>
+            <p class="review-desc">{{ product.description|linebreaks }}</p>
+
+            <h3>Sizes & stock</h3>
+            <table class="table table-sm table-dark">
+                <thead><tr><th>Size</th><th>Stock</th><th>Available</th></tr></thead>
+                <tbody>
+                {% for v in product.variants.all %}
+                <tr><td>{{ v.size }}</td><td>{{ v.stock }}</td><td>{% if v.is_available %}Yes{% else %}No{% endif %}</td></tr>
+                {% empty %}
+                <tr><td colspan="3">No variants</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <p class="text-muted small">
+                Submitted {{ product.updated_at|date:'M d, Y H:i' }}
+                {% if product.published_by %} · {{ product.published_by.email }}{% endif %}
+            </p>
+
+            <form method="post" class="review-actions mt-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Rejection reason (only if rejecting)</label>
+                    <textarea name="reason" class="form-control" rows="2" placeholder="Optional message for merchant"></textarea>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="submit" name="action" value="approve" class="btn btn-success btn-lg">
+                        <i class="fas fa-check"></i> Approve & publish
+                    </button>
+                    <button type="submit" name="action" value="reject" class="btn btn-danger btn-lg"
+                            onclick="return confirm('Reject this product?');">
+                        <i class="fas fa-times"></i> Reject
+                    </button>
+                    <a href="{% url 'admin_panel:product_edit' product.id %}" class="btn btn-outline-light">Edit as admin</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.review-container { max-width: 1100px; }
+.review-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; }
+@media (max-width: 768px) { .review-layout { grid-template-columns: 1fr; } }
+.review-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.review-img { width: 100%; border-radius: 10px; aspect-ratio: 1; object-fit: cover; border: 1px solid rgba(255,215,0,0.2); }
+.badge-pending-lg { background: #fbbf24; color: #111; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+.review-details h1 { color: var(--gold); font-family: 'Bebas Neue', cursive; font-size: 2rem; margin: 0.5rem 0; }
+.merchant-line { color: rgba(255,255,255,0.75); }
+.review-meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1.25rem 0; padding: 1rem; background: rgba(255,255,255,0.04); border-radius: 10px; }
+.review-meta-grid strong { color: var(--gold); font-size: 0.75rem; text-transform: uppercase; }
+.review-desc { color: rgba(255,255,255,0.8); line-height: 1.6; }
+.review-details .form-control { background: rgba(0,0,0,0.35); border-color: rgba(255,215,0,0.2); color: #fff; }
+</style>
+{% endblock %}

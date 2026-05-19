@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<div class="store-page">
+<div class="container py-5">
+    <nav class="mb-3" aria-label="breadcrumb">
+        <a href="{% url 'merchants:store_home' merchant.slug %}">{{ merchant.business_name }}</a> / Products
+    </nav>
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-6"><input type="search" name="search" value="{{ search_query }}" class="form-control" placeholder="Search products"></div>
+        <div class="col-md-3">
+            <select name="sort" class="form-select">
+                <option value="newest">Newest</option>
+                <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            </select>
+        </div>
+        <div class="col-md-3"><button class="btn btn-dark w-100">Apply</button></div>
+    </form>
+    <div class="row g-4">
+        {% for product in page_obj %}
+        <div class="col-6 col-md-3">
+            <a href="{% url 'products:product_detail' product.slug %}" class="text-decoration-none text-dark">
+                {% with img=product.images.first %}
+                <img src="{% if img %}{{ img.image.url }}{% else %}{% static 'images/logo.jpeg' %}{% endif %}" class="img-fluid rounded" alt="{{ product.name }}">
+                {% endwith %}
+                <h6 class="mt-2">{{ product.name }}</h6>
+                <p class="text-muted mb-0">₹{{ product.price }}</p>
+            </a>
+        </div>
+        {% empty %}<p>No products found.</p>{% endfor %}
+    </div>
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-4"><ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&sort={{ request.GET.sort }}">Previous</a></li>{% endif %}
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&sort={{ request.GET.sort }}">Next</a></li>{% endif %}
+    </ul></nav>
+    {% endif %}
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Merchants - Admin Panel - EQUILA{% endblock %}
+{% block page_title %}Merchant & Franchise Management{% endblock %}
+
+{% block content %}
+<div class="products-container">
+    <div class="section-header">
+        <form method="get" class="search-bar">
+            <input type="text" name="search" class="search-input" placeholder="Search by name, ID, email, city..." value="{{ search_query }}">
+            <select name="status" class="form-select" style="max-width:160px;">
+                <option value="">All statuses</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Filter</button>
+        </form>
+        <div class="header-actions">
+            <a href="{% url 'admin_panel:merchant_add' %}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Add Merchant
+            </a>
+        </div>
+    </div>
+
+    <div class="results-info">
+        <span class="results-count">{{ merchants.count }} merchant(s)</span>
+    </div>
+
+    <div class="products-grid">
+        {% for m in merchants %}
+        <div class="product-card merchant-card">
+            <div class="product-image">
+                {% if m.logo %}
+                <img src="{{ m.logo.url }}" alt="{{ m.business_name }}">
+                {% else %}
+                <img src="{% static 'images/logo.jpeg' %}" alt="{{ m.business_name }}">
+                {% endif %}
+                <div class="product-status">
+                    <span class="status-badge status-{{ m.status }}">{{ m.get_status_display }}</span>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">{{ m.business_name }}</h3>
+                <p class="product-brand">{{ m.merchant_id }} · {{ m.owner_name }}{% if m.owner_user %} · <i class="fas fa-user"></i> {{ m.owner_user.email }}{% endif %}</p>
+                <p class="product-description">{{ m.city }}, {{ m.state }} · {{ m.get_franchise_type_display }}</p>
+                <div class="product-meta">
+                    <span class="product-category">{{ m.get_verification_status_display }}</span>
+                    {% if m.territory %}<span class="product-gender">{{ m.territory.name }}</span>{% endif %}
+                    <span class="product-gender">{{ m.commission_rate }}% commission</span>
+                </div>
+            </div>
+            <div class="product-actions">
+                <a href="{% url 'merchants:store_home' m.slug %}" class="btn btn-sm btn-secondary" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> Store
+                </a>
+                <a href="{% url 'admin_panel:merchant_edit' m.id %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <button type="button" class="btn btn-sm {% if m.status == 'active' %}btn-warning{% else %}btn-success{% endif %} toggle-merchant-btn" data-id="{{ m.id }}">
+                    <i class="fas fa-power-off"></i>
+                    {% if m.status == 'active' %}Suspend{% else %}Activate{% endif %}
+                </button>
+                {% if m.verification_status != 'verified' %}
+                <button type="button" class="btn btn-sm btn-success verify-btn" data-id="{{ m.id }}" data-action="verify">
+                    <i class="fas fa-check"></i> Verify
+                </button>
+                {% endif %}
+                <button type="button" class="btn btn-sm btn-danger delete-merchant-btn" data-id="{{ m.id }}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <i class="fas fa-store fa-3x"></i>
+            <p>No merchants yet. Add your first franchise partner.</p>
+            <a href="{% url 'admin_panel:merchant_add' %}" class="btn btn-primary">Add Merchant</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function csrfToken() {
+    return '{{ csrf_token }}';
+}
+document.querySelectorAll('.toggle-merchant-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        const r = await fetch(`/admin-panel/merchants/${id}/toggle-status/`, {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrfToken()}
+        });
+        const data = await r.json();
+        if (data.success) location.reload();
+    });
+});
+document.querySelectorAll('.verify-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        const fd = new FormData();
+        fd.append('action', btn.dataset.action);
+        const r = await fetch(`/admin-panel/merchants/${id}/verify/`, {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrfToken()},
+            body: fd
+        });
+        const data = await r.json();
+        if (data.success) location.reload();
+    });
+});
+document.querySelectorAll('.delete-merchant-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        if (!confirm('Delete this merchant permanently?')) return;
+        const id = btn.dataset.id;
+        const r = await fetch(`/admin-panel/merchants/${id}/delete/`, {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrfToken()}
+        });
+        const data = await r.json();
+        if (data.success) location.reload();
+    });
+});
+</script>
+{% endblock %}

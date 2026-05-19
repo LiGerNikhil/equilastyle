@@ -3,10 +3,29 @@ from django.db import models
 
 
 class User(AbstractUser):
+    class Role(models.TextChoices):
+        SUPER_ADMIN = 'super_admin', 'Super Admin'
+        REGIONAL_MANAGER = 'regional_manager', 'Regional Manager'
+        MERCHANT = 'merchant', 'Merchant'
+        MERCHANT_STAFF = 'merchant_staff', 'Merchant Staff'
+        CUSTOMER = 'customer', 'Customer'
+
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True)
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.CUSTOMER,
+        db_index=True,
+    )
     is_premium = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    # Territories assigned to regional managers
+    managed_territories = models.ManyToManyField(
+        'merchants.Territory',
+        blank=True,
+        related_name='regional_managers',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

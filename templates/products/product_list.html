@@ -229,6 +229,9 @@
                             
                             <!-- Product Badges -->
                             <div class="product-badges">
+                                {% if product.merchant %}
+                                    <span class="badge" style="background:#8b6914;color:#fff;font-size:0.65rem;">{{ product.merchant.business_name|truncatechars:18 }}</span>
+                                {% endif %}
                                 {% if product.is_premium %}
                                     <span class="badge premium">Premium</span>
                                 {% endif %}

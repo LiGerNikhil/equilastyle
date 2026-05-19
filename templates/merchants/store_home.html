@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .store-page .store-hero {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .store-page .store-hero-overlay {
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .store-page .store-logo {
+        max-width: 150px;
+        height: auto;
+    }
+    
+    .store-page .store-nav .btn-outline-light {
+        border-color: rgba(255, 215, 0, 0.5);
+        color: var(--gold);
+        background: transparent;
+    }
+    
+    .store-page .store-nav .btn-outline-light:hover {
+        background: var(--gold);
+        color: var(--black);
+        border-color: var(--gold);
+    }
+    
+    .store-page .container.py-5 {
+        background: var(--black);
+    }
+    
+    .store-page h2.mb-4 {
+        font-family: 'Bebas Neue', cursive;
+        color: var(--gold);
+        letter-spacing: 0.05em;
+        margin-bottom: 30px;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .store-page h2.mb-4::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--gold);
+    }
+    
+    .store-page .col-6.col-md-3 {
+        margin-bottom: 30px;
+    }
+    
+    .store-page .text-decoration-none.text-dark {
+        display: block;
+        background: linear-gradient(135deg, rgba(10, 46, 29, 0.8) 0%, rgba(26, 26, 26, 0.9) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.15);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        backdrop-filter: blur(10px);
+        text-decoration: none;
+        color: inherit;
+        height: 100%;
+    }
+    
+    .store-page .text-decoration-none.text-dark:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(255, 215, 0, 0.15);
+        border-color: var(--gold);
+    }
+    
+    .store-page .text-decoration-none.text-dark:hover::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold) 0%, transparent 50%, var(--gold) 100%);
+        opacity: 1;
+    }
+    
+    .store-page .img-fluid.rounded {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+    
+    .store-page .text-decoration-none.text-dark:hover .img-fluid.rounded {
+        transform: scale(1.1);
+    }
+    
+    .store-page h6.mt-2 {
+        font-family: 'Bebas Neue', cursive;
+        color: var(--white);
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 1.4rem;
+        transition: color 0.3s ease;
+    }
+    
+    .store-page .text-decoration-none.text-dark:hover h6.mt-2 {
+        color: var(--gold);
+    }
+    
+    .store-page p.text-muted {
+        color: rgba(240, 235, 228, 0.7);
+        font-size: 1.1rem;
+        font-weight: 600;
+        font-family: 'Bebas Neue', cursive;
+        letter-spacing: 0.05em;
+    }
+    
+    .store-page .btn-dark {
+        background: var(--dark-green);
+        color: var(--white);
+        border: none;
+        padding: 12px 30px;
+        font-family: 'Bebas Neue', cursive;
+        font-size: 1.1rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .store-page .btn-dark:hover {
+        background: var(--gold);
+        color: var(--black);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(255, 215, 0, 0.35);
+    }
+    
+    @media (max-width: 768px) {
+        .store-page .store-hero {
+            min-height: 60vh;
+        }
+        
+        .store-page .store-logo {
+            max-width: 120px;
+        }
+        
+        .store-page h1 {
+            font-size: 2.5rem;
+        }
+        
+        .store-page p.lead {
+            font-size: 1.2rem;
+        }
+        
+        .store-page .container.py-5 {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+        
+        .store-page h2.mb-4 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+        }
+        
+        .store-page h2.mb-4::after {
+            width: 40px;
+        }
+        
+        .store-page .col-6.col-md-3 {
+            width: 50%;
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        
+        .store-page .img-fluid.rounded {
+            height: 220px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .store-page .store-hero {
+            min-height: 50vh;
+        }
+        
+        .store-page h1 {
+            font-size: 2rem;
+        }
+        
+        .store-page p.lead {
+            font-size: 1rem;
+        }
+        
+        .store-page .container.py-5 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        
+        .store-page h2.mb-4 {
+            font-size: 1.8rem;
+        }
+        
+        .store-page .col-6.col-md-3 {
+            width: 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        
+        .store-page .img-fluid.rounded {
+            height: 260px;
+        }
+        
+        .store-page .btn-dark {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="store-page">
+<section class="store-hero" style="{% if merchant.banner %}background-image:url('{{ merchant.banner.url }}');{% endif %}">
+    <div class="store-hero-overlay">
+        <div class="container py-5">
+            {% if merchant.logo %}<img src="{{ merchant.logo.url }}" alt="{{ merchant.business_name }}" class="store-logo mb-3">{% endif %}
+            <h1>{{ merchant.business_name }}</h1>
+            <p class="lead">{{ merchant.city }}, {{ merchant.state }}</p>
+            <div class="store-nav mt-3">
+                <a href="{% url 'merchants:store_products' merchant.slug %}" class="btn btn-outline-light me-2">Shop Products</a>
+                <a href="{% url 'merchants:store_about' merchant.slug %}" class="btn btn-outline-light">About Store</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <h2 class="mb-4">Featured Products</h2>
+    <div class="row g-4">
+        {% for product in products %}
+        <div class="col-6 col-md-3">
+            <a href="{% url 'products:product_detail' product.slug %}" class="text-decoration-none text-dark">
+                {% with img=product.images.first %}
+                <img src="{% if img %}{{ img.image.url }}{% else %}{% static 'images/logo.jpeg' %}{% endif %}" class="img-fluid rounded" alt="{{ product.name }}">
+                {% endwith %}
+                <h6 class="mt-2">{{ product.name }}</h6>
+                <p class="text-muted">₹{{ product.price }}</p>
+            </a>
+        </div>
+        {% empty %}
+        <p>No products listed yet.</p>
+        {% endfor %}
+    </div>
+    {% if products %}
+    <div class="text-center mt-4">
+        <a href="{% url 'merchants:store_products' merchant.slug %}" class="btn btn-dark">View All Products</a>
+    </div>
+    {% endif %}
+</section>
+</div>
+{% endblock %}

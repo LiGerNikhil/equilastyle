@@ -47,6 +47,21 @@
                     <span>Users</span>
                 </a>
             </li>
+            <li class="menu-item {% if 'merchant' in request.resolver_match.url_name|default:'' %}active{% endif %}">
+                <a href="{% url 'admin_panel:merchants' %}">
+                    <i class="fas fa-store"></i>
+                    <span>Merchants</span>
+                </a>
+            </li>
+            <li class="menu-item {% if request.resolver_match.url_name == 'admin_panel:product_approvals' or request.resolver_match.url_name == 'admin_panel:product_review' %}active{% endif %}">
+                <a href="{% url 'admin_panel:product_approvals' %}">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Approvals</span>
+                    {% if admin_pending_product_count %}
+                    <span class="sidebar-badge">{{ admin_pending_product_count }}</span>
+                    {% endif %}
+                </a>
+            </li>
             <li class="menu-item {% if request.resolver_match.url_name == 'admin_panel:products' %}active{% endif %}">
                 <a href="{% url 'admin_panel:products' %}">
                     <i class="fas fa-box"></i>
@@ -688,6 +703,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     .dropdown-menu.show {
         display: block;
+    }
+
+    .menu-item a {
+        position: relative;
+    }
+
+    .sidebar-badge {
+        margin-left: auto;
+        background: #fbbf24;
+        color: #111;
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+        min-width: 20px;
+        text-align: center;
     }
 </style>
 
