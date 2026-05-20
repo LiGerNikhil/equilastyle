@@ -576,17 +576,6 @@
   <div id="cur-label">VIEW</div>
 </div>
 
-<!-- Preloader -->
-<div id="preloader">
-  <div class="pl-bg-lines"></div>
-  <div class="pl-logo">
-    EQUILA STYLE
-    <div class="pl-logo-fill" id="plFill">EQUILA STYLE</div>
-  </div>
-  <div class="pl-bar-outer"><div class="pl-bar" id="plBar"></div></div>
-  <div class="pl-pct" id="plPct">0%</div>
-  <div class="pl-tagline">Where style meets substance</div>
-</div>
 
 <!-- Navigation -->
 <nav id="navbar">
@@ -866,33 +855,7 @@
             el.addEventListener('mouseleave', () => document.body.classList.remove('cur-hover'));
         });
         
-        // Preloader
-        const preloader = document.getElementById('preloader');
-        const plFill = document.getElementById('plFill');
-        const plBar = document.getElementById('plBar');
-        const plPct = document.getElementById('plPct');
-        
-        let loadProgress = 0;
-        const loadingInterval = setInterval(() => {
-            loadProgress += Math.random() * 15;
-            if (loadProgress >= 100) {
-                loadProgress = 100;
-                clearInterval(loadingInterval);
-                
-                setTimeout(() => {
-                    plFill.style.clipPath = 'inset(0 0 0 0)';
-                    setTimeout(() => {
-                        preloader.style.opacity = '0';
-                        setTimeout(() => {
-                            preloader.style.display = 'none';
-                        }, 100);
-                    }, 50);
-                }, 50);
-            }
-            
-            plBar.style.width = loadProgress + '%';
-            plPct.textContent = Math.floor(loadProgress) + '%';
-        }, 100);
+
         
         // Scroll Progress
         const scrollProgress = document.getElementById('scroll-progress');

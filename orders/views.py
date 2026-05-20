@@ -7,6 +7,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from .models import Order, OrderItem
 from .forms import OrderCreateForm
+from .email_utils import send_order_confirmation_email
 from cart.models import Cart, CartItem
 
 try:
@@ -66,6 +67,10 @@ def order_create(request):
             # Clear cart for COD orders
             if payment_method == 'cod':
                 cart_items.delete()
+                try:
+                    send_order_confirmation_email(order)
+                except Exception:
+                    pass
                 messages.success(request, 'Your order has been placed successfully!')
                 return redirect('orders:order_detail', order.id)
             else:
@@ -203,6 +208,11 @@ def verify_payment(request):
             cart = Cart.objects.filter(user=request.user).first()
             if cart:
                 cart.items.all().delete()
+
+            try:
+                send_order_confirmation_email(order)
+            except Exception:
+                pass
 
             messages.success(request, 'Payment successful! Your order has been confirmed.')
             return JsonResponse({

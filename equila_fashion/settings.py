@@ -209,3 +209,12 @@ SITE_URL = config('SITE_URL', default='https://www.equilastyle.com')
 RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID', default='rzp_test_your_test_key_id')
 RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET', default='your_test_key_secret')
 RAZORPAY_CURRENCY = config('RAZORPAY_CURRENCY', default='INR')
+
+# Email Configuration (Gmail SMTP)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'saakshinikhil@gmail.com'
+EMAIL_HOST_PASSWORD = 'mssv qnrf gllc gezw'
+DEFAULT_FROM_EMAIL = 'EQUILA STYLE <saakshinikhil@gmail.com>'
