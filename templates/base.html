@@ -4,10 +4,7 @@
     {% load static %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      {% block title %}{{ seo_site_name }} — {{ seo_site_tagline }}{% endblock
-      %}
-    </title>
+    <title>{% block title %}{{ seo_site_name }} — {{ seo_site_tagline }}{% endblock %}</title>
     <meta
       name="description"
       content="{% block meta_description %}{{ seo_default_description }}{% endblock %}"
@@ -796,11 +793,7 @@
             >
           </li>
           <li>
-            <a href="{% url 'cart:cart_detail' %}"
-              ><i class="fas fa-shopping-cart"></i> Cart {% if cart_total_items
-              > 0 %}<span class="mobile-cart-count">{{ cart_total_items }}</span
-              >{% endif %}</a
-            >
+            <a href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"></i> Cart{% if cart_total_items > 0 %} <span class="mobile-cart-count">{{ cart_total_items }}</span>{% endif %}</a>
           </li>
         </ul>
 
