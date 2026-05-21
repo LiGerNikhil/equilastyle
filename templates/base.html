@@ -690,8 +690,7 @@
         {% endif %}
         <li style="list-style: none; margin-left: 20px">
           <a href="{% url 'accounts:profile' %}" class="nav-profile-link">
-            <i class="fas fa-user me-2"></i>{{
-            user.first_name|default:user.email }}
+            <i class="fas fa-user me-2"></i>{{ user.username }}
           </a>
         </li>
         <li style="list-style: none; margin-left: 20px">
