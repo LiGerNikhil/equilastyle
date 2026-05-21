@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q, Count, Avg, Sum
 from django.utils import timezone
+from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 import time
 from django.contrib import messages
@@ -84,17 +85,21 @@ def admin_dashboard(request):
 def admin_users(request):
     """Admin users management page"""
     
-    users = User.objects.all().order_by('-date_joined')
+    user_list = User.objects.all().order_by('-date_joined')
     
     # Filter by search
     search_query = request.GET.get('search', '')
     if search_query:
-        users = users.filter(
+        user_list = user_list.filter(
             Q(username__icontains=search_query) |
             Q(email__icontains=search_query) |
             Q(first_name__icontains=search_query) |
             Q(last_name__icontains=search_query)
         )
+    
+    paginator = Paginator(user_list, 20)
+    page_number = request.GET.get('page')
+    users = paginator.get_page(page_number)
     
     context = {
         'users': users,
@@ -102,6 +107,66 @@ def admin_users(request):
     }
     
     return render(request, 'admin/users.html', context)
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_user_edit(request, user_id: int):
+    """Edit user profile details."""
+    u = get_object_or_404(User, pk=user_id)
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name', '')
+        last_name = request.POST.get('last_name', '')
+        email = request.POST.get('email', '')
+        phone = request.POST.get('phone', '')
+        role = request.POST.get('role', '')
+        is_active = request.POST.get('is_active') == '1'
+        is_staff_val = request.POST.get('is_staff') == '1'
+
+        if email:
+            existing = User.objects.filter(email__iexact=email).exclude(pk=u.pk).first()
+            if existing:
+                messages.error(request, 'Another user already uses that email.')
+                return render(request, 'admin/user_form.html', {'edit_user': u})
+        u.first_name = first_name
+        u.last_name = last_name
+        u.email = email or u.email
+        u.phone = phone or ''
+        if role and role in dict(User.Role.choices):
+            u.role = role
+        u.is_active = is_active
+        u.is_staff = is_staff_val
+        u.save()
+        messages.success(request, f'User {u.email} updated.')
+        return redirect('admin_panel:users')
+
+    return render(request, 'admin/user_form.html', {'edit_user': u})
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_user_toggle_status(request, user_id: int):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'detail': 'Method not allowed.'}, status=405)
+    u = get_object_or_404(User, pk=user_id)
+    if u.is_superuser:
+        return JsonResponse({'success': False, 'detail': 'Cannot toggle superuser status.'}, status=403)
+    u.is_active = not u.is_active
+    u.save(update_fields=['is_active'])
+    return JsonResponse({'success': True, 'is_active': u.is_active})
+
+
+@login_required
+@user_passes_test(is_staff_user, login_url='accounts:login')
+def admin_user_delete(request, user_id: int):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'detail': 'Method not allowed.'}, status=405)
+    u = get_object_or_404(User, pk=user_id)
+    if u.is_superuser:
+        return JsonResponse({'success': False, 'detail': 'Cannot delete superuser.'}, status=403)
+    email = u.email
+    u.delete()
+    return JsonResponse({'success': True, 'message': f'User {email} deleted.'})
 
 
 @login_required

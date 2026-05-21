@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Set Up Your Merchant Account — EQUILA STYLE{% endblock %}
+
+{% block content %}
+<style>
+    .merchant-setup-page {
+        min-height: 100vh;
+        background: #0a0a0a;
+        padding: 140px 20px 80px;
+    }
+    .merchant-setup-page .setup-card {
+        max-width: 680px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        border: 1px solid rgba(255, 215, 0, 0.15);
+        padding: 48px;
+    }
+    .merchant-setup-page .setup-card h1 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 36px;
+        color: #ffd700;
+        letter-spacing: 2px;
+        margin: 0 0 8px;
+    }
+    .merchant-setup-page .setup-card .lead {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        margin-bottom: 32px;
+    }
+    .merchant-setup-page .form-label {
+        color: rgba(255, 215, 0, 0.8);
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .merchant-setup-page .form-control {
+        background: #2a2a2a;
+        border: 1px solid rgba(255, 215, 0, 0.12);
+        color: #ffd700;
+        border-radius: 0;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    .merchant-setup-page .form-control:focus {
+        background: #333;
+        border-color: #ffd700;
+        box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.15);
+        color: #ffd700;
+    }
+    .merchant-setup-page .btn-submit {
+        width: 100%;
+        padding: 14px;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 16px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        background: #ffd700;
+        color: #000;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 16px;
+    }
+    .merchant-setup-page .btn-submit:hover {
+        background: #ffed4a;
+    }
+    .merchant-setup-page .help-text {
+        color: rgba(255, 255, 255, 0.35);
+        font-size: 11px;
+        margin-top: 4px;
+    }
+    @media (max-width: 576px) {
+        .merchant-setup-page .setup-card { padding: 28px 20px; }
+    }
+</style>
+
+<div class="merchant-setup-page">
+    <div class="setup-card">
+        <h1>Set Up Your Store</h1>
+        <p class="lead">Fill in the details below to activate your merchant account.</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<div class="help-text">{{ field.help_text }}</div>{% endif %}
+                {% for error in field.errors %}<div class="text-danger" style="font-size:12px;margin-top:4px;">{{ error }}</div>{% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn-submit">Activate Merchant Account</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

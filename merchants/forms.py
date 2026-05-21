@@ -121,6 +121,43 @@ class MerchantForm(forms.ModelForm):
         return merchant
 
 
+class MerchantSetupForm(forms.ModelForm):
+    """Simplified form: existing merchant users create their Merchant record."""
+
+    class Meta:
+        model = Merchant
+        fields = [
+            'business_name',
+            'owner_name',
+            'phone',
+            'address',
+            'city',
+            'state',
+            'pincode',
+            'gst_number',
+            'about_text',
+        ]
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': 3}),
+            'about_text': forms.Textarea(attrs={'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.setdefault('class', 'form-control')
+
+    def save(self, user, commit=True):
+        merchant = super().save(commit=False)
+        merchant.email = user.email
+        merchant.owner_user = user
+        merchant.status = Merchant.Status.ACTIVE
+        merchant.verification_status = Merchant.VerificationStatus.VERIFIED
+        if commit:
+            merchant.save()
+        return merchant
+
+
 class TerritoryForm(forms.ModelForm):
     class Meta:
         model = Territory

@@ -1,0 +1,142 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Edit User — {{ edit_user.email }} — Admin Panel{% endblock %}
+
+{% block page_title %}Edit User: {{ edit_user.email }}{% endblock %}
+
+{% block content %}
+<style>
+    .user-form-page {
+        padding: 20px;
+        max-width: 640px;
+    }
+    .user-form-page .form-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        border-radius: 10px;
+        padding: 32px;
+    }
+    .user-form-page .form-label {
+        color: rgba(255, 215, 0, 0.8);
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .user-form-page .form-control,
+    .user-form-page .form-select {
+        background: #2a2a2a;
+        border: 1px solid rgba(255, 215, 0, 0.12);
+        color: #ffd700;
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+    .user-form-page .form-control:focus,
+    .user-form-page .form-select:focus {
+        background: #333;
+        border-color: #ffd700;
+        box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.15);
+        color: #ffd700;
+    }
+    .user-form-page .form-check-input {
+        background: #2a2a2a;
+        border-color: rgba(255, 215, 0, 0.3);
+    }
+    .user-form-page .form-check-input:checked {
+        background: #ffd700;
+        border-color: #ffd700;
+    }
+    .user-form-page .btn-save {
+        padding: 12px 36px;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 15px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: #ffd700;
+        color: #000;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .user-form-page .btn-save:hover {
+        background: #ffed4a;
+    }
+    .user-form-page .btn-cancel {
+        padding: 12px 36px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        margin-left: 12px;
+    }
+    .user-form-page .btn-cancel:hover {
+        color: #fff;
+    }
+    .user-form-page .form-text {
+        color: rgba(255, 255, 255, 0.35);
+        font-size: 11px;
+    }
+    .user-form-page hr {
+        border-color: rgba(255, 215, 0, 0.12);
+        margin: 24px 0;
+    }
+</style>
+
+<div class="user-form-page">
+    <div class="form-card">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input type="text" name="first_name" class="form-control" value="{{ edit_user.first_name }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="last_name" class="form-control" value="{{ edit_user.last_name }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" value="{{ edit_user.email }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control" value="{{ edit_user.phone }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Role</label>
+                <select name="role" class="form-select">
+                    {% for val, label in edit_user.Role.choices %}
+                    <option value="{{ val }}" {% if edit_user.role == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <hr>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="is_active" class="form-check-input" id="id_is_active" value="1" {% if edit_user.is_active %}checked{% endif %}>
+                <label class="form-label form-check-label" for="id_is_active" style="text-transform:none;letter-spacing:0;color:#fff;">Active</label>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="is_staff" class="form-check-input" id="id_is_staff" value="1" {% if edit_user.is_staff %}checked{% endif %}>
+                <label class="form-label form-check-label" for="id_is_staff" style="text-transform:none;letter-spacing:0;color:#fff;">Staff (Admin Panel Access)</label>
+            </div>
+
+            <hr>
+
+            <div>
+                <button type="submit" class="btn-save">Save Changes</button>
+                <a href="{% url 'admin_panel:users' %}" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

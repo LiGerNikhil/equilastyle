@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
+from merchants.forms import MerchantSetupForm
 from merchants.models import Merchant, MerchantWallet
 from merchants.permissions import (
     get_merchant_for_user,
@@ -191,3 +192,29 @@ def merchant_order_update_status(request, item_id):
         from merchants.services import credit_merchant_for_order_item
         credit_merchant_for_order_item(item)
     return JsonResponse({'success': True, 'status': new_status, 'display': valid[new_status]})
+
+
+@login_required
+def merchant_setup(request):
+    """Onboarding page: existing merchant users create their Merchant record."""
+    if get_merchant_for_user(request.user) is not None:
+        return redirect('merchants:dashboard')
+
+    role = getattr(request.user, 'role', '')
+    if role not in ('merchant', 'merchant_staff'):
+        messages.error(request, 'You are not registered as a merchant.')
+        return redirect('products:home')
+
+    if request.method == 'POST':
+        form = MerchantSetupForm(request.POST, request.FILES)
+        if form.is_valid():
+            merchant = form.save(user=request.user)
+            messages.success(request, f'Welcome, {merchant.business_name}! Your merchant account is ready.')
+            return redirect('merchants:dashboard')
+    else:
+        form = MerchantSetupForm(initial={
+            'owner_name': request.user.get_full_name() or request.user.username,
+            'phone': request.user.phone or '',
+        })
+
+    return render(request, 'merchants/merchant_setup.html', {'form': form})

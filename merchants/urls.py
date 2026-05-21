@@ -11,6 +11,7 @@ urlpatterns = [
     path('store/<slug:slug>/about/', views.store_about, name='store_about'),
     # Merchant portal
     path('portal/dashboard/', views.merchant_dashboard, name='dashboard'),
+    path('portal/setup/', views.merchant_setup, name='setup'),
     path('portal/orders/', views.merchant_orders, name='orders'),
     path('portal/products/', product_views.merchant_products, name='products'),
     path('portal/products/add/', product_views.merchant_product_create, name='product_add'),

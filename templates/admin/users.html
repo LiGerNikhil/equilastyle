@@ -73,9 +73,9 @@
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn btn-sm btn-secondary edit-btn" data-user-id="{{ user.id }}">
+                            <a href="{% url 'admin_panel:user_edit' user.id %}" class="btn btn-sm btn-secondary">
                                 <i class="fas fa-edit"></i>
-                            </button>
+                            </a>
                             <button class="btn btn-sm {% if user.is_active %}btn-warning{% else %}btn-success{% endif %} toggle-btn" data-user-id="{{ user.id }}" data-active="{{ user.is_active }}">
                                 <i class="fas fa-{% if user.is_active %}ban{% else %}check{% endif %}"></i>
                             </button>
@@ -136,22 +136,18 @@
 </div>
 
 <script>
-// User management functions
-function editUser(userId) {
-    window.adminUtils.confirmAction('Edit user functionality would be implemented here.', function() {
-        window.adminUtils.showNotification('Edit user feature coming soon!', 'info');
-    });
-}
+var TOGGLE_URL_BASE = '{% url "admin_panel:user_toggle_status" 0 %}';
+var DELETE_URL_BASE = '{% url "admin_panel:user_delete" 0 %}';
 
 function toggleUserStatus(userId) {
     window.adminUtils.confirmAction('Are you sure you want to toggle this user\'s status?', function() {
-        window.adminUtils.ajaxRequest('/admin/users/' + userId + '/toggle-status/', 'POST')
+        window.adminUtils.ajaxRequest(TOGGLE_URL_BASE.replace('/0/', '/' + userId + '/'), 'POST')
             .then(function(data) {
-                if (data.success) {
+                if (data && data.success) {
                     window.adminUtils.showNotification('User status updated successfully!', 'success');
                     location.reload();
                 } else {
-                    window.adminUtils.showNotification('Error updating user status.', 'error');
+                    window.adminUtils.showNotification(data && data.detail || 'Error updating user status.', 'error');
                 }
             });
     });
@@ -159,13 +155,13 @@ function toggleUserStatus(userId) {
 
 function deleteUser(userId) {
     window.adminUtils.confirmAction('Are you sure you want to delete this user? This action cannot be undone.', function() {
-        window.adminUtils.ajaxRequest('/admin/users/' + userId + '/delete/', 'POST')
+        window.adminUtils.ajaxRequest(DELETE_URL_BASE.replace('/0/', '/' + userId + '/'), 'POST')
             .then(function(data) {
-                if (data.success) {
+                if (data && data.success) {
                     window.adminUtils.showNotification('User deleted successfully!', 'success');
                     location.reload();
                 } else {
-                    window.adminUtils.showNotification('Error deleting user.', 'error');
+                    window.adminUtils.showNotification(data && data.detail || 'Error deleting user.', 'error');
                 }
             });
     });
@@ -173,14 +169,6 @@ function deleteUser(userId) {
 
 // Event listeners for buttons
 document.addEventListener('DOMContentLoaded', function() {
-    // Edit buttons
-    document.querySelectorAll('.edit-btn').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var userId = this.getAttribute('data-user-id');
-            editUser(userId);
-        });
-    });
-    
     // Toggle status buttons
     document.querySelectorAll('.toggle-btn').forEach(function(button) {
         button.addEventListener('click', function() {

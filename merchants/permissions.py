@@ -138,6 +138,8 @@ def merchant_owner_required(view_func):
     def _wrapped(request, *args, **kwargs):
         merchant = get_merchant_for_user(request.user)
         if merchant is None and not is_super_admin(request.user):
+            if get_user_role(request.user) in (User.Role.MERCHANT, User.Role.MERCHANT_STAFF):
+                return redirect('merchants:setup')
             messages.error(request, 'No merchant account is linked to your user. Contact support.')
             return redirect('products:home')
         kwargs['merchant'] = merchant
