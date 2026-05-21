@@ -10,9 +10,10 @@ Roles:
 """
 from functools import wraps
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from accounts.models import User
 
@@ -137,7 +138,8 @@ def merchant_owner_required(view_func):
     def _wrapped(request, *args, **kwargs):
         merchant = get_merchant_for_user(request.user)
         if merchant is None and not is_super_admin(request.user):
-            raise PermissionDenied
+            messages.error(request, 'No merchant account is linked to your user. Contact support.')
+            return redirect('products:home')
         kwargs['merchant'] = merchant
         return view_func(request, *args, **kwargs)
     return _wrapped
