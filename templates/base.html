@@ -626,13 +626,7 @@
       }
     </style>
 
-    <!-- Custom Cursor -->
-    <div id="cur">
-      <div id="cur-d"></div>
-      <div id="cur-r"></div>
-      <div id="cur-label">VIEW</div>
-    </div>
-
+    
     <!-- Navigation -->
     <nav id="navbar">
       <a href="{% url 'products:home' %}" class="nav-logo">
@@ -1041,48 +1035,6 @@
     <script src="{% static 'js/main.js' %}"></script>
 
     <script>
-      // Custom Cursor
-      const cur = document.getElementById("cur");
-      const curD = document.getElementById("cur-d");
-      const curR = document.getElementById("cur-r");
-      const curLabel = document.getElementById("cur-label");
-
-      let mouseX = 0,
-        mouseY = 0;
-      let curX = 0,
-        curY = 0;
-
-      document.addEventListener("mousemove", (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-      });
-
-      const followCursor = () => {
-        const dx = mouseX - curX;
-        const dy = mouseY - curY;
-
-        curX += dx * 0.1;
-        curY += dy * 0.1;
-
-        cur.style.transform = `translate(${curX}px, ${curY}px)`;
-
-        requestAnimationFrame(followCursor);
-      };
-      followCursor();
-
-      // Cursor hover effects
-      const hoverElements = document.querySelectorAll(
-        "a, button, .btn, .nav-cart, .product-card",
-      );
-      hoverElements.forEach((el) => {
-        el.addEventListener("mouseenter", () =>
-          document.body.classList.add("cur-hover"),
-        );
-        el.addEventListener("mouseleave", () =>
-          document.body.classList.remove("cur-hover"),
-        );
-      });
-
       // Scroll Progress
       const scrollProgress = document.getElementById("scroll-progress");
       window.addEventListener("scroll", () => {
