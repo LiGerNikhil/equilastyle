@@ -1,557 +1,664 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Returns & Refunds | EQUILA STYLE{% endblock %}
-{% block meta_description %}EQUILA STYLE returns & refunds policy — easy returns on eligible premium fashion and footwear orders.{% endblock %}
-{% block meta_keywords %}EQUILA STYLE returns, equilastyle refund policy, fashion returns India{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Returns & Refunds |
+EQUILA STYLE{% endblock %} {% block meta_description %}EQUILA STYLE no-return
+policy — all sales are final except for damaged, defective, or incorrect
+items.{% endblock %} {% block meta_keywords %}EQUILA STYLE no returns, final
+sale policy, defective item claims{% endblock %} {% block content %}
 <!-- Returns Hero Section -->
 <section class="page-hero">
-    <div class="hero-background">
-        <div class="noise-overlay"></div>
-        <div class="gradient-overlay"></div>
+  <div class="hero-background">
+    <div class="noise-overlay"></div>
+    <div class="gradient-overlay"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">No Return Policy</h1>
+      <p class="hero-subtitle">
+        All sales are final. Returns are not accepted except for damaged,
+        defective, or incorrect items received.
+      </p>
+      <div class="hero-meta">
+        <span class="meta-item"
+          ><i class="fas fa-ban"></i> No Returns Accepted</span
+        >
+        <span class="meta-item"
+          ><i class="fas fa-shield-alt"></i> Claims Only for Defects</span
+        >
+      </div>
     </div>
-    <div class="container">
-        <div class="hero-content">
-            <h1 class="hero-title">Returns & Refunds</h1>
-            <p class="hero-subtitle">Hassle-free returns and refunds. Your satisfaction is our priority. Learn about our easy return process and refund policies.</p>
-            <div class="hero-meta">
-                <span class="meta-item"><i class="fas fa-undo"></i> 30-Day Returns</span>
-                <span class="meta-item"><i class="fas fa-shield-alt"></i> 100% Satisfaction</span>
-            </div>
-        </div>
-    </div>
+  </div>
 </section>
 
 <!-- Returns Content -->
 <section class="returns-content">
-    <div class="container">
-        <div class="content-wrapper">
-            <!-- Table of Contents -->
-            <div class="table-of-contents">
-                <h3><i class="fas fa-list"></i> Quick Navigation</h3>
-                <ul class="toc-list">
-                    <li><a href="#return-policy">Return Policy</a></li>
-                    <li><a href="#eligible-items">Eligible Items</a></li>
-                    <li><a href="#return-process">Return Process</a></li>
-                    <li><a href="#refund-options">Refund Options</a></li>
-                    <li><a href="#exchange-policy">Exchange Policy</a></li>
-                    <li><a href="#return-shipping">Return Shipping</a></li>
-                    <li><a href="#damaged-items">Damaged Items</a></li>
-                    <li><a href="#exceptions">Exceptions</a></li>
-                    <li><a href="#contact">Contact Us</a></li>
-                </ul>
+  <div class="container">
+    <div class="content-wrapper">
+      <!-- Table of Contents -->
+      <div class="table-of-contents">
+        <h3><i class="fas fa-list"></i> Quick Navigation</h3>
+        <ul class="toc-list">
+          <li><a href="#return-policy">Return Policy</a></li>
+          <li><a href="#eligible-items">Eligible Items</a></li>
+          <li><a href="#return-process">Return Process</a></li>
+          <li><a href="#refund-options">Refund Options</a></li>
+          <li><a href="#exchange-policy">Exchange Policy</a></li>
+          <li><a href="#return-shipping">Return Shipping</a></li>
+          <li><a href="#damaged-items">Damaged Items</a></li>
+          <li><a href="#exceptions">Exceptions</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Returns Sections -->
+      <div class="returns-sections">
+        <div id="return-policy" class="returns-section">
+          <h2><i class="fas fa-ban"></i> Return Policy</h2>
+          <div class="section-content">
+            <div class="policy-overview">
+              <h4>No Returns Accepted</h4>
+              <p>
+                EQUILA STYLE operates a no-return policy. All sales are final,
+                and items cannot be returned for change of mind.
+              </p>
+              <p>
+                Returns are only considered for items that are damaged,
+                defective, or incorrect at the time of delivery.
+              </p>
+
+              <div class="policy-highlights">
+                <div class="highlight-card">
+                  <h4><i class="fas fa-times-circle"></i> Final Sale</h4>
+                  <p>
+                    Items purchased are final unless a valid claim is approved.
+                  </p>
+                </div>
+                <div class="highlight-card">
+                  <h4>
+                    <i class="fas fa-exclamation-triangle"></i> Claims for
+                    Defects
+                  </h4>
+                  <p>
+                    Damage, defects, or wrong item delivery are evaluated on
+                    request.
+                  </p>
+                </div>
+                <div class="highlight-card">
+                  <h4><i class="fas fa-headset"></i> Support Assistance</h4>
+                  <p>
+                    Contact our team promptly for claim support and resolution.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <!-- Returns Sections -->
-            <div class="returns-sections">
-                <div id="return-policy" class="returns-section">
-                    <h2><i class="fas fa-undo"></i> Return Policy</h2>
-                    <div class="section-content">
-                        <div class="policy-overview">
-                            <h4>30-Day Return Window</h4>
-                            <p>We offer a 30-day return policy from the date of delivery. If you're not completely satisfied with your purchase, you can return it for a full refund or exchange.</p>
-                            
-                            <div class="policy-highlights">
-                                <div class="highlight-card">
-                                    <h4><i class="fas fa-check-circle"></i> Easy Returns</h4>
-                                    <p>Simple online return process with prepaid shipping labels</p>
-                                </div>
-                                <div class="highlight-card">
-                                    <h4><i class="fas fa-clock"></i> Quick Processing</h4>
-                                    <p>Refunds processed within 5-7 business days after return approval</p>
-                                </div>
-                                <div class="highlight-card">
-                                    <h4><i class="fas fa-shield-alt"></i> Quality Guarantee</h4>
-                                    <p>100% authentic products with quality assurance</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="return-conditions">
-                            <h4>Return Conditions</h4>
-                            <p>To be eligible for a return, items must meet the following conditions:</p>
-                            <ul class="condition-list">
-                                <li>Items must be unused and in original condition</li>
-                                <li>Original tags and labels must be intact</li>
-                                <li>Original packaging must be included</li>
-                                <li>Return request must be initiated within 30 days of delivery</li>
-                                <li>Proof of purchase (order number or receipt) required</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="eligible-items" class="returns-section">
-                    <h2><i class="fas fa-check"></i> Eligible Items</h2>
-                    <div class="section-content">
-                        <div class="eligible-grid">
-                            <div class="eligible-card yes">
-                                <h4><i class="fas fa-check-circle"></i> Returns Accepted</h4>
-                                <ul>
-                                    <li>Footwear (all categories)</li>
-                                    <li>Apparel and clothing</li>
-                                    <li>Accessories (bags, belts, etc.)</li>
-                                    <li>Items with manufacturing defects</li>
-                                    <li>Wrong items delivered</li>
-                                    <li>Items damaged during shipping</li>
-                                </ul>
-                            </div>
-                            <div class="eligible-card no">
-                                <h4><i class="fas fa-times-circle"></i> Returns Not Accepted</h4>
-                                <ul>
-                                    <li>Items worn or used</li>
-                                    <li>Items without original tags</li>
-                                    <li>Items with damaged packaging</li>
-                                    <li>Final sale items</li>
-                                    <li>Personalized items</li>
-                                    <li>Items returned after 30 days</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="condition-checklist">
-                            <h4>Quality Checklist</h4>
-                            <div class="checklist-items">
-                                <div class="checklist-item">
-                                    <i class="fas fa-shoe-prints"></i>
-                                    <div>
-                                        <h5>Footwear</h5>
-                                        <p>No signs of wear, clean soles, original box included</p>
-                                    </div>
-                                </div>
-                                <div class="checklist-item">
-                                    <i class="fas fa-tshirt"></i>
-                                    <div>
-                                        <h5>Apparel</h5>
-                                        <p>No stains, tears, or alterations, tags attached</p>
-                                    </div>
-                                </div>
-                                <div class="checklist-item">
-                                    <i class="fas fa-shopping-bag"></i>
-                                    <div>
-                                        <h5>Accessories</h5>
-                                        <p>No scratches or damage, original packaging intact</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="return-process" class="returns-section">
-                    <h2><i class="fas fa-cogs"></i> Return Process</h2>
-                    <div class="section-content">
-                        <p>Our return process is simple and straightforward:</p>
-                        
-                        <div class="process-steps">
-                            <div class="step-card">
-                                <div class="step-number">1</div>
-                                <h4>Initiate Return</h4>
-                                <p>Log into your account and select the order you want to return</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">2</div>
-                                <h4>Select Items</h4>
-                                <p>Choose the items you want to return and specify the reason</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">3</div>
-                                <h4>Get Label</h4>
-                                <p>Download prepaid shipping label via email</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">4</div>
-                                <h4>Package Items</h4>
-                                <p>Securely pack items in original packaging</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">5</div>
-                                <h4>Ship Package</h4>
-                                <p>Drop off at any courier location or schedule pickup</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">6</div>
-                                <h4>Receive Refund</h4>
-                                <p>Get refund after inspection and approval</p>
-                            </div>
-                        </div>
-
-                        <div class="initiation-methods">
-                            <h4>How to Initiate Returns</h4>
-                            <div class="method-grid">
-                                <div class="method-item">
-                                    <h5><i class="fas fa-user"></i> Online Account</h5>
-                                    <p>Log into your EQUILA account → My Orders → Return Items</p>
-                                </div>
-                                <div class="method-item">
-                                    <h5><i class="fas fa-envelope"></i> Email Request</h5>
-                                    <p>Send return request to returns@equilastyle.com with order details</p>
-                                </div>
-                                <div class="method-item">
-                                    <h5><i class="fas fa-phone"></i> Phone Support</h5>
-                                    <p>Call our customer service at +91 74179 14416</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="refund-options" class="returns-section">
-                    <h2><i class="fas fa-rupee-sign"></i> Refund Options</h2>
-                    <div class="section-content">
-                        <p>We offer multiple refund options for your convenience:</p>
-                        
-                        <div class="refund-types">
-                            <div class="refund-card">
-                                <h4><i class="fas fa-credit-card"></i> Original Payment Method</h4>
-                                <p>Refund to your original payment method (credit/debit card, UPI, etc.)</p>
-                                <div class="refund-details">
-                                    <ul>
-                                        <li>Processing time: 5-7 business days</li>
-                                        <li>Full refund including shipping costs (for defective items)</li>
-                                        <li>Standard refund method for most returns</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="refund-card">
-                                <h4><i class="fas fa-wallet"></i> EQUILA Wallet</h4>
-                                <p>Instant refund to your EQUILA wallet for future purchases</p>
-                                <div class="refund-details">
-                                    <ul>
-                                        <li>Processing time: Immediate</li>
-                                        <li>Additional 5% bonus on refund amount</li>
-                                        <li>No expiration on wallet balance</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="refund-card">
-                                <h4><i class="fas fa-exchange-alt"></i> Store Credit</h4>
-                                <p>Store credit voucher for future purchases</p>
-                                <div class="refund-details">
-                                    <ul>
-                                        <li>Processing time: Immediate</li>
-                                        <li>Valid for 12 months from issue date</li>
-                                        <li>Can be combined with other offers</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="refund-timeline">
-                            <h4>Refund Processing Timeline</h4>
-                            <div class="timeline-steps">
-                                <div class="timeline-step">
-                                    <div class="timeline-date">Day 1-2</div>
-                                    <div class="timeline-desc">Return received and inspection begins</div>
-                                </div>
-                                <div class="timeline-step">
-                                    <div class="timeline-date">Day 2-3</div>
-                                    <div class="timeline-desc">Quality inspection completed</div>
-                                </div>
-                                <div class="timeline-step">
-                                    <div class="timeline-date">Day 3-4</div>
-                                    <div class="timeline-desc">Return approved and refund initiated</div>
-                                </div>
-                                <div class="timeline-step">
-                                    <div class="timeline-date">Day 5-7</div>
-                                    <div class="timeline-desc">Refund processed and credited</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="exchange-policy" class="returns-section">
-                    <h2><i class="fas fa-exchange-alt"></i> Exchange Policy</h2>
-                    <div class="section-content">
-                        <div class="exchange-info">
-                            <h4>Size and Style Exchanges</h4>
-                            <p>Want a different size or color? We offer easy exchanges within 30 days of delivery:</p>
-                            
-                            <div class="exchange-features">
-                                <div class="feature-item">
-                                    <i class="fas fa-sync"></i>
-                                    <div>
-                                        <h5>Free Size Exchanges</h5>
-                                        <p>Exchange for different sizes at no additional cost</p>
-                                    </div>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-palette"></i>
-                                    <div>
-                                        <h5>Color/Style Changes</h5>
-                                        <p>Exchange for different colors or styles (price difference applies)</p>
-                                    </div>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-bolt"></i>
-                                    <div>
-                                        <h5>Priority Processing</h5>
-                                        <p>Exchanges processed within 24 hours</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="exchange-process">
-                            <h4>Exchange Process</h4>
-                            <ol class="exchange-steps">
-                                <li>Select "Exchange" instead of "Return" when initiating request</li>
-                                <li>Choose new size, color, or style from available options</li>
-                                <li>Pay any price difference (if applicable)</li>
-                                <li>Receive prepaid shipping label for return</li>
-                                <li>New item shipped once return is processed</li>
-                                <li>Exchange typically completed within 7-10 days</li>
-                            </ol>
-                        </div>
-
-                        <div class="exchange-conditions">
-                            <h4>Exchange Conditions</h4>
-                            <ul class="condition-list">
-                                <li>Original item must meet return eligibility criteria</li>
-                                <li>Exchanged item must be in stock</li>
-                                <li>Only one exchange per order allowed</li>
-                                <li>Price differences will be charged or refunded accordingly</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="return-shipping" class="returns-section">
-                    <h2><i class="fas fa-truck"></i> Return Shipping</h2>
-                    <div class="section-content">
-                        <div class="shipping-info">
-                            <h4>Free Return Shipping</h4>
-                            <p>We provide prepaid shipping labels for all returns and exchanges:</p>
-                            
-                            <div class="shipping-features">
-                                <div class="shipping-card">
-                                    <h4><i class="fas fa-file-alt"></i> Prepaid Labels</h4>
-                                    <p>Download and print shipping label from your email or account</p>
-                                </div>
-                                <div class="shipping-card">
-                                    <h4><i class="fas fa-box"></i> Secure Packaging</h4>
-                                    <p>Use original packaging or secure alternative packaging</p>
-                                </div>
-                                <div class="shipping-card">
-                                    <h4><i class="fas fa-map-marker-alt"></i> Drop-off Locations</h4>
-                                    <p>Multiple courier partner locations nationwide</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pickup-options">
-                            <h4>Pickup Options</h4>
-                            <div class="pickup-grid">
-                                <div class="pickup-card">
-                                    <h5><i class="fas fa-home"></i> Scheduled Pickup</h5>
-                                    <p>Schedule convenient pickup from your address (available in major cities)</p>
-                                </div>
-                                <div class="pickup-card">
-                                    <h5><i class="fas fa-store"></i> Drop-off Points</h5>
-                                    <p>Drop off at any courier partner location nationwide</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="packaging-guide">
-                            <h4>Packaging Guidelines</h4>
-                            <div class="packaging-steps">
-                                <div class="packaging-step">
-                                    <h5>Step 1: Prepare Items</h5>
-                                    <p>Ensure items are clean, unworn, and have all tags attached</p>
-                                </div>
-                                <div class="packaging-step">
-                                    <h5>Step 2: Use Original Packaging</h5>
-                                    <p>Place items in original shoe boxes or packaging if available</p>
-                                </div>
-                                <div class="packaging-step">
-                                    <h5>Step 3: Secure Outer Box</h5>
-                                    <p>Place original packaging in a sturdy outer box for protection</p>
-                                </div>
-                                <div class="packaging-step">
-                                    <h5>Step 4: Attach Label</h5>
-                                    <p>Securely attach the prepaid shipping label to the outer box</p>
-                                </div>
-                                <div class="packaging-step">
-                                    <h5>Step 5: Seal Package</h5>
-                                    <p>Tape all edges securely to prevent damage during transit</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="damaged-items" class="returns-section">
-                    <h2><i class="fas fa-exclamation-triangle"></i> Damaged Items</h2>
-                    <div class="section-content">
-                        <div class="damage-info">
-                            <h4>Received Damaged Item?</h4>
-                            <p>If you receive a damaged or defective item, we're here to help:</p>
-                            
-                            <div class="damage-types">
-                                <div class="damage-card">
-                                    <h4><i class="fas fa-truck"></i> Shipping Damage</h4>
-                                    <p>Items damaged during transit</p>
-                                    <ul>
-                                        <li>Report within 48 hours of delivery</li>
-                                        <li>Provide photos of damage and packaging</li>
-                                        <li>Free replacement or full refund</li>
-                                        <li>No return shipping required</li>
-                                    </ul>
-                                </div>
-                                <div class="damage-card">
-                                    <h4><i class="fas fa-wrench"></i> Manufacturing Defects</h4>
-                                    <p>Items with quality or manufacturing issues</p>
-                                    <ul>
-                                        <li>Report within 30 days of delivery</li>
-                                        <li>Free replacement or repair</li>
-                                        <li>Return shipping provided</li>
-                                        <li>Priority processing</li>
-                                    </ul>
-                                </div>
-                                <div class="damage-card">
-                                    <h4><i class="fas fa-times-circle"></i> Wrong Item</h4>
-                                    <p>Received different item than ordered</p>
-                                    <ul>
-                                        <li>Report immediately upon receipt</li>
-                                        <li>Correct item shipped immediately</li>
-                                        <li>Return pickup arranged at no cost</li>
-                                        <li>Expedited shipping for replacement</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="damage-process">
-                            <h4>Damage Claim Process</h4>
-                            <ol class="damage-steps">
-                                <li>Document the issue with clear photos</li>
-                                <li>Contact customer support immediately</li>
-                                <li>Provide order number and damage details</li>
-                                <li>Choose replacement or refund option</li>
-                                <li>Receive resolution within 48 hours</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="exceptions" class="returns-section">
-                    <h2><i class="fas fa-exclamation-circle"></i> Exceptions</h2>
-                    <div class="section-content">
-                        <div class="exception-info">
-                            <h4>Non-Returnable Items</h4>
-                            <p>The following items cannot be returned or exchanged:</p>
-                            
-                            <div class="exception-list">
-                                <div class="exception-item">
-                                    <h5><i class="fas fa-tag"></i> Final Sale Items</h5>
-                                    <p>Items marked as "Final Sale" during purchase</p>
-                                </div>
-                                <div class="exception-item">
-                                    <h5><i class="fas fa-user"></i> Personalized Items</h5>
-                                    <p>Customized or personalized products</p>
-                                </div>
-                                <div class="exception-item">
-                                    <h5><i class="fas fa-gift"></i> Gift Cards</h5>
-                                    <p>EQUILA gift cards and vouchers</p>
-                                </div>
-                                <div class="exception-item">
-                                    <h5><i class="fas fa-clock"></i> Late Returns</h5>
-                                    <p>Returns initiated after 30 days of delivery</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="special-cases">
-                            <h4>Special Cases</h4>
-                            <div class="case-grid">
-                                <div class="case-card">
-                                    <h5><i class="fas fa-percentage"></i> Promotional Items</h5>
-                                    <p>Items purchased during special promotions may have different return terms</p>
-                                </div>
-                                <div class="case-card">
-                                    <h5><i class="fas fa-gifts"></i> Gift Returns</h5>
-                                    <p>Gift recipients can return items for store credit or exchange</p>
-                                </div>
-                                <div class="case-card">
-                                    <h5><i class="fas fa-balance-scale"></i> Dispute Resolution</h5>
-                                    <p>Complex cases reviewed individually for fair resolution</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="contact" class="returns-section">
-                    <h2><i class="fas fa-envelope"></i> Contact Us</h2>
-                    <div class="section-content">
-                        <div class="contact-info">
-                            <div class="contact-item">
-                                <i class="fas fa-phone"></i>
-                                <div>
-                                    <h4>Returns Support</h4>
-                                    <p>+91 74179 14416</p>
-                                    <p>Mon-Sat: 9 AM - 8 PM</p>
-                                </div>
-                            </div>
-                            <div class="contact-item">
-                                <i class="fas fa-envelope"></i>
-                                <div>
-                                    <h4>Email Support</h4>
-                                    <p>returns@equilastyle.com</p>
-                                    <p>Response within 24 hours</p>
-                                </div>
-                            </div>
-                            <div class="contact-item">
-                                <i class="fas fa-comments"></i>
-                                <div>
-                                    <h4>Live Chat</h4>
-                                    <p>Available on website</p>
-                                    <p>Mon-Sat: 10 AM - 7 PM</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="returns-faq">
-                            <h3>Frequently Asked Questions</h3>
-                            <div class="faq-list">
-                                <div class="faq-item">
-                                    <h4><i class="fas fa-question-circle"></i> How long does the return process take?</h4>
-                                    <p>Most returns are processed within 5-7 business days from when we receive your return.</p>
-                                </div>
-                                <div class="faq-item">
-                                    <h4><i class="fas fa-question-circle"></i> Do I have to pay for return shipping?</h4>
-                                    <p>No, we provide prepaid shipping labels for all returns and exchanges.</p>
-                                </div>
-                                <div class="faq-item">
-                                    <h4><i class="fas fa-question-circle"></i> Can I return items purchased on sale?</h4>
-                                    <p>Yes, sale items can be returned unless marked as "Final Sale".</p>
-                                </div>
-                                <div class="faq-item">
-                                    <h4><i class="fas fa-question-circle"></i> What if I lost my original packaging?</h4>
-                                    <p>You can use secure alternative packaging, but original packaging is preferred.</p>
-                                </div>
-                                <div class="faq-item">
-                                    <h4><i class="fas fa-question-circle"></i> How do I track my return?</h4>
-                                    <p>You can track your return status in your account under "My Returns".</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="return-conditions">
+              <h4>Claims Conditions</h4>
+              <p>We review claims only when one of the following applies:</p>
+              <ul class="condition-list">
+                <li>Item is damaged or defective on delivery</li>
+                <li>Wrong item was shipped to you</li>
+                <li>Proof of purchase and photos are provided</li>
+                <li>Claims are reported promptly after delivery</li>
+                <li>Items are not accepted for change of mind or fit issues</li>
+              </ul>
             </div>
+          </div>
         </div>
-    </div>
-</section>
-{% endblock %}
 
-{% block extra_css %}
+        <div id="eligible-items" class="returns-section">
+          <h2><i class="fas fa-check"></i> Claims Eligibility</h2>
+          <div class="section-content">
+            <div class="eligible-grid">
+              <div class="eligible-card yes">
+                <h4><i class="fas fa-check-circle"></i> Claims Accepted</h4>
+                <ul>
+                  <li>Items damaged during shipping</li>
+                  <li>Manufacturing defects on arrival</li>
+                  <li>Incorrect item shipped</li>
+                  <li>Items missing parts or accessories</li>
+                </ul>
+              </div>
+              <div class="eligible-card no">
+                <h4>
+                  <i class="fas fa-times-circle"></i> Returns Not Accepted
+                </h4>
+                <ul>
+                  <li>Change of mind or fit issues</li>
+                  <li>Items worn, used, or altered</li>
+                  <li>Items without original tags</li>
+                  <li>Final sale items</li>
+                  <li>Personalized or customized products</li>
+                  <li>All other standard returns</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="condition-checklist">
+              <h4>Claims Checklist</h4>
+              <div class="checklist-items">
+                <div class="checklist-item">
+                  <i class="fas fa-shoe-prints"></i>
+                  <div>
+                    <h5>Footwear</h5>
+                    <p>
+                      Report only if received damaged, defective, or incorrect
+                    </p>
+                  </div>
+                </div>
+                <div class="checklist-item">
+                  <i class="fas fa-tshirt"></i>
+                  <div>
+                    <h5>Apparel</h5>
+                    <p>Claims approved only for defects or wrong items</p>
+                  </div>
+                </div>
+                <div class="checklist-item">
+                  <i class="fas fa-shopping-bag"></i>
+                  <div>
+                    <h5>Accessories</h5>
+                    <p>
+                      Only damaged or incorrect accessories are eligible for
+                      claim review
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="return-process" class="returns-section">
+          <h2><i class="fas fa-cogs"></i> Claim Process</h2>
+          <div class="section-content">
+            <p>
+              Our claims process is designed for damaged, defective, or
+              incorrect deliveries only.
+            </p>
+
+            <div class="process-steps">
+              <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Report Issue</h4>
+                <p>
+                  Contact us immediately with order details and photos of the
+                  item.
+                </p>
+              </div>
+              <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Claim Review</h4>
+                <p>
+                  We review your claim and confirm eligibility for return or
+                  replacement.
+                </p>
+              </div>
+              <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Return Approval</h4>
+                <p>
+                  Approved claims receive instructions for return shipping, if
+                  required.
+                </p>
+              </div>
+              <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Package Items</h4>
+                <p>
+                  Follow the claim instructions and pack the item securely for
+                  transit.
+                </p>
+              </div>
+              <div class="step-card">
+                <div class="step-number">5</div>
+                <h4>Inspect Item</h4>
+                <p>We inspect the returned item to verify the claim.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-number">6</div>
+                <h4>Resolution</h4>
+                <p>
+                  Approved claims receive a refund, replacement, or store
+                  credit.
+                </p>
+              </div>
+            </div>
+
+            <div class="initiation-methods">
+              <h4>How to Initiate a Claim</h4>
+              <div class="method-grid">
+                <div class="method-item">
+                  <h5><i class="fas fa-user"></i> Online Account</h5>
+                  <p>
+                    Log into your EQUILA account → My Orders → Report an Issue
+                  </p>
+                </div>
+                <div class="method-item">
+                  <h5><i class="fas fa-envelope"></i> Email Request</h5>
+                  <p>
+                    Send claim details to returns@equilastyle.com with order
+                    information.
+                  </p>
+                </div>
+                <div class="method-item">
+                  <h5><i class="fas fa-phone"></i> Phone Support</h5>
+                  <p>
+                    Call our customer service at +91 74179 14416 for immediate
+                    assistance.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="refund-options" class="returns-section">
+          <h2><i class="fas fa-rupee-sign"></i> Refund Options</h2>
+          <div class="section-content">
+            <p>We offer multiple refund options for your convenience:</p>
+
+            <div class="refund-types">
+              <div class="refund-card">
+                <h4>
+                  <i class="fas fa-credit-card"></i> Original Payment Method
+                </h4>
+                <p>
+                  Refund to your original payment method (credit/debit card,
+                  UPI, etc.)
+                </p>
+                <div class="refund-details">
+                  <ul>
+                    <li>Processing time: 5-7 business days</li>
+                    <li>
+                      Full refund including shipping costs (for defective items)
+                    </li>
+                    <li>Standard refund method for most returns</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="refund-card">
+                <h4><i class="fas fa-wallet"></i> EQUILA Wallet</h4>
+                <p>Instant refund to your EQUILA wallet for future purchases</p>
+                <div class="refund-details">
+                  <ul>
+                    <li>Processing time: Immediate</li>
+                    <li>Additional 5% bonus on refund amount</li>
+                    <li>No expiration on wallet balance</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="refund-card">
+                <h4><i class="fas fa-exchange-alt"></i> Store Credit</h4>
+                <p>Store credit voucher for future purchases</p>
+                <div class="refund-details">
+                  <ul>
+                    <li>Processing time: Immediate</li>
+                    <li>Valid for 12 months from issue date</li>
+                    <li>Can be combined with other offers</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="refund-timeline">
+              <h4>Refund Processing Timeline</h4>
+              <div class="timeline-steps">
+                <div class="timeline-step">
+                  <div class="timeline-date">Day 1-2</div>
+                  <div class="timeline-desc">
+                    Return received and inspection begins
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <div class="timeline-date">Day 2-3</div>
+                  <div class="timeline-desc">Quality inspection completed</div>
+                </div>
+                <div class="timeline-step">
+                  <div class="timeline-date">Day 3-4</div>
+                  <div class="timeline-desc">
+                    Return approved and refund initiated
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <div class="timeline-date">Day 5-7</div>
+                  <div class="timeline-desc">Refund processed and credited</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="exchange-policy" class="returns-section">
+          <h2><i class="fas fa-exchange-alt"></i> Exchange Policy</h2>
+          <div class="section-content">
+            <div class="exchange-info">
+              <h4>No Exchanges</h4>
+              <p>
+                We do not offer exchanges for size, color, or style changes. All
+                sales are final unless an item is damaged, defective, or
+                incorrect.
+              </p>
+
+              <div class="exchange-features">
+                <div class="feature-item">
+                  <i class="fas fa-ban"></i>
+                  <div>
+                    <h5>No Size Exchanges</h5>
+                    <p>Size exchanges are not available under this policy.</p>
+                  </div>
+                </div>
+                <div class="feature-item">
+                  <i class="fas fa-ban"></i>
+                  <div>
+                    <h5>No Style Changes</h5>
+                    <p>
+                      Requests for a different color or style are not accepted.
+                    </p>
+                  </div>
+                </div>
+                <div class="feature-item">
+                  <i class="fas fa-headset"></i>
+                  <div>
+                    <h5>Claims Only</h5>
+                    <p>
+                      Replacement is only possible for approved defect or
+                      wrong-item claims.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="exchange-conditions">
+              <h4>Policy Conditions</h4>
+              <ul class="condition-list">
+                <li>No exchanges for change of mind</li>
+                <li>Only valid claims may be reviewed for replacement</li>
+                <li>
+                  Replacement depends on item availability and claim approval
+                </li>
+                <li>Price differences are not applicable</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="return-shipping" class="returns-section">
+          <h2><i class="fas fa-truck"></i> Return Shipping</h2>
+          <div class="section-content">
+            <div class="shipping-info">
+              <h4>Claims Shipping</h4>
+              <p>
+                Return shipping is only provided for approved damaged,
+                defective, or wrong-item claims.
+              </p>
+
+              <div class="shipping-features">
+                <div class="shipping-card">
+                  <h4><i class="fas fa-file-alt"></i> Approved Claims Only</h4>
+                  <p>Shipping labels are issued only after claim approval.</p>
+                </div>
+                <div class="shipping-card">
+                  <h4><i class="fas fa-box"></i> Secure Packaging</h4>
+                  <p>
+                    Use secure packaging when returning approved claim items.
+                  </p>
+                </div>
+                <div class="shipping-card">
+                  <h4><i class="fas fa-map-marker-alt"></i> Claim Drop-off</h4>
+                  <p>
+                    Return shipment instructions are provided for approved
+                    claims only.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="packaging-guide">
+              <h4>Packaging Guidelines for Claims</h4>
+              <div class="packaging-steps">
+                <div class="packaging-step">
+                  <h5>Step 1: Prepare Claim Items</h5>
+                  <p>
+                    Pack only the items approved for return under your claim.
+                  </p>
+                </div>
+                <div class="packaging-step">
+                  <h5>Step 2: Use Safe Packaging</h5>
+                  <p>
+                    Place items in a sturdy box and protect them from damage.
+                  </p>
+                </div>
+                <div class="packaging-step">
+                  <h5>Step 3: Attach Label</h5>
+                  <p>Attach the prepaid claim shipping label securely.</p>
+                </div>
+                <div class="packaging-step">
+                  <h5>Step 4: Seal Package</h5>
+                  <p>
+                    Tape all edges securely and drop off at the courier location
+                    specified.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="damaged-items" class="returns-section">
+          <h2><i class="fas fa-exclamation-triangle"></i> Damaged Items</h2>
+          <div class="section-content">
+            <div class="damage-info">
+              <h4>Received Damaged Item?</h4>
+              <p>
+                If you receive a damaged or defective item, we're here to help:
+              </p>
+
+              <div class="damage-types">
+                <div class="damage-card">
+                  <h4><i class="fas fa-truck"></i> Shipping Damage</h4>
+                  <p>Items damaged during transit</p>
+                  <ul>
+                    <li>Report within 48 hours of delivery</li>
+                    <li>Provide photos of damage and packaging</li>
+                    <li>Free replacement or full refund</li>
+                    <li>No return shipping required</li>
+                  </ul>
+                </div>
+                <div class="damage-card">
+                  <h4><i class="fas fa-wrench"></i> Manufacturing Defects</h4>
+                  <p>Items with quality or manufacturing issues</p>
+                  <ul>
+                    <li>Report within 30 days of delivery</li>
+                    <li>Free replacement or repair</li>
+                    <li>Return shipping provided</li>
+                    <li>Priority processing</li>
+                  </ul>
+                </div>
+                <div class="damage-card">
+                  <h4><i class="fas fa-times-circle"></i> Wrong Item</h4>
+                  <p>Received different item than ordered</p>
+                  <ul>
+                    <li>Report immediately upon receipt</li>
+                    <li>Correct item shipped immediately</li>
+                    <li>Return pickup arranged at no cost</li>
+                    <li>Expedited shipping for replacement</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="damage-process">
+              <h4>Damage Claim Process</h4>
+              <ol class="damage-steps">
+                <li>Document the issue with clear photos</li>
+                <li>Contact customer support immediately</li>
+                <li>Provide order number and damage details</li>
+                <li>Choose replacement or refund option</li>
+                <li>Receive resolution within 48 hours</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div id="exceptions" class="returns-section">
+          <h2><i class="fas fa-exclamation-circle"></i> Exceptions</h2>
+          <div class="section-content">
+            <div class="exception-info">
+              <h4>Non-Returnable Items</h4>
+              <p>
+                Most items are non-returnable. The following are explicitly
+                excluded from claims unless damaged or incorrect:
+              </p>
+
+              <div class="exception-list">
+                <div class="exception-item">
+                  <h5><i class="fas fa-tag"></i> Final Sale Items</h5>
+                  <p>Items marked as "Final Sale" at the time of purchase</p>
+                </div>
+                <div class="exception-item">
+                  <h5><i class="fas fa-user"></i> Personalized Items</h5>
+                  <p>Customized or personalized products</p>
+                </div>
+                <div class="exception-item">
+                  <h5><i class="fas fa-gift"></i> Gift Cards</h5>
+                  <p>EQUILA gift cards and vouchers</p>
+                </div>
+                <div class="exception-item">
+                  <h5><i class="fas fa-clock"></i> Regular Sales</h5>
+                  <p>
+                    Regular purchases are considered final sale unless a valid
+                    claim exists
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="special-cases">
+              <h4>Special Cases</h4>
+              <div class="case-grid">
+                <div class="case-card">
+                  <h5><i class="fas fa-percentage"></i> Promotional Items</h5>
+                  <p>
+                    Promotions are final sale and not eligible for
+                    change-of-mind returns.
+                  </p>
+                </div>
+                <div class="case-card">
+                  <h5><i class="fas fa-gifts"></i> Gift Returns</h5>
+                  <p>
+                    Gift recipients may request claim review for damaged or
+                    incorrect deliveries only.
+                  </p>
+                </div>
+                <div class="case-card">
+                  <h5>
+                    <i class="fas fa-balance-scale"></i> Dispute Resolution
+                  </h5>
+                  <p>
+                    Disputes are handled individually and may be escalated for
+                    fair review.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="contact" class="returns-section">
+          <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+          <div class="section-content">
+            <div class="contact-info">
+              <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <div>
+                  <h4>Returns Support</h4>
+                  <p>+91 74179 14416</p>
+                  <p>Mon-Sat: 9 AM - 8 PM</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <div>
+                  <h4>Email Support</h4>
+                  <p>returns@equilastyle.com</p>
+                  <p>Response within 24 hours</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-comments"></i>
+                <div>
+                  <h4>Live Chat</h4>
+                  <p>Available on website</p>
+                  <p>Mon-Sat: 10 AM - 7 PM</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="returns-faq">
+              <h3>Frequently Asked Questions</h3>
+              <div class="faq-list">
+                <div class="faq-item">
+                  <h4>
+                    <i class="fas fa-question-circle"></i> How long does the
+                    return process take?
+                  </h4>
+                  <p>
+                    Most returns are processed within 5-7 business days from
+                    when we receive your return.
+                  </p>
+                </div>
+                <div class="faq-item">
+                  <h4>
+                    <i class="fas fa-question-circle"></i> Do I have to pay for
+                    return shipping?
+                  </h4>
+                  <p>
+                    Return shipping is provided only for approved damage,
+                    defect, or wrong-item claims. General returns are not
+                    accepted.
+                  </p>
+                </div>
+                <div class="faq-item">
+                  <h4>
+                    <i class="fas fa-question-circle"></i> Can I return items
+                    purchased on sale?
+                  </h4>
+                  <p>
+                    No. Sale items are final sale unless they are received
+                    damaged, defective, or incorrect.
+                  </p>
+                </div>
+                <div class="faq-item">
+                  <h4>
+                    <i class="fas fa-question-circle"></i> What if I lost my
+                    original packaging?
+                  </h4>
+                  <p>
+                    For approved claim returns, use secure alternative packaging
+                    and follow the instructions provided.
+                  </p>
+                </div>
+                <div class="faq-item">
+                  <h4>
+                    <i class="fas fa-question-circle"></i> How do I track my
+                    return?
+                  </h4>
+                  <p>
+                    You can track your return status in your account under "My
+                    Returns".
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block extra_css %}
 <style>
-/* Returns Policy Styles */
-.page-hero {
+  /* Returns Policy Styles */
+  .page-hero {
     position: relative;
     min-height: 60vh;
     display: flex;
@@ -559,18 +666,18 @@
     justify-content: center;
     overflow: hidden;
     background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #0a2e1d 100%);
-}
+  }
 
-.hero-background {
+  .hero-background {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 1;
-}
+  }
 
-.noise-overlay {
+  .noise-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -578,18 +685,23 @@
     bottom: 0;
     opacity: 0.1;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
+  }
 
-.gradient-overlay {
+  .gradient-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(255, 215, 0, 0.1) 0%, transparent 50%, rgba(255, 215, 0, 0.05) 100%);
-}
+    background: linear-gradient(
+      45deg,
+      rgba(255, 215, 0, 0.1) 0%,
+      transparent 50%,
+      rgba(255, 215, 0, 0.05) 100%
+    );
+  }
 
-.hero-content {
+  .hero-content {
     position: relative;
     z-index: 2;
     text-align: center;
@@ -597,10 +709,10 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 0 20px;
-}
+  }
 
-.hero-title {
-    font-family: 'Bebas Neue', cursive;
+  .hero-title {
+    font-family: "Bebas Neue", cursive;
     font-size: 4rem;
     font-weight: 700;
     margin-bottom: 20px;
@@ -610,50 +722,50 @@
     background-clip: text;
     text-transform: uppercase;
     letter-spacing: 2px;
-}
+  }
 
-.hero-subtitle {
-    font-family: 'Cormorant Garamond', serif;
+  .hero-subtitle {
+    font-family: "Cormorant Garamond", serif;
     font-size: 1.4rem;
     font-weight: 300;
     margin-bottom: 30px;
     opacity: 0.9;
     line-height: 1.6;
-}
+  }
 
-.hero-meta {
+  .hero-meta {
     display: flex;
     justify-content: center;
     gap: 30px;
     flex-wrap: wrap;
-}
+  }
 
-.meta-item {
+  .meta-item {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 0.9rem;
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-weight: 500;
-}
+  }
 
-/* Returns Content */
-.returns-content {
+  /* Returns Content */
+  .returns-content {
     padding: 80px 0;
     background: var(--black);
-}
+  }
 
-.content-wrapper {
+  .content-wrapper {
     display: grid;
     grid-template-columns: 300px 1fr;
     gap: 60px;
     max-width: 1200px;
     margin: 0 auto;
-}
+  }
 
-/* Table of Contents */
-.table-of-contents {
+  /* Table of Contents */
+  .table-of-contents {
     position: sticky;
     top: 100px;
     height: fit-content;
@@ -661,58 +773,58 @@
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 30px;
-}
+  }
 
-.table-of-contents h3 {
+  .table-of-contents h3 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 10px;
-}
+  }
 
-.toc-list {
+  .toc-list {
     list-style: none;
     padding: 0;
     margin: 0;
-}
+  }
 
-.toc-list li {
+  .toc-list li {
     margin-bottom: 12px;
-}
+  }
 
-.toc-list a {
+  .toc-list a {
     color: var(--white);
     text-decoration: none;
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     transition: all 0.3s ease;
     display: block;
     padding: 8px 12px;
     border-left: 3px solid transparent;
-}
+  }
 
-.toc-list a:hover {
+  .toc-list a:hover {
     color: var(--gold);
     background: rgba(255, 215, 0, 0.1);
     border-left-color: var(--gold);
-}
+  }
 
-/* Returns Sections */
-.returns-sections {
+  /* Returns Sections */
+  .returns-sections {
     color: var(--white);
-}
+  }
 
-.returns-section {
+  .returns-section {
     margin-bottom: 60px;
     scroll-margin-top: 120px;
-}
+  }
 
-.returns-section h2 {
-    font-family: 'Bebas Neue', cursive;
+  .returns-section h2 {
+    font-family: "Bebas Neue", cursive;
     font-size: 2.5rem;
     color: var(--gold);
     margin-bottom: 30px;
@@ -721,241 +833,241 @@
     gap: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
-}
+  }
 
-.returns-section h3 {
-    font-family: 'DM Sans', sans-serif;
+  .returns-section h3 {
+    font-family: "DM Sans", sans-serif;
     font-size: 1.4rem;
     color: var(--gold-shine);
     margin: 30px 0 15px 0;
-}
+  }
 
-.section-content p {
-    font-family: 'Cormorant Garamond', serif;
+  .section-content p {
+    font-family: "Cormorant Garamond", serif;
     font-size: 1.1rem;
     line-height: 1.8;
     margin-bottom: 20px;
     opacity: 0.9;
-}
+  }
 
-/* Policy Overview */
-.policy-overview h4 {
+  /* Policy Overview */
+  .policy-overview h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.2rem;
     margin-bottom: 15px;
-}
+  }
 
-.policy-highlights {
+  .policy-highlights {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin: 30px 0;
-}
+  }
 
-.highlight-card {
+  .highlight-card {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     text-align: center;
-}
+  }
 
-.highlight-card h4 {
+  .highlight-card h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-}
+  }
 
-.highlight-card p {
-    font-family: 'DM Sans', sans-serif;
+  .highlight-card p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Return Conditions */
-.return-conditions {
+  /* Return Conditions */
+  .return-conditions {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     margin: 30px 0;
-}
+  }
 
-.return-conditions h4 {
+  .return-conditions h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 15px;
-}
+  }
 
-.condition-list {
+  .condition-list {
     list-style: none;
     padding: 0;
     margin: 20px 0;
-}
+  }
 
-.condition-list li {
+  .condition-list li {
     margin-bottom: 12px;
     padding-left: 20px;
     position: relative;
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1rem;
     line-height: 1.6;
-}
+  }
 
-.condition-list li::before {
+  .condition-list li::before {
     content: "▸";
     position: absolute;
     left: 0;
     color: var(--gold);
     font-weight: bold;
-}
+  }
 
-/* Eligible Grid */
-.eligible-grid {
+  /* Eligible Grid */
+  .eligible-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
     margin: 30px 0;
-}
+  }
 
-.eligible-card {
+  .eligible-card {
     border-radius: 12px;
     padding: 25px;
-}
+  }
 
-.eligible-card.yes {
+  .eligible-card.yes {
     background: rgba(76, 175, 80, 0.1);
     border: 1px solid rgba(76, 175, 80, 0.3);
-}
+  }
 
-.eligible-card.no {
+  .eligible-card.no {
     background: rgba(244, 67, 54, 0.1);
     border: 1px solid rgba(244, 67, 54, 0.3);
-}
+  }
 
-.eligible-card h4 {
-    font-family: 'DM Sans', sans-serif;
+  .eligible-card h4 {
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 10px;
-}
+  }
 
-.eligible-card.yes h4 {
-    color: #4CAF50;
-}
+  .eligible-card.yes h4 {
+    color: #4caf50;
+  }
 
-.eligible-card.no h4 {
+  .eligible-card.no h4 {
     color: #f44336;
-}
+  }
 
-.eligible-card ul {
+  .eligible-card ul {
     list-style: none;
     padding: 0;
     margin: 0;
-}
+  }
 
-.eligible-card li {
+  .eligible-card li {
     margin-bottom: 10px;
     padding-left: 20px;
     position: relative;
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
-}
+  }
 
-.eligible-card.yes li::before {
+  .eligible-card.yes li::before {
     content: "✓";
     position: absolute;
     left: 0;
-    color: #4CAF50;
-}
+    color: #4caf50;
+  }
 
-.eligible-card.no li::before {
+  .eligible-card.no li::before {
     content: "✗";
     position: absolute;
     left: 0;
     color: #f44336;
-}
+  }
 
-/* Condition Checklist */
-.condition-checklist {
+  /* Condition Checklist */
+  .condition-checklist {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     margin: 30px 0;
-}
+  }
 
-.condition-checklist h4 {
+  .condition-checklist h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 20px;
-}
+  }
 
-.checklist-items {
+  .checklist-items {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
-}
+  }
 
-.checklist-item {
+  .checklist-item {
     display: flex;
     align-items: flex-start;
     gap: 15px;
     padding: 20px;
     background: rgba(255, 215, 0, 0.05);
     border-radius: 8px;
-}
+  }
 
-.checklist-item i {
+  .checklist-item i {
     color: var(--gold);
     font-size: 1.5rem;
     flex-shrink: 0;
     margin-top: 5px;
-}
+  }
 
-.checklist-item h5 {
+  .checklist-item h5 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 5px;
-}
+  }
 
-.checklist-item p {
-    font-family: 'DM Sans', sans-serif;
+  .checklist-item p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Process Steps */
-.process-steps {
+  /* Process Steps */
+  .process-steps {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 20px;
     margin: 30px 0;
-}
+  }
 
-.step-card {
+  .step-card {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px 20px;
     text-align: center;
     position: relative;
-}
+  }
 
-.step-number {
+  .step-number {
     width: 40px;
     height: 40px;
     background: var(--gold);
@@ -967,170 +1079,170 @@
     font-weight: bold;
     font-size: 1.1rem;
     margin: 0 auto 15px;
-}
+  }
 
-.step-card h4 {
+  .step-card h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 10px;
-}
+  }
 
-.step-card p {
-    font-family: 'DM Sans', sans-serif;
+  .step-card p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Initiation Methods */
-.initiation-methods {
+  /* Initiation Methods */
+  .initiation-methods {
     margin: 30px 0;
-}
+  }
 
-.initiation-methods h4 {
+  .initiation-methods h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 20px;
-}
+  }
 
-.method-grid {
+  .method-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 15px;
-}
+  }
 
-.method-item {
+  .method-item {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 8px;
     padding: 20px;
-}
+  }
 
-.method-item h5 {
+  .method-item h5 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
-}
+  }
 
-.method-item p {
-    font-family: 'DM Sans', sans-serif;
+  .method-item p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Refund Types */
-.refund-types {
+  /* Refund Types */
+  .refund-types {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
     margin: 30px 0;
-}
+  }
 
-.refund-card {
+  .refund-card {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
-}
+  }
 
-.refund-card h4 {
+  .refund-card h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 10px;
-}
+  }
 
-.refund-card p {
-    font-family: 'DM Sans', sans-serif;
+  .refund-card p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     opacity: 0.8;
     margin-bottom: 20px;
-}
+  }
 
-.refund-details ul {
+  .refund-details ul {
     list-style: none;
     padding: 0;
     margin: 0;
-}
+  }
 
-.refund-details li {
+  .refund-details li {
     margin-bottom: 10px;
     padding-left: 20px;
     position: relative;
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     opacity: 0.8;
-}
+  }
 
-.refund-details li::before {
+  .refund-details li::before {
     content: "•";
     position: absolute;
     left: 0;
     color: var(--gold);
-}
+  }
 
-/* Refund Timeline */
-.refund-timeline {
+  /* Refund Timeline */
+  .refund-timeline {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     margin: 30px 0;
-}
+  }
 
-.refund-timeline h4 {
+  .refund-timeline h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 20px;
-}
+  }
 
-.timeline-steps {
+  .timeline-steps {
     display: grid;
     gap: 15px;
-}
+  }
 
-.timeline-step {
+  .timeline-step {
     display: grid;
     grid-template-columns: 120px 1fr;
     gap: 15px;
     padding: 15px;
     background: rgba(255, 215, 0, 0.05);
     border-radius: 8px;
-}
+  }
 
-.timeline-date {
+  .timeline-date {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     font-weight: 600;
-}
+  }
 
-.timeline-desc {
-    font-family: 'DM Sans', sans-serif;
+  .timeline-desc {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     opacity: 0.8;
-}
+  }
 
-/* Exchange Features */
-.exchange-features {
+  /* Exchange Features */
+  .exchange-features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin: 30px 0;
-}
+  }
 
-.feature-item {
+  .feature-item {
     display: flex;
     align-items: flex-start;
     gap: 15px;
@@ -1138,63 +1250,63 @@
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 8px;
-}
+  }
 
-.feature-item i {
+  .feature-item i {
     color: var(--gold);
     font-size: 1.2rem;
     flex-shrink: 0;
     margin-top: 2px;
-}
+  }
 
-.feature-item h5 {
+  .feature-item h5 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 5px;
-}
+  }
 
-.feature-item p {
-    font-family: 'DM Sans', sans-serif;
+  .feature-item p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Exchange Process */
-.exchange-process {
+  /* Exchange Process */
+  .exchange-process {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     margin: 30px 0;
-}
+  }
 
-.exchange-process h4 {
+  .exchange-process h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 20px;
-}
+  }
 
-.exchange-steps {
+  .exchange-steps {
     list-style: none;
     padding: 0;
     margin: 0;
     counter-reset: step-counter;
-}
+  }
 
-.exchange-steps li {
+  .exchange-steps li {
     counter-increment: step-counter;
     margin-bottom: 12px;
     padding-left: 35px;
     position: relative;
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     opacity: 0.8;
-}
+  }
 
-.exchange-steps li::before {
+  .exchange-steps li::before {
     content: counter(step-counter);
     position: absolute;
     left: 0;
@@ -1209,229 +1321,229 @@
     justify-content: center;
     font-weight: bold;
     font-size: 0.8rem;
-}
+  }
 
-/* Exchange Conditions */
-.exchange-conditions {
+  /* Exchange Conditions */
+  .exchange-conditions {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     margin: 30px 0;
-}
+  }
 
-.exchange-conditions h4 {
+  .exchange-conditions h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 15px;
-}
+  }
 
-/* Shipping Features */
-.shipping-features {
+  /* Shipping Features */
+  .shipping-features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin: 30px 0;
-}
+  }
 
-.shipping-card {
+  .shipping-card {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     text-align: center;
-}
+  }
 
-.shipping-card h4 {
+  .shipping-card h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-}
+  }
 
-.shipping-card p {
-    font-family: 'DM Sans', sans-serif;
+  .shipping-card p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Pickup Options */
-.pickup-options {
+  /* Pickup Options */
+  .pickup-options {
     margin: 30px 0;
-}
+  }
 
-.pickup-options h4 {
+  .pickup-options h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 20px;
-}
+  }
 
-.pickup-grid {
+  .pickup-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
-}
+  }
 
-.pickup-card {
+  .pickup-card {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
-}
+  }
 
-.pickup-card h5 {
+  .pickup-card h5 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1rem;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
-}
+  }
 
-.pickup-card p {
-    font-family: 'DM Sans', sans-serif;
+  .pickup-card p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Packaging Guide */
-.packaging-guide {
+  /* Packaging Guide */
+  .packaging-guide {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     margin: 30px 0;
-}
+  }
 
-.packaging-guide h4 {
+  .packaging-guide h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 20px;
-}
+  }
 
-.packaging-steps {
+  .packaging-steps {
     display: grid;
     gap: 15px;
-}
+  }
 
-.packaging-step {
+  .packaging-step {
     padding: 15px;
     background: rgba(255, 215, 0, 0.05);
     border-radius: 8px;
-}
+  }
 
-.packaging-step h5 {
+  .packaging-step h5 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 8px;
-}
+  }
 
-.packaging-step p {
-    font-family: 'DM Sans', sans-serif;
+  .packaging-step p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Damage Types */
-.damage-types {
+  /* Damage Types */
+  .damage-types {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
     margin: 30px 0;
-}
+  }
 
-.damage-card {
+  .damage-card {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
-}
+  }
 
-.damage-card h4 {
+  .damage-card h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1rem;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 10px;
-}
+  }
 
-.damage-card p {
-    font-family: 'DM Sans', sans-serif;
+  .damage-card p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     opacity: 0.8;
     margin-bottom: 15px;
-}
+  }
 
-.damage-card ul {
+  .damage-card ul {
     list-style: none;
     padding: 0;
     margin: 0;
-}
+  }
 
-.damage-card li {
+  .damage-card li {
     margin-bottom: 10px;
     padding-left: 20px;
     position: relative;
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     opacity: 0.8;
-}
+  }
 
-.damage-card li::before {
+  .damage-card li::before {
     content: "•";
     position: absolute;
     left: 0;
     color: var(--gold);
-}
+  }
 
-/* Damage Process */
-.damage-process {
+  /* Damage Process */
+  .damage-process {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
     margin: 30px 0;
-}
+  }
 
-.damage-process h4 {
+  .damage-process h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.1rem;
     margin-bottom: 20px;
-}
+  }
 
-.damage-steps {
+  .damage-steps {
     list-style: none;
     padding: 0;
     margin: 0;
     counter-reset: step-counter;
-}
+  }
 
-.damage-steps li {
+  .damage-steps li {
     counter-increment: step-counter;
     margin-bottom: 12px;
     padding-left: 35px;
     position: relative;
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     opacity: 0.8;
-}
+  }
 
-.damage-steps li::before {
+  .damage-steps li::before {
     content: counter(step-counter);
     position: absolute;
     left: 0;
@@ -1446,81 +1558,81 @@
     justify-content: center;
     font-weight: bold;
     font-size: 0.8rem;
-}
+  }
 
-/* Exception List */
-.exception-list {
+  /* Exception List */
+  .exception-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin: 30px 0;
-}
+  }
 
-.exception-item {
+  .exception-item {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 8px;
     padding: 20px;
-}
+  }
 
-.exception-item h5 {
+  .exception-item h5 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
-}
+  }
 
-.exception-item p {
-    font-family: 'DM Sans', sans-serif;
+  .exception-item p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Special Cases */
-.case-grid {
+  /* Special Cases */
+  .case-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     margin: 30px 0;
-}
+  }
 
-.case-card {
+  .case-card {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 12px;
     padding: 25px;
-}
+  }
 
-.case-card h5 {
+  .case-card h5 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 8px;
-}
+  }
 
-.case-card p {
-    font-family: 'DM Sans', sans-serif;
+  .case-card p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Contact Info */
-.contact-info {
+  /* Contact Info */
+  .contact-info {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
     margin: 30px 0;
-}
+  }
 
-.contact-item {
+  .contact-item {
     display: flex;
     align-items: flex-start;
     gap: 15px;
@@ -1528,113 +1640,113 @@
     background: rgba(255, 215, 0, 0.05);
     border-radius: 12px;
     border: 1px solid rgba(255, 215, 0, 0.2);
-}
+  }
 
-.contact-item i {
+  .contact-item i {
     color: var(--gold);
     font-size: 1.5rem;
     flex-shrink: 0;
     margin-top: 5px;
-}
+  }
 
-.contact-item h4 {
+  .contact-item h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1rem;
     margin-bottom: 5px;
-}
+  }
 
-.contact-item p {
-    font-family: 'DM Sans', sans-serif;
+  .contact-item p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Returns FAQ */
-.returns-faq {
+  /* Returns FAQ */
+  .returns-faq {
     margin-top: 40px;
-}
+  }
 
-.returns-faq h3 {
+  .returns-faq h3 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 1.3rem;
     margin-bottom: 20px;
-}
+  }
 
-.faq-list {
+  .faq-list {
     display: grid;
     gap: 15px;
-}
+  }
 
-.faq-item {
+  .faq-item {
     background: rgba(255, 215, 0, 0.05);
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 8px;
     padding: 20px;
-}
+  }
 
-.faq-item h4 {
+  .faq-item h4 {
     color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 10px;
     display: flex;
     align-items: flex-start;
     gap: 10px;
-}
+  }
 
-.faq-item p {
-    font-family: 'DM Sans', sans-serif;
+  .faq-item p {
+    font-family: "DM Sans", sans-serif;
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
-}
+  }
 
-/* Responsive */
-@media (max-width: 968px) {
+  /* Responsive */
+  @media (max-width: 968px) {
     .content-wrapper {
-        grid-template-columns: 1fr;
-        gap: 40px;
+      grid-template-columns: 1fr;
+      gap: 40px;
     }
-    
-    .table-of-contents {
-        position: static;
-        order: 2;
-    }
-    
-    .returns-sections {
-        order: 1;
-    }
-    
-    .hero-title {
-        font-size: 3rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.2rem;
-    }
-}
 
-@media (max-width: 768px) {
+    .table-of-contents {
+      position: static;
+      order: 2;
+    }
+
+    .returns-sections {
+      order: 1;
+    }
+
     .hero-title {
-        font-size: 2.5rem;
+      font-size: 3rem;
     }
-    
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
     .hero-meta {
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
     }
-    
+
     .returns-section h2 {
-        font-size: 2rem;
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
+      font-size: 2rem;
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
     }
-    
+
     .policy-highlights,
     .eligible-grid,
     .checklist-items,
@@ -1648,18 +1760,18 @@
     .exception-list,
     .case-grid,
     .contact-info {
-        grid-template-columns: 1fr;
+      grid-template-columns: 1fr;
     }
-    
+
     .timeline-step {
-        grid-template-columns: 1fr;
-        gap: 5px;
+      grid-template-columns: 1fr;
+      gap: 5px;
     }
-    
+
     .timeline-date {
-        font-weight: 600;
-        margin-bottom: 5px;
+      font-weight: 600;
+      margin-bottom: 5px;
     }
-}
+  }
 </style>
 {% endblock %}
